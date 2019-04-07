@@ -45,6 +45,7 @@ public class UserController {
         }
         User newUser = userService.saveOrUpdateUser(user);//save the model into database
         System.out.println("sign up");
+
         return new ResponseEntity<User>(newUser, HttpStatus.CREATED);
     }
 

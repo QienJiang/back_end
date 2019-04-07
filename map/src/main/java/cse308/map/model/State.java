@@ -12,8 +12,26 @@ public class State {
     private String id;
     private String name;
     private String population;
+    private String rvote;
+    private String dvote;
 
     public State() {
+    }
+
+    public String getRvote() {
+        return rvote;
+    }
+
+    public void setRvote(String rvote) {
+        this.rvote = rvote;
+    }
+
+    public String getDvote() {
+        return dvote;
+    }
+
+    public void setDvote(String dvote) {
+        this.dvote = dvote;
     }
 
     public String getId() {
