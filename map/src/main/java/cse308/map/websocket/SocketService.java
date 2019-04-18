@@ -20,19 +20,13 @@ import java.util.Random;
 public class SocketService {
     private static final Logger LOGGER = LoggerFactory.getLogger(SocketService.class);
     private static String[] states = {"New York","California","Pennsylvania"};
-    private static String[] colors = {"red","purple","yellow"};
+    private static String[] colors = {"red","purple","yellow","orange","blue"};
     private static Random r = new Random();
     @Autowired
     private SocketIOServer server;
 
     private static Map<String, SocketIOClient> clientsMap = new HashMap<String, SocketIOClient>();
 
-    /**
-     * 添加connect事件，当客户端发起连接时调用，本文中将clientid与sessionid存入数据库
-     * //方便后面发送消息时查找到对应的目标client,
-     *
-     * @param client
-     */
     @OnConnect
     public void onConnect(SocketIOClient client) {
         String uuid = client.getSessionId().toString();
@@ -40,9 +34,7 @@ public class SocketService {
         LOGGER.debug("IP: " + client.getRemoteAddress().toString() + " UUID: " + uuid + " 设备建立连接");
     }
 
-    /**
-     * 添加@OnDisconnect事件，客户端断开连接时调用，刷新客户端信息
-     */
+
     @OnDisconnect
     public void onDisconnect(SocketIOClient client) {
         String uuid = client.getSessionId().toString();
@@ -58,20 +50,15 @@ public class SocketService {
         //socketIoServer.getClient(client.getSessionId()).sendEvent("messageevent", "你好 data");
 
         for(int i = 0; i < 100;i++) {
-            client.sendEvent("messageevent", states[r.nextInt(3)] + ":" + colors[r.nextInt(3)]);
+            client.sendEvent("messageevent", states[r.nextInt(3)] + ":" + colors[r.nextInt(5)]);
             try {
-                Thread.sleep(1000);
+                Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
     }
-    /**
-     * 给所有连接客户端推送消息
-     *
-     * @param eventType 推送的事件类型
-     * @param message   推送的内容
-     */
+
     public void sendMessageToAllClient(String eventType, String message) {
         Collection<SocketIOClient> clients = server.getAllClients();
         for (SocketIOClient client : clients) {

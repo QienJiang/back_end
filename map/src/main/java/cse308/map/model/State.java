@@ -9,13 +9,15 @@ import javax.validation.constraints.NotBlank;
 public class State {
 
     @Id
-    private String id;
+    private Integer id;
     private String name;
     private String population;
     private String rvote;
     private String dvote;
 
-    public State() {
+    public State(int id, String name) {
+        this.id = id;
+        this.name = name;
     }
 
     public String getRvote() {
@@ -34,11 +36,11 @@ public class State {
         this.dvote = dvote;
     }
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
