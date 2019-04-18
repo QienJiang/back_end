@@ -44,8 +44,6 @@ public class UserController {
             return new ResponseEntity<Map<String,String>>(errorMap, HttpStatus.BAD_REQUEST);
         }
         User newUser = userService.saveOrUpdateUser(user);//save the model into database
-        System.out.println("sign up");
-
         return new ResponseEntity<User>(newUser, HttpStatus.CREATED);
     }
 

@@ -18,6 +18,6 @@ public class Algorithm {
     }
 
     public void run(){
-        
+
     }
 }
