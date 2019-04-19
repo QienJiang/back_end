@@ -1,19 +1,39 @@
 package cse308.map.model;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class Cluster {
-/*
+
     private int clusterID;
     private Set<ClusterEdge> edges;
     private Set<Precinct> precincts;
     private Demographic demo;
     private int population;
     private boolean isAssigned;
-    private Precinct p;
 
-    public Cluster(Precinct p){
-        this.p = p;
+    public void initCluster(Precinct p){
+        p.setParentCluster(clusterID);
+        precincts =new HashSet<Precinct>();
+        precincts.add(p)
+;    }
+
+    public void initClusterEdge(Precinct p){
+        precincts.add(p);
+    }
+
+
+
+    public void combineCluster(Cluster c){
+
+    }
+
+    public void setClusterID(int clusterID) {
+        this.clusterID = clusterID;
+    }
+
+    public int getClusterID() {
+        return clusterID;
     }
 
     public void addPrecinct(Precinct p){
@@ -50,5 +70,5 @@ public class Cluster {
         //edge
         //precincts.......
     }
-*/
+
 }
