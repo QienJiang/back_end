@@ -12,11 +12,13 @@ public class Precinct {
     @Id
     private String id;
 //    private string neighbors;
-@Transient private int parentCluster;
+    @Transient private int parentCluster;
     @Transient private Set<Edge> edges;
     @Transient private Demographic demo;
-    @Transient private String population;
+    @Transient private int population;
     @Transient private int countyID;
+    @Transient private String[] neiPs;
+    private String neighbors;
 
 //    public string getNeighbors(){
 //    return neighbors;
@@ -66,4 +68,12 @@ public class Precinct {
     public String getId() {
         return id;
     }
+    public String getNeighbors(){return neighbors;}
+    public void setNeighbors(String neighbors){
+        this.neighbors = neighbors;
+        neiPs = this.neighbors.split(",");
+    }
+    
+
+
 }
