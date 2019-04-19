@@ -4,21 +4,24 @@ import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
-@Table(name = "Precinct")
+@Table(name = "pa_finalqgis")
 public class Precinct {
     @Id
     private String id;
-    /*
-    private int parentCluster;
-    private Set<Edge> edges;
-    private Demographic demo;
-    private String population;
-    private int countyID;
-    public Precinct(){
+//    private string neighbors;
+@Transient private int parentCluster;
+    @Transient private Set<Edge> edges;
+    @Transient private Demographic demo;
+    @Transient private String population;
+    @Transient private int countyID;
 
-    }
+//    public string getNeighbors(){
+//    return neighbors;
+//    }
+
     public void computeNeighbor(){
 
     }
@@ -59,7 +62,7 @@ public class Precinct {
     public Set<Edge> getAllEdges(){
         return edges;
     }
-    */
+
     public String getId() {
         return id;
     }
