@@ -72,7 +72,19 @@ public class Precinct {
         this.neighbors = neighbors;
         neiPs = this.neighbors.split(",");
     }
-    
+    public void addEdge(Edge e){
+        if(!edges.contains(e)){
+            edges.add(e);
+        }
+    }
+    public void removeEdge(Edge e){
+        if(edges.contains(e)){
+            edges.remove(e);
+        }
+    }
+    public void setDemo(Demographic demo){
+        this.demo = demo;
+    }
 
 
 }
