@@ -1,16 +1,21 @@
 package cse308.map.model;
 
 import java.util.Set;
+import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
+@Entity
+@Table(name = "Precinct")
 public class Precinct {
     @Id
+    private String id;
+    /*
     private int parentCluster;
     private Set<Edge> edges;
     private Demographic demo;
     private String population;
     private int countyID;
-    private String id;
     public Precinct(){
 
     }
@@ -54,6 +59,7 @@ public class Precinct {
     public Set<Edge> getAllEdges(){
         return edges;
     }
+    */
     public String getId() {
         return id;
     }

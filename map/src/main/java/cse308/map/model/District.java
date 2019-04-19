@@ -1,6 +1,7 @@
 package cse308.map.model;
 
 public class District {
+    /*
     private Cluster cluster;
     private int DistrictID;
     private Precinct precinct;
@@ -16,5 +17,6 @@ public class District {
         cluster.addPrecinct(precinct);
 
     }
+    */
 
 }

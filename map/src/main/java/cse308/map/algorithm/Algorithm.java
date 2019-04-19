@@ -10,7 +10,6 @@ import java.util.HashSet;
 import java.util.Map;
 
 public class Algorithm {
-    @Autowired
     private PrecinctService precinctService;
     private Map<Integer,State> states = new HashMap<>();
     private Map<String,Precinct> precincts = new HashMap<>();
