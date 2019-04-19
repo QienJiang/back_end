@@ -8,7 +8,7 @@ public class Precinct {
     private int parentCluster;
     private Set<Edge> edges;
     private Demographic demo;
-    private int population;
+    private String population;
     private int countyID;
     private String id;
     public Precinct(){

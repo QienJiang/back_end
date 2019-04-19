@@ -3,6 +3,7 @@ package cse308.map.model;
 import java.util.Set;
 
 public class Cluster {
+
     private int clusterID;
     private Set<ClusterEdge> edges;
     private Set<Precinct> precincts;

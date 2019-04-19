@@ -25,14 +25,17 @@ public class State {
     }
 
     public void setRvote(String rvote) {
+
         this.rvote = rvote;
     }
 
     public String getDvote() {
+
         return dvote;
     }
 
     public void setDvote(String dvote) {
+
         this.dvote = dvote;
     }
 
