@@ -32,4 +32,18 @@ public class UserService {
     public void deleted(String email){
         userRepository.deleteById(email);
     }
+
+    public Boolean validUser(User user) {
+        Optional<User> opt = userRepository.findById(user.getEmail());
+        if (!opt.isPresent()) {//check if the account exist
+            return false;
+        } else {
+            if (opt.get().getPassword().equals( user.getPassword()))//check if the password is corrected.
+            return true;
+            else
+            return false;
+        }
+    }
+
+
 }

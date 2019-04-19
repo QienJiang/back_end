@@ -32,21 +32,39 @@ public class UserController {
 //            return new ResponseEntity<User>(opt.get(), HttpStatus.OK);
 //    }
 
-    @PostMapping(value = "/signin")//save the state to the database
+    @PostMapping(value = "/signin")//check the user exist in the database or not
     public ResponseEntity<?> signIn(@Valid @RequestBody User user, BindingResult result){
         //BindResult is an interface that gets the result of the validation
 
         if(result.hasErrors()){
             Map<String,String> errorMap = new HashMap<>();
             for(FieldError error: result.getFieldErrors()){
-                    errorMap.put(error.getField(),error.getDefaultMessage());
+                errorMap.put(error.getField(),error.getDefaultMessage());
             }
             return new ResponseEntity<Map<String,String>>(errorMap, HttpStatus.BAD_REQUEST);
         }
-        User newUser = userService.saveOrUpdateUser(user);//save the model into database
-        return new ResponseEntity<User>(newUser, HttpStatus.CREATED);
-    }
 
+        Boolean status = userService.validUser(user);//check if the user exist
+
+        if(status){
+            Optional<User> opt = userService.findById(user.getEmail());
+            System.out.println("sign in");
+            return new ResponseEntity<User>(opt.get(), HttpStatus.OK);
+        }else {
+            System.out.println("user does not exist.");
+            return new ResponseEntity("No such user ", HttpStatus.NOT_FOUND);
+        }
+
+    }
+    @PostMapping(value = "/signup")//save the state to the database
+    public ResponseEntity<?> signUp(@Valid @RequestBody User user){
+        //BindResult is an interface that gets the result of the validation
+        User newUser = userService.saveOrUpdateUser(user);//save the model into database
+        System.out.println("register completed. ");
+        return new ResponseEntity<User>(newUser, HttpStatus.OK);
+
+
+    }
 
 
 }
