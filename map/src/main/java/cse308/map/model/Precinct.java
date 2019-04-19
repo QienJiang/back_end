@@ -29,6 +29,9 @@ public class Precinct {
     public void computeCountyJoin(int countyID) {
 
     }
+    public void setParentCluster(int cID){
+        parentCluster = cID;
+    }
 
     public int getParentCluster() {
         return parentCluster;
