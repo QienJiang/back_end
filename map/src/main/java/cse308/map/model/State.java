@@ -2,6 +2,7 @@ package cse308.map.model;
 
 
 import javax.persistence.*;
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.validation.constraints.NotBlank;
 
 @Entity
@@ -9,14 +10,17 @@ import javax.validation.constraints.NotBlank;
 public class State {
 
     @Id
-    private Integer id;
+    private String id;
     private String name;
     private String population;
     private String rvote;
     private String dvote;
 
-    public State(int id, String name) {
-        this.id = id;
+    public State(){
+
+    }
+    public State(Integer id, String name) {
+        this.id = id.toString();
         this.name = name;
     }
 
@@ -39,11 +43,11 @@ public class State {
         this.dvote = dvote;
     }
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 

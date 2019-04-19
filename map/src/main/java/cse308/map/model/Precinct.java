@@ -11,7 +11,7 @@ import javax.persistence.Transient;
 public class Precinct {
     @Id
     private String geoid10;//precinct id
-    private int pop100;//population
+    private double pop100;//population
     private String countyfp10;//countyID
     private String neighbors;
     @Transient private int parentCluster;
@@ -20,6 +20,55 @@ public class Precinct {
     @Transient private String[] neiPs;
     @Transient private boolean iscomput=false;
 
+    public double getPop100() {
+        return pop100;
+    }
+
+    public void setPop100(double pop100) {
+        this.pop100 = pop100;
+    }
+
+    public String getGeoid10() {
+        return geoid10;
+    }
+
+    public void setGeoid10(String geoid10) {
+        this.geoid10 = geoid10;
+    }
+
+
+
+    public String getCountyfp10() {
+        return countyfp10;
+    }
+
+    public void setCountyfp10(String countyfp10) {
+        this.countyfp10 = countyfp10;
+    }
+
+    public Set<Edge> getEdges() {
+        return edges;
+    }
+
+    public void setEdges(Set<Edge> edges) {
+        this.edges = edges;
+    }
+
+    public String[] getNeiPs() {
+        return neiPs;
+    }
+
+    public void setNeiPs(String[] neiPs) {
+        this.neiPs = neiPs;
+    }
+
+    public boolean isIscomput() {
+        return iscomput;
+    }
+
+    public void setIscomput(boolean iscomput) {
+        this.iscomput = iscomput;
+    }
 //    public string getNeighbors(){
 //    return neighbors;
 //    }
@@ -30,7 +79,7 @@ public class Precinct {
             iscomput = true;
     }
     public void isCompute(){
-        
+
     }
     public boolean isNeighbor(Precinct p1,Precinct p2){
         boolean isN = false;

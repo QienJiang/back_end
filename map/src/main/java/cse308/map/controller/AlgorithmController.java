@@ -1,15 +1,40 @@
 package cse308.map.controller;
 
+import cse308.map.algorithm.Algorithm;
+import cse308.map.model.AlgoType;
+import cse308.map.model.Config;
+import cse308.map.model.State;
+import cse308.map.server.PrecinctService;
+import cse308.map.server.StateService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
+@RestController
+@RequestMapping(value = "/runpage")
+@CrossOrigin
 public class AlgorithmController {
 
+    @Autowired
+    private StateService stateService;
+    @Autowired
+    private PrecinctService precinctService;
 
-    @GetMapping("/{phaseone}")//select the state with the specify id from the database
-    public ResponseEntity<State> getStateInfo(@PathVariable("phaseone") Enum algorithm){
-        Optional<State> opt = stateRepository.findById(id);
-        if(!opt.isPresent()){
-            return new ResponseEntity("No such element ",HttpStatus.NOT_FOUND);
-        }else
-            return new ResponseEntity<State>(opt.get(), HttpStatus.OK);
+    @PostMapping(value = "/one")//select the state with the specify id from the database
+    public ResponseEntity<?> runAlgorithm(@RequestBody Config stateConfig){
+        System.out.println("xxxxx algorithm");
+        System.out.println("state id: "+stateConfig.getStateId());
+        Iterable<State> opt = stateService.findById(stateConfig.getStateId());
+
+        System.out.println();
+
+        Algorithm algorithm = new Algorithm("pa",stateConfig.getDesireNum(),1,precinctService);
+        algorithm.run();
+
+
+        return new ResponseEntity<State>(opt.iterator().next(), HttpStatus.OK);
     }
 
 
