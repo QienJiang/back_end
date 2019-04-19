@@ -18,19 +18,28 @@ public class Precinct {
     @Transient private Set<Edge> edges;
     @Transient private Demographic demo;
     @Transient private String[] neiPs;
+    @Transient private boolean iscomput=false;
 
 //    public string getNeighbors(){
 //    return neighbors;
 //    }
 
     public void computeNeighbor(){
-
+        if(neighbors!=null)
+            neiPs = neighbors.split(",");
+            iscomput = true;
     }
     public void isCompute(){
-
+        
     }
-    public boolean isNeighbor(Precinct cp2){
-        return true;
+    public boolean isNeighbor(Precinct p1,Precinct p2){
+        boolean isN = false;
+        for(Edge e : edges){
+            if(e.getNeighborPrecinct(p1).equals(p2)){
+                isN = true;
+            }
+        }
+        return isN;
     }
     public void assignNeighbor(Precinct cp2){
 
@@ -70,7 +79,6 @@ public class Precinct {
     public String getNeighbors(){return neighbors;}
     public void setNeighbors(String neighbors){
         this.neighbors = neighbors;
-        neiPs = this.neighbors.split(",");
     }
     public void addEdge(Edge e){
         if(!edges.contains(e)){
