@@ -10,15 +10,14 @@ import javax.persistence.Transient;
 @Table(name = "pa_finalqgis")
 public class Precinct {
     @Id
-    private String id;
-//    private string neighbors;
+    private String geoid10;//precinct id
+    private int pop100;//population
+    private String countyfp10;//countyID
+    private String neighbors;
     @Transient private int parentCluster;
     @Transient private Set<Edge> edges;
     @Transient private Demographic demo;
-    @Transient private int population;
-    @Transient private int countyID;
     @Transient private String[] neiPs;
-    private String neighbors;
 
 //    public string getNeighbors(){
 //    return neighbors;
@@ -66,7 +65,7 @@ public class Precinct {
     }
 
     public String getId() {
-        return id;
+        return geoid10;
     }
     public String getNeighbors(){return neighbors;}
     public void setNeighbors(String neighbors){

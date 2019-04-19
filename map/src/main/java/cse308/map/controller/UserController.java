@@ -55,6 +55,9 @@ public class UserController {
             return new ResponseEntity("No such user ", HttpStatus.NOT_FOUND);
         }
 
+
+        
+
     }
     @PostMapping(value = "/signup")//save the state to the database
     public ResponseEntity<?> signUp(@Valid @RequestBody User user){
