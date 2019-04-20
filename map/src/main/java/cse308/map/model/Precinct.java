@@ -1,5 +1,6 @@
 package cse308.map.model;
 
+import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -15,7 +16,7 @@ public class Precinct {
     private String countyfp10;//countyID
     private String neighbors;
     @Transient private int parentCluster;
-    @Transient private Set<PrecinctEdge> precinctEdges;
+    @Transient private Set<PrecinctEdge> precinctEdges = new HashSet<>();
     @Transient private Demographic demo;
     @Transient private boolean iscomput=false;
 
@@ -134,5 +135,7 @@ public class Precinct {
         this.demo = demo;
     }
 
-
+    public String toString(){
+        return geoid10;
+    }
 }

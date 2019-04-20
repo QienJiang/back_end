@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 @RestController
-@RequestMapping(value = "/runpage")
 @CrossOrigin
 public class AlgorithmController {
 
@@ -22,7 +21,7 @@ public class AlgorithmController {
     @Autowired
     private PrecinctService precinctService;
 
-    @PostMapping(value = "/one")//select the state with the specify id from the database
+    @PostMapping(value = "/run")//select the state with the specify id from the database
     public ResponseEntity<?> runAlgorithm(@RequestBody Config stateConfig){
         System.out.println("xxxxx algorithm");
         System.out.println("state id: "+stateConfig.getStateId());
