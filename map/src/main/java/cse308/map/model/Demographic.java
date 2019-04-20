@@ -3,7 +3,7 @@ package cse308.map.model;
 public class Demographic {
     private Party politicalParty;
     private int population;
-    private MajorMinor mm;
+    private MajorMinor majorMinor;
     private int rvote;
     private int dvote;
     private int AFRICAN_AMERICAN;
@@ -19,12 +19,12 @@ public class Demographic {
         this.politicalParty = politicalParty;
     }
 
-    public MajorMinor getMm() {
-        return mm;
+    public MajorMinor getMajorMinor() {
+        return majorMinor;
     }
 
-    public void setMm(MajorMinor mm) {
-        this.mm = mm;
+    public void setMajorMinor(MajorMinor majorMinor) {
+        this.majorMinor = majorMinor;
     }
 
     public int getRvote() {
