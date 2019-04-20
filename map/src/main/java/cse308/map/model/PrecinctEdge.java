@@ -1,6 +1,6 @@
 package cse308.map.model;
 
-public class Edge {
+public class PrecinctEdge {
     private double comactness;
     private Precinct p1;
     private Precinct p2;
@@ -14,7 +14,7 @@ public class Edge {
         }
         return null;
     }
-    public Edge(Precinct p1, Precinct p2){
+    public PrecinctEdge(Precinct p1, Precinct p2){
         this.p1 = p1;
         this.p2 = p2;
 

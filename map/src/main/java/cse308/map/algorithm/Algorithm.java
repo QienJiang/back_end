@@ -1,13 +1,11 @@
 package cse308.map.algorithm;
 
-import cse308.map.model.Edge;
+import cse308.map.model.PrecinctEdge;
 import cse308.map.model.Precinct;
 import cse308.map.model.State;
 import cse308.map.server.PrecinctService;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 
 public class Algorithm {
@@ -35,9 +33,9 @@ public class Algorithm {
             for(String name: neighbours){
                 Precinct neighbour = precincts.get(name);
                 if(!p.isNeighbor(neighbour)) {
-                    Edge edge = new Edge(p, neighbour);
-                    p.addEdge(edge);
-                    neighbour.addEdge(edge);
+                    PrecinctEdge precinctEdge = new PrecinctEdge(p, neighbour);
+                    p.addEdge(precinctEdge);
+                    neighbour.addEdge(precinctEdge);
                 }
             }
         }

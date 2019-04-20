@@ -15,7 +15,7 @@ public class Precinct {
     private String countyfp10;//countyID
     private String neighbors;
     @Transient private int parentCluster;
-    @Transient private Set<Edge> edges;
+    @Transient private Set<PrecinctEdge> precinctEdges;
     @Transient private Demographic demo;
     @Transient private boolean iscomput=false;
 
@@ -45,12 +45,12 @@ public class Precinct {
         this.countyfp10 = countyfp10;
     }
 
-    public Set<Edge> getEdges() {
-        return edges;
+    public Set<PrecinctEdge> getPrecinctEdges() {
+        return precinctEdges;
     }
 
-    public void setEdges(Set<Edge> edges) {
-        this.edges = edges;
+    public void setPrecinctEdges(Set<PrecinctEdge> precinctEdges) {
+        this.precinctEdges = precinctEdges;
     }
 
     public boolean isIscomput() {
@@ -101,8 +101,8 @@ public class Precinct {
     public void compute(){
 
     }
-    public Set<Edge> getAllEdges(){
-        return edges;
+    public Set<PrecinctEdge> getAllEdges(){
+        return precinctEdges;
     }
 
     public String getId() {
@@ -113,21 +113,21 @@ public class Precinct {
         this.neighbors = neighbors;
     }
     public boolean isNeighbor(Precinct nei){
-        for(Edge e :edges){
+        for(PrecinctEdge e : precinctEdges){
             if(e.getNeighborPrecinct(this) == nei){
                 return true;
             }
         }
         return false;
     }
-    public void addEdge(Edge e){
-        if(!edges.contains(e)){
-            edges.add(e);
+    public void addEdge(PrecinctEdge e){
+        if(!precinctEdges.contains(e)){
+            precinctEdges.add(e);
         }
     }
-    public void removeEdge(Edge e){
-        if(edges.contains(e)){
-            edges.remove(e);
+    public void removeEdge(PrecinctEdge e){
+        if(precinctEdges.contains(e)){
+            precinctEdges.remove(e);
         }
     }
     public void setDemo(Demographic demo){

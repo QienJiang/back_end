@@ -58,10 +58,10 @@ public class Cluster {
     public Set<ClusterEdge> getAllEdges(){
         return edges;
     }
-    public void adAll(Edge e){
+    public void adAll(PrecinctEdge e){
 
     }
-    public void retainAll(Edge e){
+    public void retainAll(PrecinctEdge e){
 
     }
     public void updataInfo(Cluster c1,Cluster c2){
