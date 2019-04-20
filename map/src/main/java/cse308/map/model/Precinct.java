@@ -15,7 +15,7 @@ public class Precinct {
     private double pop100;//population
     private String countyfp10;//countyID
     private String neighbors;
-    @Transient private int parentCluster;
+    @Transient private String parentCluster;
     @Transient private Set<PrecinctEdge> precinctEdges = new HashSet<>();
     @Transient private Demographic demo;
     @Transient private boolean iscomput=false;
@@ -80,11 +80,11 @@ public class Precinct {
     public void computeCountyJoin(int countyID) {
 
     }
-    public void setParentCluster(int cID){
+    public void setParentCluster(String cID){
         parentCluster = cID;
     }
 
-    public int getParentCluster() {
+    public String getParentCluster() {
         return parentCluster;
     }
     public void computeJoinability(){

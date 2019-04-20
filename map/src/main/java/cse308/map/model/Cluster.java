@@ -5,21 +5,32 @@ import java.util.Set;
 
 public class Cluster {
 
-    private int clusterID;
-    private Set<ClusterEdge> edges;
+    private String clusterID;
+    private Set<ClusterEdge> edges = new HashSet<>();
     private Set<Precinct> precincts;
     private Demographic demo;
     private int population;
     private boolean isAssigned;
 
-    public void initCluster(Precinct p){
+    public Cluster(Precinct p){
+        clusterID = p.getId();
         p.setParentCluster(clusterID);
-        precincts =new HashSet<Precinct>();
-        precincts.add(p)
-;    }
-
-    public void initClusterEdge(Precinct p){
+        precincts = new HashSet<Precinct>();
         precincts.add(p);
+    }
+
+    public boolean isNeighbor(Cluster nei){
+        for(ClusterEdge e : edges){
+            if(e.getNeighborCluster(this) == nei){
+                return true;
+            }
+        }
+        return false;
+    }
+    public void addEdge(ClusterEdge e){
+        if(!edges.contains(e)){
+            edges.add(e);
+        }
     }
 
 
@@ -28,11 +39,11 @@ public class Cluster {
 
     }
 
-    public void setClusterID(int clusterID) {
+    public void setClusterID(String clusterID) {
         this.clusterID = clusterID;
     }
 
-    public int getClusterID() {
+    public String getClusterID() {
         return clusterID;
     }
 
@@ -43,7 +54,7 @@ public class Cluster {
     public void removePrecinct(Precinct p){
         if(precincts.contains(p)){
             precincts.remove(p);
-            p.setParentCluster(-1);
+            p.setParentCluster(null);
         }
     }
     public void combineCluster(Cluster c1,Cluster c2){
@@ -69,6 +80,10 @@ public class Cluster {
         //demo??
         //edge
         //precincts.......
+    }
+
+    public String toString(){
+        return clusterID;
     }
 
 }

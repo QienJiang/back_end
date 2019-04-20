@@ -7,23 +7,17 @@ public class ClusterEdge {
     private double communityifInterset;
     private double countyJoinability;
     private double joinability;
-    private ClusterEdge e;
 
 
-    public ClusterEdge(){
-
-    }
     public Cluster getNeighborCluster(Cluster p){
         if(c1.equals(p)){
             return c2;
         }
         return null;
     }
-    public ClusterEdge initialEdge(Cluster c1, Cluster c2){
+    public ClusterEdge(Cluster c1, Cluster c2){
         this.c1 = c1;
         this.c2 = c2;
-
-        return e;
     }
     public double computJoin(){
         double join = 10.2;
@@ -37,4 +31,7 @@ public class ClusterEdge {
         return joinability;
     }
 
+    public String toString(){
+        return c1.getClusterID() + ": " + c2.getClusterID();
+    }
 }
