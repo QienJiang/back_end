@@ -6,6 +6,7 @@ import cse308.map.server.PrecinctService;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class Algorithm {
 
@@ -24,28 +25,37 @@ public class Algorithm {
         this.precinctService = precinctService;
         this.client = client;
     }
+
+    public Algorithm(String stateName, int desireDistrict, int numOfRun, PrecinctService precinctService) {
+        for(int i =0; i < numOfRun;i++){
+            states.put(i,new State(i,stateName));
+        }
+        this.precinctService = precinctService;
+    }
+
     private void init(){
+        System.out.print("in");
         String[] colors = {"#FF0000","#00FF00","#0000FF","#FF00FF","#00FF00","blue","#FFFF00"};
         Iterable<Precinct> allPrecincts = precinctService.getAllPrecincts();
         String temp = "";
         int counter = 0;
         for(Precinct p : allPrecincts){
             precincts.put(p.getId(),p);
-
-            if(counter<100) {
-                temp += p.getId() + ":" + colors[(int) (Math.random() * colors.length)] + ",";
-                counter++;
-            }
-            else{
-                client.sendEvent("messageevent", temp);
-                try {
-                    Thread.sleep(50);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                temp="";
-                counter=0;
-            }
+//
+//            if(counter<100) {
+//                temp += p.getId() + ":" + colors[(int) (Math.random() * colors.length)] + ",";
+//                counter++;
+//            }
+//            else{
+//                client.sendEvent("messageevent", temp);
+//                try {
+//                    Thread.sleep(50);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//                temp="";
+//                counter=0;
+//            }
         }
 
         for(Precinct p : precincts.values()){
@@ -54,7 +64,7 @@ public class Algorithm {
 
         for(Precinct p :precincts.values()){
             Demographic demo1=new Demographic();
-            demo1.setNATIVAAMERICAN(p.getNativeAmericanPop());
+            demo1.setNATIVAAMERICAN(p.getNativeamericanpop());
             demo1.setMajorMinor(MajorMinor.NATIVEAMERICAN);
             p.setDemo(demo1);
             String[] neighbors =  p.getNeighbors().split(",");
@@ -63,7 +73,7 @@ public class Algorithm {
                 Precinct neighbor = precincts.get(name);
                 if(!p.isNeighbor(neighbor)) {
                     Demographic demo2=new Demographic();
-                    demo2.setNATIVAAMERICAN(neighbor.getNativeAmericanPop());
+                    demo2.setNATIVAAMERICAN(neighbor.getNativeamericanpop());
                     demo2.setMajorMinor(MajorMinor.NATIVEAMERICAN);
                     neighbor.setDemo(demo2);
 
@@ -83,14 +93,26 @@ public class Algorithm {
                     c1.addEdge(clusterEdge);
                     c2.addEdge(clusterEdge);
                     //clusterEdge.computJoin();//compute joinability of the two precincts
-                    System.out.println(clusterEdge);
+//                    System.out.println(clusterEdge);
                 }
             }
         }
 
     }
+    private void combine(){
+//        for(Cluster c : clusters.values()){
+//            System.out.println(c.getClusterID());
+//        }
+        Cluster c=clusters.get("42083360");
+        Set<ClusterEdge> edges=c.getAllEdges();
+
+        for(ClusterEdge e:edges){
+            System.out.println(e);
+        }
+    }
 
     public void run(){
             init();
+            combine();
     }
 }

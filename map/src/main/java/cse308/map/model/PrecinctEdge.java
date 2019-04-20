@@ -9,8 +9,11 @@ public class PrecinctEdge {
     private double joinability;
 
     public Precinct getNeighborPrecinct(Precinct p) {
-        if (p1.equals(p)) {
+        if (p1 == p) {
             return p2;
+        }
+        else if(p2 == p){
+            return p1;
         }
         return null;
     }
