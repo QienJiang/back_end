@@ -17,7 +17,6 @@ public class Precinct {
     @Transient private int parentCluster;
     @Transient private Set<Edge> edges;
     @Transient private Demographic demo;
-    @Transient private String[] neiPs;
     @Transient private boolean iscomput=false;
 
     public double getPop100() {
@@ -54,14 +53,6 @@ public class Precinct {
         this.edges = edges;
     }
 
-    public String[] getNeiPs() {
-        return neiPs;
-    }
-
-    public void setNeiPs(String[] neiPs) {
-        this.neiPs = neiPs;
-    }
-
     public boolean isIscomput() {
         return iscomput;
     }
@@ -75,21 +66,13 @@ public class Precinct {
 
     public void computeNeighbor(){
         if(neighbors!=null)
-            neiPs = neighbors.split(",");
+          //  neiPs = neighbors.split(",");
             iscomput = true;
     }
     public void isCompute(){
 
     }
-    public boolean isNeighbor(Precinct p1,Precinct p2){
-        boolean isN = false;
-        for(Edge e : edges){
-            if(e.getNeighborPrecinct(p1).equals(p2)){
-                isN = true;
-            }
-        }
-        return isN;
-    }
+
     public void assignNeighbor(Precinct cp2){
 
     }
@@ -128,6 +111,14 @@ public class Precinct {
     public String getNeighbors(){return neighbors;}
     public void setNeighbors(String neighbors){
         this.neighbors = neighbors;
+    }
+    public boolean isNeighbor(Precinct nei){
+        for(Edge e :edges){
+            if(e.getNeighborPrecinct(this) == nei){
+                return true;
+            }
+        }
+        return false;
     }
     public void addEdge(Edge e){
         if(!edges.contains(e)){

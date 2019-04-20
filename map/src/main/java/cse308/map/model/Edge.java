@@ -7,23 +7,17 @@ public class Edge {
     private double communityifInterset;
     private double countyJoinability;
     private double joinability;
-    private Edge e;
 
-
-    public Edge(){
-
-    }
     public Precinct getNeighborPrecinct(Precinct p){
         if(p1.equals(p)){
             return p2;
         }
         return null;
     }
-    public Edge initialEdge(Precinct p1, Precinct p2){
+    public Edge(Precinct p1, Precinct p2){
         this.p1 = p1;
         this.p2 = p2;
 
-        return e;
     }
     public double computJoin(){
         double join = 10.2;

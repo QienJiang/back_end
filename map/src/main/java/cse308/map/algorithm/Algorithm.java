@@ -1,5 +1,6 @@
 package cse308.map.algorithm;
 
+import cse308.map.model.Edge;
 import cse308.map.model.Precinct;
 import cse308.map.model.State;
 import cse308.map.server.PrecinctService;
@@ -25,14 +26,21 @@ public class Algorithm {
     }
     private void init(){
         Iterable<Precinct> allPrecincts = precinctService.getAllPrecincts();
-        if(allPrecincts == null){
-            System.out.println("xxxxxxxxxxxx");
-        }
         for(Precinct p : allPrecincts){
             precincts.put(p.getId(),p);
-            System.out.println("precinct id: "+p.getId());
         }
 
+        for(Precinct p :precincts.values()){
+            String[] neighbours =  p.getNeighbors().split(",");
+            for(String name: neighbours){
+                Precinct neighbour = precincts.get(name);
+                if(!p.isNeighbor(neighbour)) {
+                    Edge edge = new Edge(p, neighbour);
+                    p.addEdge(edge);
+                    neighbour.addEdge(edge);
+                }
+            }
+        }
 
     }
 
