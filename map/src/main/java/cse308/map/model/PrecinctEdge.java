@@ -20,6 +20,8 @@ public class PrecinctEdge {
 
     }
     public double computJoin(){
+        int totalPopulation =p1.getDemo().getPopulation() + p2.getDemo().getPopulation();
+
         double join = 10.2;
         return join;//????
     }

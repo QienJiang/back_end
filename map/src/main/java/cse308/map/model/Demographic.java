@@ -6,25 +6,78 @@ public class Demographic {
     private MajorMinor mm;
     private int rvote;
     private int dvote;
-    private int afpop;
-    private int appop;
-    private int hispop;
-    private int lapop;
+    private int AFRICAN_AMERICAN;
+    private int ASIAN_PACIFIC;
+    private int HISPANIC;
+    private int LATINO;
+
+    public Party getPoliticalParty() {
+        return politicalParty;
+    }
+
+    public void setPoliticalParty(Party politicalParty) {
+        this.politicalParty = politicalParty;
+    }
+
+    public MajorMinor getMm() {
+        return mm;
+    }
+
+    public void setMm(MajorMinor mm) {
+        this.mm = mm;
+    }
+
+    public int getRvote() {
+        return rvote;
+    }
+
+    public void setRvote(int rvote) {
+        this.rvote = rvote;
+    }
+
+    public int getDvote() {
+        return dvote;
+    }
+
+    public void setDvote(int dvote) {
+        this.dvote = dvote;
+    }
+
+    public int getAFRICAN_AMERICAN() {
+        return AFRICAN_AMERICAN;
+    }
+
+    public void setAFRICAN_AMERICAN(int AFRICAN_AMERICAN) {
+        this.AFRICAN_AMERICAN = AFRICAN_AMERICAN;
+    }
+
+    public int getASIAN_PACIFIC() {
+        return ASIAN_PACIFIC;
+    }
+
+    public void setASIAN_PACIFIC(int ASIAN_PACIFIC) {
+        this.ASIAN_PACIFIC = ASIAN_PACIFIC;
+    }
+
+    public int getHISPANIC() {
+        return HISPANIC;
+    }
+
+    public void setHISPANIC(int HISPANIC) {
+        this.HISPANIC = HISPANIC;
+    }
+
+    public int getLATINO() {
+        return LATINO;
+    }
+
+    public void setLATINO(int LATINO) {
+        this.LATINO = LATINO;
+    }
 
     public Demographic(){
     }
 
-    public void setAfpop(int afpop) {
-        this.afpop = afpop;
-    }
-
-    public int getAfpop() {
-        return afpop;
-    }
-
-    public int getAppop() {
-        return appop;
-    }
 
     public int vote(Party pp) {
         if(pp == Party.DEMOCRATIC)
