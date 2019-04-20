@@ -5,6 +5,10 @@ public class ClusterEdge {
     private Cluster c1;
     private Cluster c2;
 
+    private double communityifInterset;
+
+    private double joinability;
+
     public double getComactness() {
         return comactness;
     }
@@ -37,22 +41,10 @@ public class ClusterEdge {
         this.communityifInterset = communityifInterset;
     }
 
-    public double getCountyJoinability() {
-        return countyJoinability;
-    }
-
-    public void setCountyJoinability(double countyJoinability) {
-        this.countyJoinability = countyJoinability;
-    }
 
     public void setJoinability(double joinability) {
         this.joinability = joinability;
     }
-
-    private double communityifInterset;
-    private double countyJoinability;
-    private double joinability;
-
 
     public Cluster getNeighborCluster(Cluster p){
         if(c1.equals(p)){
@@ -66,25 +58,27 @@ public class ClusterEdge {
     }
     public void computJoin(){
         int totalPopulation = c1.getDemo().getPopulation() + c2.getDemo().getPopulation();
-        int totalAFRICAN_AMERICAN = c1.getDemo().getAFRICAN_AMERICAN() + c2.getDemo().getAFRICAN_AMERICAN();
-        int totalASIAN_PACIFIC = c1.getDemo().getASIAN_PACIFIC() + c2.getDemo().getASIAN_PACIFIC();
-        int totalHISPANIC = c1.getDemo().getHISPANIC() + c2.getDemo().getHISPANIC();
-        int totalLATINO = c1.getDemo().getLATINO() + c2.getDemo().getLATINO();
         double joinability = 0;
+        int countyValue= c1.getCountyID().equals(c2.getCountyID())?1:0;
         switch (c1.getDemo().getMajorMinor()) {
             case AFRICAN_AMERICAN:
+                int totalAFRICAN_AMERICAN = c1.getDemo().getAFRICAN_AMERICAN() + c2.getDemo().getAFRICAN_AMERICAN();
                 joinability = totalAFRICAN_AMERICAN / totalPopulation;
                 break;
             case ASIAN_PACIFIC:
+                int totalASIAN_PACIFIC = c1.getDemo().getASIAN_PACIFIC() + c2.getDemo().getASIAN_PACIFIC();
                 joinability = totalASIAN_PACIFIC / totalPopulation;
                 break;
             case HISPANIC:
-                joinability = totalLATINO / totalPopulation;
+                int totalHISPANIC = c1.getDemo().getHISPANIC() + c2.getDemo().getHISPANIC();
+                joinability = totalHISPANIC / totalPopulation;
                 break;
             case LATINO:
+                int totalLATINO = c1.getDemo().getLATINO() + c2.getDemo().getLATINO();
                 joinability = totalLATINO / totalPopulation;
                 break;
         }
+        joinability=joinability*0.5+countyValue*0.5;
         setJoinability(joinability);
         
     }

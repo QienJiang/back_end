@@ -11,12 +11,21 @@ public class Cluster {
     private Demographic demo;
     private int population;
     private boolean isAssigned;
+    private String countyID;
 
     public Cluster(Precinct p){
         clusterID = p.getId();
         p.setParentCluster(clusterID);
         precincts = new HashSet<Precinct>();
         precincts.add(p);
+    }
+
+    public String getCountyID() {
+        return countyID;
+    }
+
+    public void setCountyID(String countyID) {
+        this.countyID = countyID;
     }
 
     public boolean isNeighbor(Cluster nei){

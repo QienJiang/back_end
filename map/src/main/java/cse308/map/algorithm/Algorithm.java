@@ -53,13 +53,17 @@ public class Algorithm {
                 Precinct neighbor = precincts.get(name);
                 if(!p.isNeighbor(neighbor)) {
                     PrecinctEdge precinctEdge = new PrecinctEdge(p, neighbor);
+                    precinctEdge.computJoin();
                     p.addEdge(precinctEdge);
                     neighbor.addEdge(precinctEdge);
                     //precinctEdge.computJoin();//compute joinability of the two precincts
 
                     Cluster c1 = clusters.get(p.getId());
+                    c1.setCountyID(p.getCountyfp10());
                     Cluster c2 = clusters.get(neighbor.getId());
+                    c2.setCountyID(neighbor.getCountyfp10());
                     ClusterEdge clusterEdge = new ClusterEdge(c1,c2);
+                    clusterEdge.setJoinability(precinctEdge.getJoinability());
                     c1.addEdge(clusterEdge);
                     c2.addEdge(clusterEdge);
                     //clusterEdge.computJoin();//compute joinability of the two precincts
