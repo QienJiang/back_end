@@ -27,9 +27,20 @@ public class Algorithm {
     private void init(){
         String[] colors = {"red","purple","yellow","orange","blue"};
         Iterable<Precinct> allPrecincts = precinctService.getAllPrecincts();
+        String temp = "";
+        int counter = 0;
         for(Precinct p : allPrecincts){
             precincts.put(p.getId(),p);
-            client.sendEvent("messageevent", p.getId() + ":" + colors[(int)(Math.random()*colors.length)]);
+            if(counter<1500)
+            {
+                temp += p.getId() + ":" + colors[(int)(Math.random()*colors.length)]+",";
+                counter++;
+            }
+            else {
+                client.sendEvent("messageevent", temp);
+                temp="";
+                counter=0;
+            }
         }
 
         for(Precinct p : precincts.values()){
@@ -44,14 +55,14 @@ public class Algorithm {
                     PrecinctEdge precinctEdge = new PrecinctEdge(p, neighbor);
                     p.addEdge(precinctEdge);
                     neighbor.addEdge(precinctEdge);
-                    precinctEdge.computJoin();//compute joinability of the two precincts
+                    //precinctEdge.computJoin();//compute joinability of the two precincts
 
                     Cluster c1 = clusters.get(p.getId());
                     Cluster c2 = clusters.get(neighbor.getId());
                     ClusterEdge clusterEdge = new ClusterEdge(c1,c2);
                     c1.addEdge(clusterEdge);
                     c2.addEdge(clusterEdge);
-                    clusterEdge.computJoin();//compute joinability of the two precincts
+                    //clusterEdge.computJoin();//compute joinability of the two precincts
                     System.out.println(clusterEdge);
                 }
             }
