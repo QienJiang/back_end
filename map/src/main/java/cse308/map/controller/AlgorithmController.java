@@ -28,10 +28,10 @@ public class AlgorithmController {
         Iterable<State> opt = stateService.findById(stateConfig.getStateId());
 
         System.out.println();
-
+/*
         Algorithm algorithm = new Algorithm("pa",stateConfig.getDesireNum(),1,precinctService);
         algorithm.run();
-
+*/
 
         return new ResponseEntity<State>(opt.iterator().next(), HttpStatus.OK);
     }
