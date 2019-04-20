@@ -32,19 +32,21 @@ public class Algorithm {
         }
 
         for(Precinct p :precincts.values()){
-            String[] neighbours =  p.getNeighbors().split(",");
-            for(String name: neighbours){
-                Precinct neighbour = precincts.get(name);
-                if(!p.isNeighbor(neighbour)) {
-                    PrecinctEdge precinctEdge = new PrecinctEdge(p, neighbour);
+            String[] neighbors =  p.getNeighbors().split(",");
+            for(String name: neighbors){
+                Precinct neighbor = precincts.get(name);
+                if(!p.isNeighbor(neighbor)) {
+                    PrecinctEdge precinctEdge = new PrecinctEdge(p, neighbor);
                     p.addEdge(precinctEdge);
-                    neighbour.addEdge(precinctEdge);
+                    neighbor.addEdge(precinctEdge);
+                    precinctEdge.computJoin();//compute joinability of the two precincts
 
                     Cluster c1 = clusters.get(p.getId());
-                    Cluster c2 = clusters.get(neighbour.getId());
+                    Cluster c2 = clusters.get(neighbor.getId());
                     ClusterEdge clusterEdge = new ClusterEdge(c1,c2);
                     c1.addEdge(clusterEdge);
                     c2.addEdge(clusterEdge);
+                    clusterEdge.computJoin();//compute joinability of the two precincts
                     System.out.println(clusterEdge);
                 }
             }

@@ -61,25 +61,7 @@ public class Precinct {
     public void setIscomput(boolean iscomput) {
         this.iscomput = iscomput;
     }
-//    public string getNeighbors(){
-//    return neighbors;
-//    }
 
-    public void computeNeighbor(){
-        if(neighbors!=null)
-          //  neiPs = neighbors.split(",");
-            iscomput = true;
-    }
-    public void isCompute(){
-
-    }
-
-    public void assignNeighbor(Precinct cp2){
-
-    }
-    public void computeCountyJoin(int countyID) {
-
-    }
     public void setParentCluster(String cID){
         parentCluster = cID;
     }
@@ -87,21 +69,11 @@ public class Precinct {
     public String getParentCluster() {
         return parentCluster;
     }
-    public void computeJoinability(){
 
-    }
-    public int getNeighborCounty(){
-        return 0;
-    }
     public Demographic getDemo(){
         return demo;
     }
-    public Demographic getNeighborDemo(){
-        return demo;
-    }
-    public void compute(){
 
-    }
     public Set<PrecinctEdge> getAllEdges(){
         return precinctEdges;
     }
