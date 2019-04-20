@@ -1,5 +1,7 @@
 package cse308.map.model;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -12,6 +14,22 @@ public class Cluster {
     private int population;
     private boolean isAssigned;
     private String countyID;
+    private String color;
+
+
+    public void assignedColor(String[] color){
+        ArrayList<String> arrayList = new ArrayList<String>(Arrays.asList(color));
+        if(this.color==null){
+            arrayList.remove(this.color);
+            for(ClusterEdge edge : edges){
+                if(edge.getC1().countyID!=this.clusterID)//remove all neighbor cluster's color
+                    if(edge.getC1().color!=null)
+                    arrayList.remove(edge.getC1().color);
+            }
+            this.color = arrayList.get(0);
+        }
+
+    }
 
     public Cluster(Precinct p){
         clusterID = p.getId();
