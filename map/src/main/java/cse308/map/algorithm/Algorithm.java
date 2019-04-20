@@ -25,19 +25,24 @@ public class Algorithm {
         this.client = client;
     }
     private void init(){
-        String[] colors = {"red","purple","yellow","orange","blue"};
+        String[] colors = {"#FF0000","#00FF00","#0000FF","#FF00FF","#00FF00","blue","#FFFF00"};
         Iterable<Precinct> allPrecincts = precinctService.getAllPrecincts();
         String temp = "";
         int counter = 0;
         for(Precinct p : allPrecincts){
             precincts.put(p.getId(),p);
-            if(counter<1500)
-            {
-                temp += p.getId() + ":" + colors[(int)(Math.random()*colors.length)]+",";
+
+            if(counter<100) {
+                temp += p.getId() + ":" + colors[(int) (Math.random() * colors.length)] + ",";
                 counter++;
             }
-            else {
+            else{
                 client.sendEvent("messageevent", temp);
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 temp="";
                 counter=0;
             }
