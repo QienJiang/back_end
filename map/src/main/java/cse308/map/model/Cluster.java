@@ -33,8 +33,6 @@ public class Cluster {
         }
     }
 
-
-
     public void combineCluster(Cluster c){
 
     }
@@ -60,8 +58,8 @@ public class Cluster {
     public void combineCluster(Cluster c1,Cluster c2){
 
     }
-    public Demographic getDemo(Cluster c){
-        return c.demo;
+    public Demographic getDemo(){
+        return demo;
     }
     public int getPopulation(){
         return population;
