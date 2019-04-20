@@ -48,10 +48,20 @@ public class Algorithm {
         }
 
         for(Precinct p :precincts.values()){
+            Demographic demo1=new Demographic();
+            demo1.setNATIVAAMERICAN(p.getNativeAmericanPop());
+            demo1.setMajorMinor(MajorMinor.NATIVEAMERICAN);
+            p.setDemo(demo1);
             String[] neighbors =  p.getNeighbors().split(",");
+
             for(String name: neighbors){
                 Precinct neighbor = precincts.get(name);
                 if(!p.isNeighbor(neighbor)) {
+                    Demographic demo2=new Demographic();
+                    demo2.setNATIVAAMERICAN(neighbor.getNativeAmericanPop());
+                    demo2.setMajorMinor(MajorMinor.NATIVEAMERICAN);
+                    neighbor.setDemo(demo2);
+
                     PrecinctEdge precinctEdge = new PrecinctEdge(p, neighbor);
                     precinctEdge.computJoin();
                     p.addEdge(precinctEdge);
@@ -64,6 +74,7 @@ public class Algorithm {
                     c2.setCountyID(neighbor.getCountyfp10());
                     ClusterEdge clusterEdge = new ClusterEdge(c1,c2);
                     clusterEdge.setJoinability(precinctEdge.getJoinability());
+                    
                     c1.addEdge(clusterEdge);
                     c2.addEdge(clusterEdge);
                     //clusterEdge.computJoin();//compute joinability of the two precincts

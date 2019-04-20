@@ -15,6 +15,7 @@ public class Precinct {
     private double pop100;//population
     private String countyfp10;//countyID
     private String neighbors;
+    private double NativeAmericanPop;
     @Transient private String parentCluster;
     @Transient private Set<PrecinctEdge> precinctEdges = new HashSet<>();
     @Transient private Demographic demo;
@@ -36,7 +37,13 @@ public class Precinct {
         this.geoid10 = geoid10;
     }
 
+    public void setNativeAmericanPop(Double nativeAmericanPop) {
+        NativeAmericanPop = nativeAmericanPop;
+    }
 
+    public Double getNativeAmericanPop() {
+        return NativeAmericanPop;
+    }
 
     public String getCountyfp10() {
         return countyfp10;
@@ -102,6 +109,9 @@ public class Precinct {
         if(precinctEdges.contains(e)){
             precinctEdges.remove(e);
         }
+    }
+    public void setDemo(double nativeAmericanPop){
+        demo.setNATIVAAMERICAN((int)nativeAmericanPop);
     }
     public void setDemo(Demographic demo){
         this.demo = demo;

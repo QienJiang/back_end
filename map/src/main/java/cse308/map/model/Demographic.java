@@ -10,6 +10,15 @@ public class Demographic {
     private int ASIAN_PACIFIC;
     private int HISPANIC;
     private int LATINO;
+    private int NATIVAAMERICAN;
+
+    public int getNATIVAAMERICAN() {
+        return NATIVAAMERICAN;
+    }
+
+    public void setNATIVAAMERICAN(double NATIVAAMERICAN) {
+        this.NATIVAAMERICAN = (int)NATIVAAMERICAN;
+    }
 
     public Party getPoliticalParty() {
         return politicalParty;
