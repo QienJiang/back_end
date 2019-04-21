@@ -114,8 +114,24 @@ public class Cluster {
             edges.remove(e);
         }
     }
+    public void removeDuplicateEdge(Cluster c1){
+        Set<ClusterEdge> remove=new HashSet<>();
+        for(ClusterEdge e1: c1.getAllEdges()){
+            for(ClusterEdge e2 : edges){
+                Cluster c4 = e2.getNeighborCluster(this);
+                if(c4!=null) {
+                    if (e1.getNeighborCluster(c1) == c4) {
+                        System.out.println("c4: " + c4.getClusterID());
+                        c4.removeEdge(e2);
+                       remove.add(e2);
+                    }
+                }
+            }
+        }
+        edges.removeAll(remove);
+    }
     public void combineCluster(Cluster c){
-        if(countyID != c.getCountyID()){
+        if(!countyID.equals(c.getCountyID())){
             if(population<c.getPopulation()){
                 countyID = c.getCountyID();
             }

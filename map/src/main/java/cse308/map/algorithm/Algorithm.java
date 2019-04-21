@@ -4,6 +4,7 @@ import com.corundumstudio.socketio.SocketIOClient;
 import cse308.map.model.*;
 import cse308.map.server.PrecinctService;
 
+import javax.validation.constraints.Null;
 import java.util.*;
 
 public class Algorithm {
@@ -31,12 +32,13 @@ public class Algorithm {
         for(int i =0; i < numOfRun;i++){
             states.put(i,new State(i,stateName));
         }
+        this.s=new State();
         this.desireNum=desireDistrict;
         this.precinctService = precinctService;
     }
 
     private void init(){
-        System.out.print("in");
+
         String[] colors = {"#FF0000","#00FF00","#0000FF","#FF00FF","#00FF00","blue","#FFFF00"};
         Iterable<Precinct> allPrecincts = precinctService.getAllPrecincts();
         String temp = "";
@@ -68,6 +70,7 @@ public class Algorithm {
             s.setPopulation((int) (s.getPopulation()+p.getPop100()));
             Demographic demo1=new Demographic();
             demo1.setNATIVAAMERICAN(p.getNativeamericanpop());
+            demo1.setPopulation((int) p.getPop100());
             demo1.setMajorMinor(MajorMinor.NATIVEAMERICAN);
             p.setDemo(demo1);
             String[] neighbors =  p.getNeighbors().split(",");
@@ -77,6 +80,7 @@ public class Algorithm {
                 if(!p.isNeighbor(neighbor)) {
                     Demographic demo2=new Demographic();
                     demo2.setNATIVAAMERICAN(neighbor.getNativeamericanpop());
+                    demo2.setPopulation((int) neighbor.getPop100());
                     demo2.setMajorMinor(MajorMinor.NATIVEAMERICAN);
                     neighbor.setDemo(demo2);
 
@@ -88,8 +92,10 @@ public class Algorithm {
 
                     Cluster c1 = clusters.get(p.getId());
                     c1.setCountyID(p.getCountyfp10());
+                    c1.setDemo(p.getDemo());
                     Cluster c2 = clusters.get(neighbor.getId());
                     c2.setCountyID(neighbor.getCountyfp10());
+                    c2.setDemo(neighbor.getDemo());
                     ClusterEdge clusterEdge = new ClusterEdge(c1,c2);
                     clusterEdge.setJoinability(precinctEdge.getJoinability());
                     
@@ -105,55 +111,84 @@ public class Algorithm {
 
     }
     private void phaseone(){
+        System.out.println("phaseone");
         int v=0;
-        State s=new State();
+
         while(clusters.size()>desireNum) {
             List<String> keysAsArray = new ArrayList<String>(clusters.keySet());
             Random r = new Random();
             Cluster c1=clusters.get(keysAsArray.get(r.nextInt(keysAsArray.size())));
+            System.out.println("1: "+c1.getClusterID());
             while(s.getPopulation()/clusters.size()> c1.getPopulation()) {
                 double maxjoin=0;
                 ClusterEdge desireClusterEdge=null;
                 for(ClusterEdge e:c1.getAllEdges()){
                     Cluster c2=e.getNeighborCluster(c1);
+                    System.out.println("2: "+c2.getClusterID()+", "+e.getJoinability());
                     if(maxjoin<e.getJoinability()){
                         maxjoin=e.getJoinability();
                         desireClusterEdge=e;
                     }
-
                 }
-                combine(desireClusterEdge,c1);
+                if(desireClusterEdge!=null){
+                    System.out.println("3: "+desireClusterEdge.getNeighborCluster(c1));
+                combine(desireClusterEdge,c1);}
             }
-
+        }
+        for(Cluster c:clusters.values()){
+            System.out.println(c.getClusterID());
         }
     }
 
-    public void combine(ClusterEdge e,Cluster c1){
+    private void combine(ClusterEdge e, Cluster c1){
+        System.out.println("combine");
         Cluster c2 = e.getNeighborCluster(c1);
+        System.out.println(c2.getClusterID());
         c2.removeEdge(e);
         c1.removeEdge(e);
-        c1.combineCluster(c2);
+//        c1.combineCluster(c2);
+//        c2.removeDuplicateEdge(c1);//try fix ConcurrentModificationException
+
+        //remove c4 and change c5
         for(ClusterEdge e1: c1.getAllEdges()){
             for(ClusterEdge e2 : c2.getAllEdges()){
-                Cluster c3 = e2.getNeighborCluster(c2);
-                if(e1.getNeighborCluster(c1)==c3){
-                    c3.removeEdge(e2);
-                    c2.removeEdge(e2);
+                Cluster c4 = e2.getNeighborCluster(c2);
+                if(c4!=null) {
+                    System.out.println("c4: " + c4.getClusterID());
+                    if (e1.getNeighborCluster(c1) == c4) {
+                        c4.removeEdge(e2);
+                        c2.removeEdge(e2);
+                    } else {
+                        //change c2 to be c1 from c5
+                        e2.changeNeighbor(c4, c1);
+                        //add c5 to c1
+                        e1.changeNeighbor(c1, c4);
+                    }
                 }
             }
-            //cut c5
-            //add c5 to c1
-
         }
-        //for loop
-        //compute all c1 edges
+        //add edges from c2 to c1
+        for(ClusterEdge e2 : c2.getAllEdges()){
+            c1.addEdge(e2);
+        }
+        //combine demo data
+        c1.combineCluster(c2);
+        clusters.remove(c2.getClusterID());
+        //re-compute c1 join
+        for(ClusterEdge e1 : c1.getAllEdges()){
+            e1.computJoin();
+        }
 
     }
 
     public void run(){
-
-
             init();
         phaseone();
+
+//        Set<ClusterEdge> e=clusters.get("42083360").getAllEdges();
+//        for(ClusterEdge pe:e){
+//            System.out.println(pe.getC1().getClusterID()+", "+pe.getC1().getDemo().getNATIVAAMERICAN()+" c2: "+pe.getC2().getClusterID()+", "+pe.getC2().getDemo().getNATIVAAMERICAN()+" join: "+pe.getJoinability());
+//        }
+//
     }
 }
