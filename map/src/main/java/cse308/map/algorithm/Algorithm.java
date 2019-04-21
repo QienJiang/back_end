@@ -110,23 +110,44 @@ public class Algorithm {
         while(clusters.size()>desireNum) {
             List<String> keysAsArray = new ArrayList<String>(clusters.keySet());
             Random r = new Random();
-            Cluster c=clusters.get(keysAsArray.get(r.nextInt(keysAsArray.size())));
-            while(s.getPopulation()/clusters.size()> c.getPopulation()) {
-                String[] neighbors =  c.getNeighbors().split(",");
-
-                for(String name: neighbors){
-                    Precinct neighbor = precincts.get(name);
-
-
+            Cluster c1=clusters.get(keysAsArray.get(r.nextInt(keysAsArray.size())));
+            while(s.getPopulation()/clusters.size()> c1.getPopulation()) {
+                double maxjoin=0;
+                ClusterEdge desireClusterEdge=null;
+                for(ClusterEdge e:c1.getAllEdges()){
+                    Cluster c2=e.getNeighborCluster(c1);
+                    if(maxjoin<e.getJoinability()){
+                        maxjoin=e.getJoinability();
+                        desireClusterEdge=e;
+                    }
 
                 }
-//                Set<ClusterEdge> edges = c.getAllEdges();
-//
-//                for (ClusterEdge e : edges) {
-//                    System.out.println(e);
-//                }
+                combine(desireClusterEdge,c1);
             }
+
         }
+    }
+
+    public void combine(ClusterEdge e,Cluster c1){
+        Cluster c2 = e.getNeighborCluster(c1);
+        c2.removeEdge(e);
+        c1.removeEdge(e);
+        c1.combineCluster(c2);
+        for(ClusterEdge e1: c1.getAllEdges()){
+            for(ClusterEdge e2 : c2.getAllEdges()){
+                Cluster c3 = e2.getNeighborCluster(c2);
+                if(e1.getNeighborCluster(c1)==c3){
+                    c3.removeEdge(e2);
+                    c2.removeEdge(e2);
+                }
+            }
+            //cut c5
+            //add c5 to c1
+
+        }
+        //for loop
+        //compute all c1 edges
+
     }
 
     public void run(){

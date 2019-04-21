@@ -19,6 +19,16 @@ public class Demographic {
     public void setNATIVAAMERICAN(double NATIVAAMERICAN) {
         this.NATIVAAMERICAN = (int)NATIVAAMERICAN;
     }
+    public void combinDemo(Demographic demo){
+        population+= demo.getPopulation();
+        rvote += demo.getRvote();
+        dvote += demo.getDvote();
+        AFRICAN_AMERICAN += demo.getAFRICAN_AMERICAN();
+        ASIAN_PACIFIC += demo.getASIAN_PACIFIC();
+        HISPANIC += demo.getHISPANIC();
+        NATIVAAMERICAN += demo.NATIVAAMERICAN;
+
+    }
 
     public Party getPoliticalParty() {
         return politicalParty;

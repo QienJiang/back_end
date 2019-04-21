@@ -31,6 +31,55 @@ public class Cluster {
 
     }
 
+//    public Set<Cluster> getNeighbors(Cluster c){
+//        Set<Cluster> neighbors=new HashSet<>();
+//        for(ClusterEdge e:edges){
+//            neighbors.add(e.getNeighborCluster(c));
+//        }
+//        return neighbors;
+
+    public void setEdges(Set<ClusterEdge> edges) {
+        this.edges = edges;
+    }
+
+    public Set<Precinct> getPrecincts() {
+        return precincts;
+    }
+
+    public void setPrecincts(Set<Precinct> precincts) {
+        this.precincts = precincts;
+    }
+
+    public void setDemo(Demographic demo) {
+        this.demo = demo;
+    }
+
+    public void setPopulation(int population) {
+        this.population = population;
+    }
+
+    public boolean isAssigned() {
+        return isAssigned;
+    }
+
+    public void setAssigned(boolean assigned) {
+        isAssigned = assigned;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+//    }
+
+    public Set<ClusterEdge> getEdges() {
+        return edges;
+    }
+
     public Cluster(Precinct p){
         clusterID = p.getId();
         p.setParentCluster(clusterID);
@@ -60,8 +109,20 @@ public class Cluster {
         }
     }
 
+    public void removeEdge(ClusterEdge e){
+        if(edges.contains(e)){
+            edges.remove(e);
+        }
+    }
     public void combineCluster(Cluster c){
-
+        if(countyID != c.getCountyID()){
+            if(population<c.getPopulation()){
+                countyID = c.getCountyID();
+            }
+        }
+        population += c.getPopulation();
+        demo.combinDemo(c.getDemo());
+        precincts.addAll(c.getPrecincts());
     }
 
     public void setClusterID(String clusterID) {

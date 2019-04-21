@@ -47,8 +47,11 @@ public class ClusterEdge {
     }
 
     public Cluster getNeighborCluster(Cluster p){
-        if(c1.equals(p)){
+        if(c1==p){
             return c2;
+        }
+        else if (c2==p){
+            return c1;
         }
         return null;
     }
