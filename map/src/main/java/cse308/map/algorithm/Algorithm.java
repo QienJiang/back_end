@@ -158,17 +158,18 @@ public class Algorithm {
                     if (e1.getNeighborCluster(c1) == c4) {
                         c4.removeEdge(e2);
                         c2.removeEdge(e2);
-                    } else {
-                        //change c2 to be c1 from c5
-                        e2.changeNeighbor(c4, c1);
-                        //add c5 to c1
-                        e1.changeNeighbor(c1, c4);
+//                    } else {
+//                        //change c2 to be c1 from c5
+//                        e2.changeNeighbor(c4, c1);
+//                        //add c5 to c1
+//                        e1.changeNeighbor(c1, c4);
                     }
                 }
             }
         }
-        //add edges from c2 to c1
+        //add edges(c5) from c2 to c1
         for(ClusterEdge e2 : c2.getAllEdges()){
+            e2.changeNeighbor(e2.getNeighborCluster(c2),c1);
             c1.addEdge(e2);
         }
         //combine demo data
