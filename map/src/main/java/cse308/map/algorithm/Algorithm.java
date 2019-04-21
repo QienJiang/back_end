@@ -95,6 +95,8 @@ public class Algorithm {
                     
                     c1.addEdge(clusterEdge);
                     c2.addEdge(clusterEdge);
+                    c1.assignedColor(colors);
+                    c2.assignedColor(colors);
                     //clusterEdge.computJoin();//compute joinability of the two precincts
 //                    System.out.println(clusterEdge);
                 }
