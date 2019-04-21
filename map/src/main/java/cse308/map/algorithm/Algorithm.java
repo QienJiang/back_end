@@ -16,7 +16,7 @@ public class Algorithm {
     private Map<String, Cluster> clusters = new HashMap<>();
     private  State s;
     private int desireNum;
-    String[] colors = {"#FF0000","#00FF00","#0000FF","#FF00FF","#00F000","blue","#FFFF00","#6B5B95","#FF6F61","#9B1B30"};
+    String[] colors = {"#8B4513","#8B0000","#006400","#00008B","#FF00FF","#2F4F4F","#FF8C00","#6B5B95","#FFA07A","#00FF7F"};
 
 
     private SocketIOClient client;
@@ -162,7 +162,6 @@ public class Algorithm {
 
         String temp = "";
         int counter = 0;
-
         for(Cluster c : clusters.values()){
             c.setColor(colors[counter]);
             System.out.println("color :"+colors[counter]);
