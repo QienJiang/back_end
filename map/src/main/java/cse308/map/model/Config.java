@@ -4,6 +4,10 @@ public class Config {
     private int desireNum;
     private String stateId;
 
+    public Config(int desireNum, String stateId) {
+        this.desireNum = desireNum;
+        this.stateId = stateId;
+    }
 
     public int getDesireNum() {
         return desireNum;

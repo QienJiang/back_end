@@ -16,6 +16,7 @@ public class Algorithm {
     private Map<String, Cluster> clusters = new HashMap<>();
     private  State s;
     private int desireNum;
+    String[] colors = {"#FF0000","#00FF00","#0000FF","#FF00FF","#00F000","blue","#FFFF00","#6B5B95","#FF6F61","#9B1B30"};
 
 
     private SocketIOClient client;
@@ -24,6 +25,7 @@ public class Algorithm {
         for(int i =0; i < numOfRun;i++){
             states.put(i,new State(i,stateName));
         }
+        this.s=new State();
         this.precinctService = precinctService;
         this.client = client;
     }
@@ -39,27 +41,11 @@ public class Algorithm {
 
     private void init(){
 
-        String[] colors = {"#FF0000","#00FF00","#0000FF","#FF00FF","#00FF00","blue","#FFFF00"};
+
         Iterable<Precinct> allPrecincts = precinctService.getAllPrecincts();
-        String temp = "";
-        int counter = 0;
+
         for(Precinct p : allPrecincts){
             precincts.put(p.getId(),p);
-//
-//            if(counter<100) {
-//                temp += p.getId() + ":" + colors[(int) (Math.random() * colors.length)] + ",";
-//                counter++;
-//            }
-//            else{
-//                client.sendEvent("messageevent", temp);
-//                try {
-//                    Thread.sleep(50);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//                temp="";
-//                counter=0;
-//            }
         }
 
         for(Precinct p : precincts.values()){
@@ -162,7 +148,7 @@ public class Algorithm {
 
     }
 
-    public void run(){
+    public void run(SocketIOClient client){
             init();
         phaseone();
 
@@ -172,6 +158,31 @@ public class Algorithm {
             i+=c.getPrecincts().size();
         }
         System.out.println("total precinct size: "+i);
+
+
+        String temp = "";
+        int counter = 0;
+
+        for(Cluster c : clusters.values()){
+            c.setColor(colors[counter]);
+            System.out.println("color :"+colors[counter]);
+            counter++;
+
+            for(Precinct ps: c.getPrecincts()){
+                temp += ps.getId() + ":" + c.getColor() + ",";
+
+
+            }
+            client.sendEvent("updateColor", temp);
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            temp="";
+        }
+
+
 //
     }
 }

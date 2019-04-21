@@ -1,5 +1,6 @@
 package cse308.map.controller;
 
+import com.corundumstudio.socketio.SocketIOClient;
 import cse308.map.algorithm.Algorithm;
 import cse308.map.model.AlgoType;
 import cse308.map.model.Config;
@@ -22,7 +23,7 @@ public class AlgorithmController {
     private PrecinctService precinctService;
 
     @PostMapping(value = "/run")//select the state with the specify id from the database
-    public ResponseEntity<?> runAlgorithm(@RequestBody Config stateConfig){
+    public ResponseEntity<?> runAlgorithm(@RequestBody Config stateConfig, SocketIOClient client){
         System.out.println("xxxxx algorithm");
         System.out.println("state id: "+stateConfig.getStateId());
         Iterable<State> opt = stateService.findById(stateConfig.getStateId());
@@ -32,7 +33,7 @@ public class AlgorithmController {
         //hardcode
         stateConfig.setDesireNum(10);
         Algorithm algorithm = new Algorithm("pa",stateConfig.getDesireNum(),1,precinctService);
-        algorithm.run();
+        algorithm.run(client);
 
 
         return new ResponseEntity<State>(opt.iterator().next(), HttpStatus.OK);
