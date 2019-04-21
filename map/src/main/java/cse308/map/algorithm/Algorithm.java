@@ -118,10 +118,11 @@ public class Algorithm {
             List<String> keysAsArray = new ArrayList<String>(clusters.keySet());
             Random r = new Random();
             Cluster c1=clusters.get(keysAsArray.get(r.nextInt(keysAsArray.size())));
-            System.out.println("1: "+c1.getClusterID());
-            while(s.getPopulation()/clusters.size()> c1.getPopulation()) {
+            System.out.println("1: "+c1.getClusterID()+"  "+clusters.size());
+            while(s.getPopulation()/clusters.size()> c1.getDemo().getPopulation()) {
                 double maxjoin=0;
                 ClusterEdge desireClusterEdge=null;
+                System.out.println(" s.getPopulation()/clusters.size()> c1.getPopulation(): "+s.getPopulation()/clusters.size()+", "+c1.getDemo().getPopulation());
                 for(ClusterEdge e:c1.getAllEdges()){
                     Cluster c2=e.getNeighborCluster(c1);
                     System.out.println("2: "+c2.getClusterID()+", "+e.getJoinability());
@@ -135,9 +136,12 @@ public class Algorithm {
                 combine(desireClusterEdge,c1);}
             }
         }
+        int i=0;
         for(Cluster c:clusters.values()){
-            System.out.println(c.getClusterID());
+            System.out.println(c.getClusterID()+" : precinct size "+c.getPrecincts().size()+", population "+c.getDemo().getPopulation());
+            i+=c.getPrecincts().size();
         }
+        System.out.println("total precinct size: "+i);
     }
 
     private void combine(ClusterEdge e, Cluster c1){
@@ -146,27 +150,8 @@ public class Algorithm {
         System.out.println(c2.getClusterID());
         c2.removeEdge(e);
         c1.removeEdge(e);
-//        c1.combineCluster(c2);
-//        c2.removeDuplicateEdge(c1);//try fix ConcurrentModificationException
+        c2.removeDuplicateEdge(c1);//remove c4
 
-        //remove c4 and change c5
-        for(ClusterEdge e1: c1.getAllEdges()){
-            for(ClusterEdge e2 : c2.getAllEdges()){
-                Cluster c4 = e2.getNeighborCluster(c2);
-                if(c4!=null) {
-                    System.out.println("c4: " + c4.getClusterID());
-                    if (e1.getNeighborCluster(c1) == c4) {
-                        c4.removeEdge(e2);
-                        c2.removeEdge(e2);
-//                    } else {
-//                        //change c2 to be c1 from c5
-//                        e2.changeNeighbor(c4, c1);
-//                        //add c5 to c1
-//                        e1.changeNeighbor(c1, c4);
-                    }
-                }
-            }
-        }
         //add edges(c5) from c2 to c1
         for(ClusterEdge e2 : c2.getAllEdges()){
             e2.changeNeighbor(e2.getNeighborCluster(c2),c1);

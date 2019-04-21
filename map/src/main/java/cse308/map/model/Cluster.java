@@ -121,7 +121,7 @@ public class Cluster {
                 Cluster c4 = e2.getNeighborCluster(this);
                 if(c4!=null) {
                     if (e1.getNeighborCluster(c1) == c4) {
-                        System.out.println("c4: " + c4.getClusterID());
+//                        System.out.println("c4: " + c4.getClusterID());
                         c4.removeEdge(e2);
                        remove.add(e2);
                     }
