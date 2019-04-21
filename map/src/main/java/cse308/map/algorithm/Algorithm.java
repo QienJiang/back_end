@@ -4,9 +4,7 @@ import com.corundumstudio.socketio.SocketIOClient;
 import cse308.map.model.*;
 import cse308.map.server.PrecinctService;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class Algorithm {
 
@@ -15,6 +13,9 @@ public class Algorithm {
     private Map<Integer,State> states = new HashMap<>();
     private Map<String,Precinct> precincts = new HashMap<>();
     private Map<String, Cluster> clusters = new HashMap<>();
+    private  State s;
+    private int desireNum;
+
 
     private SocketIOClient client;
     //pass the precinctService to the algorithm object because we can't autowired precinctService for each object it is not working.
@@ -30,6 +31,7 @@ public class Algorithm {
         for(int i =0; i < numOfRun;i++){
             states.put(i,new State(i,stateName));
         }
+        this.desireNum=desireDistrict;
         this.precinctService = precinctService;
     }
 
@@ -61,8 +63,9 @@ public class Algorithm {
         for(Precinct p : precincts.values()){
             clusters.put(p.getId(),new Cluster(p));
         }
-
+        s.setPopulation(0);
         for(Precinct p :precincts.values()){
+            s.setPopulation((int) (s.getPopulation()+p.getPop100()));
             Demographic demo1=new Demographic();
             demo1.setNATIVAAMERICAN(p.getNativeamericanpop());
             demo1.setMajorMinor(MajorMinor.NATIVEAMERICAN);
@@ -99,20 +102,35 @@ public class Algorithm {
         }
 
     }
-    private void combine(){
-//        for(Cluster c : clusters.values()){
-//            System.out.println(c.getClusterID());
-//        }
-        Cluster c=clusters.get("42083360");
-        Set<ClusterEdge> edges=c.getAllEdges();
+    private void phaseone(){
+        int v=0;
+        State s=new State();
+        while(clusters.size()>desireNum) {
+            List<String> keysAsArray = new ArrayList<String>(clusters.keySet());
+            Random r = new Random();
+            Cluster c=clusters.get(keysAsArray.get(r.nextInt(keysAsArray.size())));
+            while(s.getPopulation()/clusters.size()> c.getPopulation()) {
+                String[] neighbors =  c.getNeighbors().split(",");
 
-        for(ClusterEdge e:edges){
-            System.out.println(e);
+                for(String name: neighbors){
+                    Precinct neighbor = precincts.get(name);
+
+
+
+                }
+//                Set<ClusterEdge> edges = c.getAllEdges();
+//
+//                for (ClusterEdge e : edges) {
+//                    System.out.println(e);
+//                }
+            }
         }
     }
 
     public void run(){
+
+
             init();
-            combine();
+        phaseone();
     }
 }

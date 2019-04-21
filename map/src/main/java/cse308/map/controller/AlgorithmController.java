@@ -29,6 +29,8 @@ public class AlgorithmController {
 
         System.out.println();
 
+        //hardcode
+        stateConfig.setDesireNum(10);
         Algorithm algorithm = new Algorithm("pa",stateConfig.getDesireNum(),1,precinctService);
         algorithm.run();
 

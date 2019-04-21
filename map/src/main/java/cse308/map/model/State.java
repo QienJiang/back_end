@@ -12,7 +12,7 @@ public class State {
     @Id
     private String id;
     private String name;
-    private String population;
+    private int population;
     private String rvote;
     private String dvote;
 
@@ -59,11 +59,11 @@ public class State {
         this.name = name;
     }
 
-    public String getPopulation() {
+    public int getPopulation() {
         return population;
     }
 
-    public void setPopulation(String population) {
+    public void setPopulation(int population) {
         this.population = population;
     }
 }
