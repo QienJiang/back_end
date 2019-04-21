@@ -136,12 +136,7 @@ public class Algorithm {
                 combine(desireClusterEdge,c1);}
             }
         }
-        int i=0;
-        for(Cluster c:clusters.values()){
-            System.out.println(c.getClusterID()+" : precinct size "+c.getPrecincts().size()+", population "+c.getDemo().getPopulation());
-            i+=c.getPrecincts().size();
-        }
-        System.out.println("total precinct size: "+i);
+
     }
 
     private void combine(ClusterEdge e, Cluster c1){
@@ -171,10 +166,12 @@ public class Algorithm {
             init();
         phaseone();
 
-//        Set<ClusterEdge> e=clusters.get("42083360").getAllEdges();
-//        for(ClusterEdge pe:e){
-//            System.out.println(pe.getC1().getClusterID()+", "+pe.getC1().getDemo().getNATIVAAMERICAN()+" c2: "+pe.getC2().getClusterID()+", "+pe.getC2().getDemo().getNATIVAAMERICAN()+" join: "+pe.getJoinability());
-//        }
+       int i=0;
+        for(Cluster c:clusters.values()){
+            System.out.println(c.getClusterID()+" : precinct size "+c.getPrecincts().size()+", population "+c.getDemo().getPopulation());
+            i+=c.getPrecincts().size();
+        }
+        System.out.println("total precinct size: "+i);
 //
     }
 }
