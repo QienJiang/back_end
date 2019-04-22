@@ -54,6 +54,10 @@ public class Algorithm {
             p.setDemo(demo1);
             String[] neighbors =  p.getNeighbors().split(",");
 
+            Cluster c1 = clusters.get(p.getId());
+            c1.setCountyID(p.getCountyfp10());
+            c1.setDemo(p.getDemo());
+
             for(String name: neighbors){
                 Precinct neighbor = precincts.get(name);
                 if(!p.isNeighbor(neighbor)) {
@@ -69,9 +73,7 @@ public class Algorithm {
                     neighbor.addEdge(precinctEdge);
                     //precinctEdge.computJoin();//compute joinability of the two precincts
 
-                    Cluster c1 = clusters.get(p.getId());
-                    c1.setCountyID(p.getCountyfp10());
-                    c1.setDemo(p.getDemo());
+
                     Cluster c2 = clusters.get(neighbor.getId());
                     c2.setCountyID(neighbor.getCountyfp10());
                     c2.setDemo(neighbor.getDemo());
