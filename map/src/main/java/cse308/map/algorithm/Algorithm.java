@@ -16,6 +16,7 @@ public class Algorithm {
     private Map<String, Cluster> clusters = new HashMap<>();
     private  State s;
     private int desireNum;
+    StringBuilder sb = new StringBuilder();
     String[] colors = {"#8B4513","#8B0000","#006400","#00008B","#FF00FF","#2F4F4F","#FF8C00","#6B5B95","#FFA07A","#00FF7F"};
 
 
@@ -122,6 +123,7 @@ public class Algorithm {
         System.out.println("combine");
         Cluster c2 = e.getNeighborCluster(c1);
         System.out.println(c2.getClusterID());
+        sb.append(c2 + " merge into " + c1).append("'\n'");
         c2.removeEdge(e);
         c1.removeEdge(e);
         c2.removeDuplicateEdge(c1);//remove c4
@@ -146,6 +148,7 @@ public class Algorithm {
             init();
         phaseone();
 
+        sendMessage(sb.toString());
        int i=0;
         for(Cluster c:clusters.values()){
             System.out.println(c.getClusterID()+" : precinct size "+c.getPrecincts().size()+", population "+c.getDemo().getPopulation());
