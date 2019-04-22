@@ -12,11 +12,20 @@ public class Demographic {
     private int LATINO;
     private int NATIVAAMERICAN;
 
+    public Demographic(MajorMinor mm,int pop,int mmPop){
+        this.majorMinor=mm;
+        this.population=pop;
+        switch (mm){
+            case NATIVEAMERICAN:
+                this.NATIVAAMERICAN=mmPop;
+        }
+
+    }
     public int getNATIVAAMERICAN() {
         return NATIVAAMERICAN;
     }
 
-    public void setNATIVAAMERICAN(double NATIVAAMERICAN) {
+    public void setNativeAmericanPop(double NATIVAAMERICAN) {
         this.NATIVAAMERICAN = (int)NATIVAAMERICAN;
     }
     public void combinDemo(Demographic demo){

@@ -111,7 +111,7 @@ public class Precinct {
         }
     }
     public void setDemo(double nativeAmericanPop){
-        demo.setNATIVAAMERICAN((int)nativeAmericanPop);
+        demo.setNativeAmericanPop((int)nativeAmericanPop);
     }
     public void setDemo(Demographic demo){
         this.demo = demo;

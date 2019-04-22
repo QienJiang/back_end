@@ -44,7 +44,7 @@ public class UserController {
             return new ResponseEntity<Map<String,String>>(errorMap, HttpStatus.BAD_REQUEST);
         }
 
-        Boolean status = userService.validUser(user);//check if the user exist
+        Boolean status = userService.isValidUser(user);//check if the user exist
 
         if(status){
             Optional<User> opt = userService.findById(user.getEmail());

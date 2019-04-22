@@ -33,7 +33,7 @@ public class UserService {
         userRepository.deleteById(email);
     }
 
-    public Boolean validUser(User user) {
+    public Boolean isValidUser(User user) {
         Optional<User> opt = userRepository.findById(user.getEmail());
         if (!opt.isPresent()) {//check if the account exist
             return false;
