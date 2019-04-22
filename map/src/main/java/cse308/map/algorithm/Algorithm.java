@@ -101,7 +101,7 @@ public class Algorithm {
             Random r = new Random();
             Cluster c1=clusters.get(keysAsArray.get(r.nextInt(keysAsArray.size())));
             System.out.println("1: "+c1.getClusterID()+"  "+clusters.size());
-            while(s.getPopulation()/clusters.size()> c1.getDemo().getPopulation()) {
+            while(s.getPopulation()/clusters.size()> c1.getDemo().getPopulation() && clusters.size()>desireNum) {
                 double maxjoin=0;
                 ClusterEdge desireClusterEdge=null;
                 System.out.println(" s.getPopulation()/clusters.size()> c1.getPopulation(): "+s.getPopulation()/clusters.size()+", "+c1.getDemo().getPopulation());
