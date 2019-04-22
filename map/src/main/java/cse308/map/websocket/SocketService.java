@@ -28,9 +28,6 @@ public class SocketService {
     private static Random r = new Random();
 
     @Autowired
-    AlgorithmController algorithmController;
-
-    @Autowired
     private SocketIOServer server;
     @Autowired
     private PrecinctService precinctService;
@@ -41,7 +38,7 @@ public class SocketService {
     public void onConnect(SocketIOClient client) {
         String uuid = client.getSessionId().toString();
         clientsMap.put(uuid, client);
-        LOGGER.debug("IP: " + client.getRemoteAddress().toString() + " UUID: " + uuid + " 设备建立连接");
+        LOGGER.debug("IP: " + client.getRemoteAddress().toString() + " UUID: " + uuid + " connection success");
     }
 
 
@@ -49,15 +46,14 @@ public class SocketService {
     public void onDisconnect(SocketIOClient client) {
         String uuid = client.getSessionId().toString();
         clientsMap.remove(uuid);
-        LOGGER.debug("IP: " + client.getRemoteAddress().toString() + " UUID: " + uuid + " 设备断开连接");
+        LOGGER.debug("IP: " + client.getRemoteAddress().toString() + " UUID: " + uuid + " disconnect from service");
     }
 
     @OnEvent(value = "runAlgorithm")
     public void onEvent(SocketIOClient client, AckRequest request, MessageInfo data) {
-        System.out.println("发来消息：" + data);
-//        Algorithm algorithm = new Algorithm("pa",10,1,precinctService,client);
-//        algorithm.run();
-        algorithmController.runAlgorithm(new Config(10,"42"),client);
+        Algorithm algorithm = new Algorithm("pa",10,1,precinctService,client);
+        algorithm.run();
+       // algorithmController.runAlgorithm(new Config(10,"42"),client);
 
         System.out.println("finished");
         //服务器端向该客户端发送消息

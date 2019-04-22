@@ -21,37 +21,29 @@ public class Algorithm {
 
     private SocketIOClient client;
     //pass the precinctService to the algorithm object because we can't autowired precinctService for each object it is not working.
-    public Algorithm(String stateName, int desireDistrict, int numOfRun, PrecinctService precinctService, SocketIOClient client){
-        for(int i =0; i < numOfRun;i++){
-            states.put(i,new State(i,stateName));
-        }
-        this.s=new State();
-        this.precinctService = precinctService;
-        this.client = client;
-    }
-
-    public Algorithm(String stateName, int desireDistrict, int numOfRun, PrecinctService precinctService) {
+    public Algorithm(String stateName, int desireDistrict, int numOfRun, PrecinctService precinctService,SocketIOClient client) {
         for(int i =0; i < numOfRun;i++){
             states.put(i,new State(i,stateName));
         }
         this.s=new State();
         this.desireNum=desireDistrict;
         this.precinctService = precinctService;
+        this.client = client;
     }
 
     private void init(){
-
-
+        sendMessage("fetching precinct's data...");
         Iterable<Precinct> allPrecincts = precinctService.getAllPrecincts();
-
         for(Precinct p : allPrecincts){
             precincts.put(p.getId(),p);
         }
 
+        sendMessage("Construct Clusters...");
         for(Precinct p : precincts.values()){
             clusters.put(p.getId(),new Cluster(p));
         }
         s.setPopulation(0);
+        sendMessage("Creating Edge...");
         for(Precinct p :precincts.values()){
             s.setPopulation((int) (s.getPopulation()+p.getPop100()));
             Demographic demo1=new Demographic();
@@ -98,6 +90,7 @@ public class Algorithm {
     }
     private void phaseone(){
         System.out.println("phaseone");
+        sendMessage("Phase 1 Graph partition...");
         int v=0;
 
         while(clusters.size()>desireNum) {
@@ -148,7 +141,8 @@ public class Algorithm {
 
     }
 
-    public void run(SocketIOClient client){
+    public void run(){
+        sendMessage("Algorithm Start...");
             init();
         phaseone();
 
@@ -162,6 +156,7 @@ public class Algorithm {
 
         String temp = "";
         int counter = 0;
+        sendMessage("Assign Colors...");
         for(Cluster c : clusters.values()){
             c.setColor(colors[counter]);
             System.out.println("color :"+colors[counter]);
@@ -181,7 +176,11 @@ public class Algorithm {
             temp="";
         }
 
-
+        sendMessage("Algorithm finished!");
 //
+    }
+
+    public void sendMessage(String msg){
+        client.sendEvent("message", msg);
     }
 }

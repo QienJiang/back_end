@@ -32,8 +32,8 @@ public class AlgorithmController {
 
         //hardcode
         stateConfig.setDesireNum(10);
-        Algorithm algorithm = new Algorithm("pa",stateConfig.getDesireNum(),1,precinctService);
-        algorithm.run(client);
+        Algorithm algorithm = new Algorithm("pa",stateConfig.getDesireNum(),1,precinctService,client);
+        algorithm.run();
 
 
         return new ResponseEntity<State>(opt.iterator().next(), HttpStatus.OK);
