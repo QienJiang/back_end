@@ -149,14 +149,16 @@ public class Algorithm {
         sendMessage("Algorithm Start...");
             init();
         phaseone();
-
-        sendMessage(sb.toString());
-       int i=0;
+        sb.append("'\n'");
+       int pn=0;
+        int cn=1;
         for(Cluster c:clusters.values()){
             System.out.println(c.getClusterID()+" : precinct size "+c.getPrecincts().size()+", population "+c.getDemo().getPopulation());
-            i+=c.getPrecincts().size();
+            sb.append("No."+cn+": "+c.getClusterID()+" : precinct size "+c.getPrecincts().size()+", population "+c.getDemo().getPopulation()).append("'\n'");
+            pn+=c.getPrecincts().size();
+            cn++;
         }
-        System.out.println("total precinct size: "+i);
+        System.out.println("total precinct size: "+pn);
 
 
         String temp = "";
@@ -180,7 +182,7 @@ public class Algorithm {
             }
             temp="";
         }
-
+        sendMessage(sb.toString());
         sendMessage("Algorithm finished!");
 //
     }
