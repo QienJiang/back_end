@@ -4,7 +4,6 @@ import com.corundumstudio.socketio.SocketIOClient;
 import cse308.map.model.*;
 import cse308.map.server.PrecinctService;
 
-import javax.validation.constraints.Null;
 import java.util.*;
 
 public class Algorithm {
@@ -12,20 +11,17 @@ public class Algorithm {
 
     private PrecinctService precinctService;
     private Map<Integer,State> states = new HashMap<>();
-    private  State s;
-
-    private int desireNum;
+    private State s;
     StringBuilder sb = new StringBuilder();
     String[] colors = {"#8B4513","#8B0000","#006400","#00008B","#FF00FF","#2F4F4F","#FF8C00","#6B5B95","#FFA07A","#00FF7F"};
 
     private SocketIOClient client;
     //pass the precinctService to the algorithm object because we can't autowired precinctService for each object it is not working.
-    public Algorithm(String stateName, int desireDistrict, int numOfRun, PrecinctService precinctService,SocketIOClient client) {
-        for(int i =0; i < numOfRun;i++){
-            states.put(i,new State(i,stateName));
+    public Algorithm(String stateName, Configuration configuration, PrecinctService precinctService, SocketIOClient client) {
+        for(int i = 0; i < configuration.getNumOfRun(); i++){
+            states.put(i,new State(i,stateName, configuration));
         }
-        this.s=new State();
-        this.desireNum=desireDistrict;
+        this.s=new State(configuration);
         this.precinctService = precinctService;
         this.client = client;
     }
@@ -45,26 +41,26 @@ public class Algorithm {
     }
 
 
-    private void graphPatition(){
+    private void graphPartition(){
         System.out.println("phaseone");
         sendMessage("Phase 1 Graph partition...");
-        while(s.getClusters().size()>desireNum) {
+        while(s.getClusters().size()>s.getConfiguration().getTargetDistricteNumber()) {
             List<String> keysAsArray = new ArrayList<String>(s.getClusters().keySet());
-            Random r = new Random();
-            Cluster c1=s.getClusters().get(keysAsArray.get(r.nextInt(keysAsArray.size())));
-            System.out.println("1: "+c1.getClusterID()+"  "+s.getClusters().size());
-            while(s.getTargetPopulation()> c1.getDemo().getPopulation() && s.getClusters().size()>desireNum) {
+//            Random r = new Random();
+//            Cluster c1=s.getClusters().get(keysAsArray.get(r.nextInt(keysAsArray.size())));
+            Cluster c1=s.getSmallestCluster();
+            System.out.println("1: "+c1.getClusterID()+"  "+s.getClusters().size()+" "+s.getTargetPopulation()+" "+c1.getDemo().getPopulation()+" "+s.getConfiguration().getTargetDistricteNumber());
+            while(s.getTargetPopulation()> c1.getDemo().getPopulation() && s.getClusters().size()>s.getConfiguration().getTargetDistricteNumber()) {
                 ClusterEdge desireClusterEdge=c1.getBestClusterEdge();
                 if(desireClusterEdge!=null){
                     System.out.println("3: "+desireClusterEdge.getNeighborCluster(c1));
-                    combineByEdge(desireClusterEdge);}
+                    combineByEdge(desireClusterEdge,c1);}
             }
         }
     }
 
-    private void combineByEdge(ClusterEdge e){
+    private void combineByEdge(ClusterEdge e, Cluster c1){
         System.out.println("combine");
-        Cluster c1=e.getC1();
         Cluster c2 = e.getC2();
         System.out.println(c2.getClusterID());
         sb.append(c2 + " merge into " + c1).append("'\n'");
@@ -72,20 +68,22 @@ public class Algorithm {
         c1.removeEdge(e);
         c2.removeDuplicateEdge(c1);//remove c4
         for(ClusterEdge e2 : c2.getAllEdges()){ //add edges(c5) from c2 to c1
+            System.out.println("ss");
             e2.changeNeighbor(e2.getNeighborCluster(c2),c1);
             c1.addEdge(e2);
         }
         c1.combineCluster(c2);//combine demo data
         s.removeCluster(c2);
         for(ClusterEdge e1 : c1.getAllEdges()){//re-compute c1 join
+            System.out.println("xxx");
             e1.computJoin();
         }
     }
 
     public void run(){
         sendMessage("Algorithm Start...");
-            init();
-        graphPatition();
+        init();
+        graphPartition();
         sb.append("'\n'");
        int pn=0;
         int cn=1;
@@ -124,7 +122,7 @@ public class Algorithm {
 //
     }
 
-    public void sendMessage(String msg){
+    private void sendMessage(String msg){
         client.sendEvent("message", msg);
     }
 }

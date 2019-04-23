@@ -2,8 +2,6 @@ package cse308.map.model;
 
 
 import javax.persistence.*;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.validation.constraints.NotBlank;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,9 +17,10 @@ public class State {
     private String dvote;
     @Transient private Map<String,Precinct> precincts = new HashMap<>();
     @Transient private Map<String, Cluster> clusters = new HashMap<>();
+    @Transient private Configuration configuration;
 
-    public State(){
-
+    public State(Configuration configuration){
+        this.configuration = configuration;
     }
 
     public void addPrecinct(Precinct p){
@@ -36,9 +35,22 @@ public class State {
         clusters.remove(c.getClusterID());
     }
 
-    public State(Integer id, String name) {
+    public State(Integer id, String name,Configuration configuration) {
         this.id = id.toString();
         this.name = name;
+        this.configuration = configuration;
+    }
+
+    public Cluster getSmallestCluster(){
+        int i=Integer.MAX_VALUE;
+        Cluster smallestCluster=null;
+        for(Cluster c:clusters.values()){
+            if(c.getDemo().getPopulation()<i && c.getDemo().getPopulation()>0){
+                smallestCluster=c;
+            i=c.getDemo().getPopulation();}
+        }
+        return smallestCluster;
+
     }
 
     public int getTargetPopulation(){
@@ -133,5 +145,13 @@ public class State {
 
     public void setClusters(Map<String, Cluster> clusters) {
         this.clusters = clusters;
+    }
+
+    public Configuration getConfiguration() {
+        return configuration;
+    }
+
+    public void setConfiguration(Configuration configuration) {
+        this.configuration = configuration;
     }
 }

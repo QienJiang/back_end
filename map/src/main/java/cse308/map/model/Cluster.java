@@ -31,12 +31,7 @@ public class Cluster {
 
     }
 
-//    public Set<Cluster> getNeighbors(Cluster c){
-//        Set<Cluster> neighbors=new HashSet<>();
-//        for(ClusterEdge e:edges){
-//            neighbors.add(e.getNeighborCluster(c));
-//        }
-//        return neighbors;
+    public Cluster(){}
 
     public void setEdges(Set<ClusterEdge> edges) {
         this.edges = edges;
@@ -121,7 +116,7 @@ public class Cluster {
                 Cluster c4 = e2.getNeighborCluster(this);
                 if(c4!=null) {
                     if (e1.getNeighborCluster(c1) == c4) {
-//                        System.out.println("c4: " + c4.getClusterID());
+                        System.out.println("c4: " + c4.getClusterID());
                         c4.removeEdge(e2);
                        remove.add(e2);
                     }
