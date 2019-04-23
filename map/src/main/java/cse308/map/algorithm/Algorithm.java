@@ -45,7 +45,7 @@ public class Algorithm {
         System.out.println("phaseone");
         sendMessage("Phase 1 Graph partition...");
         while(s.getClusters().size()>s.getConfiguration().getTargetDistricteNumber()) {
-            List<String> keysAsArray = new ArrayList<String>(s.getClusters().keySet());
+//            List<String> keysAsArray = new ArrayList<String>(s.getClusters().keySet());
 //            Random r = new Random();
 //            Cluster c1=s.getClusters().get(keysAsArray.get(r.nextInt(keysAsArray.size())));
             Cluster c1=s.getSmallestCluster();
@@ -54,26 +54,31 @@ public class Algorithm {
                 ClusterEdge desireClusterEdge=c1.getBestClusterEdge();
                 if(desireClusterEdge!=null){
                     System.out.println("3: "+desireClusterEdge.getNeighborCluster(c1));
-                    combineByEdge(desireClusterEdge,c1);}
+                    Cluster c2 = desireClusterEdge.getNeighborCluster(c1);
+                    disconnectNeighborEdge(desireClusterEdge,c1,c2);
+                    combineByEdge(c1,c2);}
             }
         }
     }
 
-    private void combineByEdge(ClusterEdge e, Cluster c1){
+    private void disconnectNeighborEdge(ClusterEdge desireClusterEdge,Cluster c1){
+        Cluster c2 = desireClusterEdge.getNeighborCluster(c1);
+        c2.removeEdge(desireClusterEdge);
+        c1.removeEdge(desireClusterEdge);
+        c2.removeDuplicateEdge(c1);//remove c4
+        s.removeCluster(c2);
+
+    }
+
+    private void combineByEdge(Cluster c1,Cluster c2){
         System.out.println("combine");
-        Cluster c2 = e.getC2();
         System.out.println(c2.getClusterID());
         sb.append(c2 + " merge into " + c1).append("'\n'");
-        c2.removeEdge(e);
-        c1.removeEdge(e);
-        c2.removeDuplicateEdge(c1);//remove c4
         for(ClusterEdge e2 : c2.getAllEdges()){ //add edges(c5) from c2 to c1
-            System.out.println("ss");
             e2.changeNeighbor(e2.getNeighborCluster(c2),c1);
             c1.addEdge(e2);
         }
         c1.combineCluster(c2);//combine demo data
-        s.removeCluster(c2);
         for(ClusterEdge e1 : c1.getAllEdges()){//re-compute c1 join
             System.out.println("xxx");
             e1.computJoin();
@@ -119,7 +124,7 @@ public class Algorithm {
         }
         sendMessage(sb.toString());
         sendMessage("Algorithm finished!");
-//
+
     }
 
     private void sendMessage(String msg){
