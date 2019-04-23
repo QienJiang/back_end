@@ -17,21 +17,22 @@ public class Cluster {
     private String color;
 
 
-    public void assignedColor(String[] color){
+    public void assignedColor(String[] color) {
         ArrayList<String> arrayList = new ArrayList<String>(Arrays.asList(color));
-        if(this.color==null){
+        if (this.color == null) {
             arrayList.remove(this.color);
-            for(ClusterEdge edge : edges){
-                if(edge.getC1().countyID!=this.clusterID)//remove all neighbor cluster's color
-                    if(edge.getC1().color!=null)
-                    arrayList.remove(edge.getC1().color);
+            for (ClusterEdge edge : edges) {
+                if (edge.getC1().countyID != this.clusterID)//remove all neighbor cluster's color
+                    if (edge.getC1().color != null)
+                        arrayList.remove(edge.getC1().color);
             }
             this.color = arrayList.get(0);
         }
 
     }
 
-    public Cluster(){}
+    public Cluster() {
+    }
 
     public void setEdges(Set<ClusterEdge> edges) {
         this.edges = edges;
@@ -75,7 +76,7 @@ public class Cluster {
         return edges;
     }
 
-    public Cluster(Precinct p){
+    public Cluster(Precinct p) {
         clusterID = p.getId();
         p.setParentCluster(clusterID);
         precincts = new HashSet<Precinct>();
@@ -90,35 +91,37 @@ public class Cluster {
         this.countyID = countyID;
     }
 
-    public boolean isNeighbor(Cluster nei){
-        for(ClusterEdge e : edges){
-            if(e.getNeighborCluster(this) == nei){
+    public boolean isNeighbor(Cluster nei) {
+        for (ClusterEdge e : edges) {
+            if (e.getNeighborCluster(this) == nei) {
                 return true;
             }
         }
         return false;
     }
-    public void addEdge(ClusterEdge e){
-        if(!edges.contains(e)){
+
+    public void addEdge(ClusterEdge e) {
+        if (!edges.contains(e)) {
             edges.add(e);
         }
     }
 
-    public void removeEdge(ClusterEdge e){
-        if(edges.contains(e)){
+    public void removeEdge(ClusterEdge e) {
+        if (edges.contains(e)) {
             edges.remove(e);
         }
     }
-    public void removeDuplicateEdge(Cluster c1){
-        Set<ClusterEdge> remove=new HashSet<>();
-        for(ClusterEdge e1: c1.getAllEdges()){
-            for(ClusterEdge e2 : edges){
+
+    public void removeDuplicateEdge(Cluster c1) {
+        Set<ClusterEdge> remove = new HashSet<>();
+        for (ClusterEdge e1 : c1.getAllEdges()) {
+            for (ClusterEdge e2 : edges) {
                 Cluster c4 = e2.getNeighborCluster(this);
-                if(c4!=null) {
+                if (c4 != null) {
                     if (e1.getNeighborCluster(c1) == c4) {
                         System.out.println("c4: " + c4.getClusterID());
                         c4.removeEdge(e2);
-                       remove.add(e2);
+                        remove.add(e2);
                     }
                 }
             }
@@ -126,23 +129,23 @@ public class Cluster {
         edges.removeAll(remove);
     }
 
-    public ClusterEdge getBestClusterEdge(){
-        double maxjoin=0;
-        ClusterEdge desireClusterEdge=null;
-        for(ClusterEdge e:edges){
-            Cluster c2=e.getNeighborCluster(this);
-            System.out.println("2: "+c2.getClusterID()+", "+e.getJoinability());
-            if(maxjoin<e.getJoinability()){
-                maxjoin=e.getJoinability();
-                desireClusterEdge=e;
+    public ClusterEdge getBestClusterEdge() {
+        double maxjoin = 0;
+        ClusterEdge desireClusterEdge = null;
+        for (ClusterEdge e : edges) {
+            Cluster c2 = e.getNeighborCluster(this);
+            System.out.println("2: " + c2.getClusterID() + ", " + e.getJoinability());
+            if (maxjoin < e.getJoinability()) {
+                maxjoin = e.getJoinability();
+                desireClusterEdge = e;
             }
         }
         return desireClusterEdge;
     }
 
-    public void combineCluster(Cluster c){
-        if(!countyID.equals(c.getCountyID())){
-            if(population<c.getPopulation()){
+    public void combineCluster(Cluster c) {
+        if (!countyID.equals(c.getCountyID())) {
+            if (population < c.getPopulation()) {
                 countyID = c.getCountyID();
             }
         }
@@ -159,42 +162,50 @@ public class Cluster {
         return clusterID;
     }
 
-    public void addPrecinct(Precinct p){
+    public void addPrecinct(Precinct p) {
         precincts.add(p);
         p.setParentCluster(clusterID);
     }
-    public void removePrecinct(Precinct p){
-        if(precincts.contains(p)){
+
+    public void removePrecinct(Precinct p) {
+        if (precincts.contains(p)) {
             precincts.remove(p);
             p.setParentCluster(null);
         }
     }
-    public void combineCluster(Cluster c1,Cluster c2){
+
+    public void combineCluster(Cluster c1, Cluster c2) {
 
     }
-    public Demographic getDemo(){
+
+    public Demographic getDemo() {
         return demo;
     }
-    public int getPopulation(){
+
+    public int getPopulation() {
         return population;
     }
-    public Set<ClusterEdge> getAllEdges(){
+
+    public Set<ClusterEdge> getAllEdges() {
         return edges;
     }
-    public void adAll(PrecinctEdge e){
+
+    public void adAll(PrecinctEdge e) {
 
     }
-    public void retainAll(PrecinctEdge e){
+
+    public void retainAll(PrecinctEdge e) {
 
     }
-    public void updataInfo(Cluster c1,Cluster c2){
+
+    public void updataInfo(Cluster c1, Cluster c2) {
         c1.population += c2.population;
         //demo??
         //edge
         //precincts.......
     }
 
-    public String toString(){
+    public String toString() {
         return clusterID;
     }
 

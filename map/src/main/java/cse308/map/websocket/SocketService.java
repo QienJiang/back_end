@@ -22,8 +22,8 @@ import java.util.Random;
 @Service
 public class SocketService {
     private static final Logger LOGGER = LoggerFactory.getLogger(SocketService.class);
-    private static String[] states = {"New York","California","Pennsylvania"};
-    private static String[] colors = {"red","purple","yellow","orange","blue"};
+    private static String[] states = {"New York", "California", "Pennsylvania"};
+    private static String[] colors = {"red", "purple", "yellow", "orange", "blue"};
     private static Random r = new Random();
 
     @Autowired
@@ -50,9 +50,9 @@ public class SocketService {
 
     @OnEvent(value = "runAlgorithm")
     public void onEvent(SocketIOClient client, AckRequest request, MessageInfo data) {
-        Algorithm algorithm = new Algorithm("pa",new Configuration(10,1),precinctService,client);
+        Algorithm algorithm = new Algorithm("pa", new Configuration(10, 1), precinctService, client);
         algorithm.run();
-       // algorithmController.runAlgorithm(new Configuration(10,"42"),client);
+        // algorithmController.runAlgorithm(new Configuration(10,"42"),client);
 
         System.out.println("finished");
         //服务器端向该客户端发送消息

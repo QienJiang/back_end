@@ -10,7 +10,7 @@ public class Configuration {
 
     public Configuration(int desireNum, int numOfRun) {
         this.targetDistricteNumber = desireNum;
-        this.numOfRun=numOfRun;
+        this.numOfRun = numOfRun;
     }
 
     public int getTargetDistricteNumber() {

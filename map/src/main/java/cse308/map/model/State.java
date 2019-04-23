@@ -15,62 +15,66 @@ public class State {
     private int population;
     private String rvote;
     private String dvote;
-    @Transient private Map<String,Precinct> precincts = new HashMap<>();
-    @Transient private Map<String, Cluster> clusters = new HashMap<>();
-    @Transient private Configuration configuration;
+    @Transient
+    private Map<String, Precinct> precincts = new HashMap<>();
+    @Transient
+    private Map<String, Cluster> clusters = new HashMap<>();
+    @Transient
+    private Configuration configuration;
 
-    public State(Configuration configuration){
+    public State(Configuration configuration) {
         this.configuration = configuration;
     }
 
-    public void addPrecinct(Precinct p){
-        precincts.put(p.getId(),p);
+    public void addPrecinct(Precinct p) {
+        precincts.put(p.getId(), p);
     }
 
-    public void addCluster(Cluster c){
-        clusters.put(c.getClusterID(),c);
+    public void addCluster(Cluster c) {
+        clusters.put(c.getClusterID(), c);
     }
 
-    public void removeCluster(Cluster c){
+    public void removeCluster(Cluster c) {
         clusters.remove(c.getClusterID());
     }
 
-    public State(Integer id, String name,Configuration configuration) {
+    public State(Integer id, String name, Configuration configuration) {
         this.id = id.toString();
         this.name = name;
         this.configuration = configuration;
     }
 
-    public Cluster getSmallestCluster(){
-        int i=Integer.MAX_VALUE;
-        Cluster smallestCluster=null;
-        for(Cluster c:clusters.values()){
-            if(c.getDemo().getPopulation()<i && c.getDemo().getPopulation()>0){
-                smallestCluster=c;
-            i=c.getDemo().getPopulation();}
+    public Cluster getSmallestCluster() {
+        int i = Integer.MAX_VALUE;
+        Cluster smallestCluster = null;
+        for (Cluster c : clusters.values()) {
+            if (c.getDemo().getPopulation() < i && c.getDemo().getPopulation() > 0) {
+                smallestCluster = c;
+                i = c.getDemo().getPopulation();
+            }
         }
         return smallestCluster;
 
     }
 
-    public int getTargetPopulation(){
-        return population/clusters.size();
+    public int getTargetPopulation() {
+        return population / clusters.size();
     }
 
-    public void initState(){
+    public void initState() {
         setPopulation(0);
-        for(Precinct p :precincts.values()){
-            setPopulation((int) (population+p.getPop100()));
-            Demographic demo1=new Demographic(MajorMinor.NATIVEAMERICAN,(int) p.getPop100(),p.getNativeamericanpop());
+        for (Precinct p : precincts.values()) {
+            setPopulation((int) (population + p.getPop100()));
+            Demographic demo1 = new Demographic(MajorMinor.NATIVEAMERICAN, (int) p.getPop100(), p.getNativeamericanpop());
             p.setDemo(demo1);
-            String[] neighbors =  p.getNeighbors().split(",");
+            String[] neighbors = p.getNeighbors().split(",");
             Cluster c1 = clusters.get(p.getId());
             c1.setCountyID(p.getCountyfp10());
             c1.setDemo(p.getDemo());
-            for(String name: neighbors){
+            for (String name : neighbors) {
                 Precinct neighbor = precincts.get(name);
-                if(!p.isNeighbor(neighbor)) {
-                    Demographic demo2=new Demographic(MajorMinor.NATIVEAMERICAN,(int)neighbor.getPop100(),neighbor.getNativeamericanpop());
+                if (!p.isNeighbor(neighbor)) {
+                    Demographic demo2 = new Demographic(MajorMinor.NATIVEAMERICAN, (int) neighbor.getPop100(), neighbor.getNativeamericanpop());
                     neighbor.setDemo(demo2);
                     PrecinctEdge precinctEdge = new PrecinctEdge(p, neighbor);
                     precinctEdge.computJoin();
@@ -79,7 +83,7 @@ public class State {
                     Cluster c2 = clusters.get(neighbor.getId());
                     c2.setCountyID(neighbor.getCountyfp10());
                     c2.setDemo(neighbor.getDemo());
-                    ClusterEdge clusterEdge = new ClusterEdge(c1,c2);
+                    ClusterEdge clusterEdge = new ClusterEdge(c1, c2);
                     clusterEdge.setJoinability(precinctEdge.getJoinability());
                     c1.addEdge(clusterEdge);
                     c2.addEdge(clusterEdge);

@@ -10,30 +10,31 @@ public class Algorithm {
 
 
     private PrecinctService precinctService;
-    private Map<Integer,State> states = new HashMap<>();
+    private Map<Integer, State> states = new HashMap<>();
     private State s;
     StringBuilder sb = new StringBuilder();
-    String[] colors = {"#8B4513","#8B0000","#006400","#00008B","#FF00FF","#2F4F4F","#FF8C00","#6B5B95","#FFA07A","#00FF7F"};
+    String[] colors = {"#8B4513", "#8B0000", "#006400", "#00008B", "#FF00FF", "#2F4F4F", "#FF8C00", "#6B5B95", "#FFA07A", "#00FF7F"};
 
     private SocketIOClient client;
+
     //pass the precinctService to the algorithm object because we can't autowired precinctService for each object it is not working.
     public Algorithm(String stateName, Configuration configuration, PrecinctService precinctService, SocketIOClient client) {
-        for(int i = 0; i < configuration.getNumOfRun(); i++){
-            states.put(i,new State(i,stateName, configuration));
+        for (int i = 0; i < configuration.getNumOfRun(); i++) {
+            states.put(i, new State(i, stateName, configuration));
         }
-        this.s=new State(configuration);
+        this.s = new State(configuration);
         this.precinctService = precinctService;
         this.client = client;
     }
 
-    private void init(){
+    private void init() {
         sendMessage("fetching precinct's data...");
         Iterable<Precinct> allPrecincts = precinctService.getAllPrecincts();
-        for(Precinct p : allPrecincts){
+        for (Precinct p : allPrecincts) {
             s.addPrecinct(p);
         }
         sendMessage("Construct Clusters...");
-        for(Precinct p : s.getPrecincts().values()){
+        for (Precinct p : s.getPrecincts().values()) {
             s.addCluster(new Cluster(p));
         }
         sendMessage("Creating Edge...");
@@ -41,78 +42,74 @@ public class Algorithm {
     }
 
 
-    private void graphPartition(){
+    private void graphPartition() {
         System.out.println("phaseone");
         sendMessage("Phase 1 Graph partition...");
-        while(s.getClusters().size()>s.getConfiguration().getTargetDistricteNumber()) {
+        while (s.getClusters().size() > s.getConfiguration().getTargetDistricteNumber()) {
 //            List<String> keysAsArray = new ArrayList<String>(s.getClusters().keySet());
 //            Random r = new Random();
 //            Cluster c1=s.getClusters().get(keysAsArray.get(r.nextInt(keysAsArray.size())));
-            Cluster c1=s.getSmallestCluster();
-            System.out.println("1: "+c1.getClusterID()+"  "+s.getClusters().size()+" "+s.getTargetPopulation()+" "+c1.getDemo().getPopulation()+" "+s.getConfiguration().getTargetDistricteNumber());
-            while(s.getTargetPopulation()> c1.getDemo().getPopulation() && s.getClusters().size()>s.getConfiguration().getTargetDistricteNumber()) {
-                ClusterEdge desireClusterEdge=c1.getBestClusterEdge();
-                if(desireClusterEdge!=null){
-                    System.out.println("3: "+desireClusterEdge.getNeighborCluster(c1));
+            Cluster c1 = s.getSmallestCluster();
+            System.out.println("1: " + c1.getClusterID() + "  " + s.getClusters().size() + " " + s.getTargetPopulation() + " " + c1.getDemo().getPopulation() + " " + s.getConfiguration().getTargetDistricteNumber());
+            while (s.getTargetPopulation() > c1.getDemo().getPopulation() && s.getClusters().size() > s.getConfiguration().getTargetDistricteNumber()) {
+                ClusterEdge desireClusterEdge = c1.getBestClusterEdge();
+                if (desireClusterEdge != null) {
+                    System.out.println("3: " + desireClusterEdge.getNeighborCluster(c1));
                     Cluster c2 = desireClusterEdge.getNeighborCluster(c1);
-                    disconnectNeighborEdge(desireClusterEdge,c1,c2);
-                    combineByEdge(c1,c2);}
+                    disconnectNeighborEdge(desireClusterEdge, c1, c2);
+                    combine(c1, c2);
+                }
             }
         }
     }
 
-    private void disconnectNeighborEdge(ClusterEdge desireClusterEdge,Cluster c1){
-        Cluster c2 = desireClusterEdge.getNeighborCluster(c1);
+    private void disconnectNeighborEdge(ClusterEdge desireClusterEdge, Cluster c1, Cluster c2) {
         c2.removeEdge(desireClusterEdge);
         c1.removeEdge(desireClusterEdge);
         c2.removeDuplicateEdge(c1);//remove c4
         s.removeCluster(c2);
-
     }
 
-    private void combineByEdge(Cluster c1,Cluster c2){
+    private void combine(Cluster c1, Cluster c2) {
         System.out.println("combine");
         System.out.println(c2.getClusterID());
         sb.append(c2 + " merge into " + c1).append("'\n'");
-        for(ClusterEdge e2 : c2.getAllEdges()){ //add edges(c5) from c2 to c1
-            e2.changeNeighbor(e2.getNeighborCluster(c2),c1);
+        for (ClusterEdge e2 : c2.getAllEdges()) { //add edges(c5) from c2 to c1
+            e2.changeNeighbor(e2.getNeighborCluster(c2), c1);
             c1.addEdge(e2);
         }
         c1.combineCluster(c2);//combine demo data
-        for(ClusterEdge e1 : c1.getAllEdges()){//re-compute c1 join
+        for (ClusterEdge e1 : c1.getAllEdges()) {//re-compute c1 join
             System.out.println("xxx");
             e1.computJoin();
         }
     }
 
-    public void run(){
+    public void run() {
         sendMessage("Algorithm Start...");
         init();
         graphPartition();
         sb.append("'\n'");
-       int pn=0;
-        int cn=1;
-        for(Cluster c:s.getClusters().values()){
-            System.out.println(c.getClusterID()+" : precinct size "+c.getPrecincts().size()+", population "+c.getDemo().getPopulation());
-            sb.append("No."+cn+": "+c.getClusterID()+" : precinct size "+c.getPrecincts().size()+", population "+c.getDemo().getPopulation()).append("'\n'");
-            pn+=c.getPrecincts().size();
+        int pn = 0;
+        int cn = 1;
+        for (Cluster c : s.getClusters().values()) {
+            System.out.println(c.getClusterID() + " : precinct size " + c.getPrecincts().size() + ", population " + c.getDemo().getPopulation());
+            sb.append("No." + cn + ": " + c.getClusterID() + " : precinct size " + c.getPrecincts().size() + ", population " + c.getDemo().getPopulation()).append("'\n'");
+            pn += c.getPrecincts().size();
             cn++;
         }
-        System.out.println("total precinct size: "+pn);
+        System.out.println("total precinct size: " + pn);
 
 
         String temp = "";
         int counter = 0;
         sendMessage("Assign Colors...");
-        for(Cluster c : s.getClusters().values()){
+        for (Cluster c : s.getClusters().values()) {
             c.setColor(colors[counter]);
-            System.out.println("color :"+colors[counter]);
+            System.out.println("color :" + colors[counter]);
             counter++;
-
-            for(Precinct ps: c.getPrecincts()){
+            for (Precinct ps : c.getPrecincts()) {
                 temp += ps.getId() + ":" + c.getColor() + ",";
-
-
             }
             client.sendEvent("updateColor", temp);
             try {
@@ -120,14 +117,13 @@ public class Algorithm {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            temp="";
+            temp = "";
         }
         sendMessage(sb.toString());
         sendMessage("Algorithm finished!");
-
     }
 
-    private void sendMessage(String msg){
+    private void sendMessage(String msg) {
         client.sendEvent("message", msg);
     }
 }

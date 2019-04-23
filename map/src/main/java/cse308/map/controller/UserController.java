@@ -1,4 +1,5 @@
 package cse308.map.controller;
+
 import cse308.map.model.User;
 import cse308.map.server.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,31 +34,32 @@ public class UserController {
 //    }
 
     @PostMapping(value = "/signin")//check the user exist in the database or not
-    public ResponseEntity<?> signIn(@Valid @RequestBody User user, BindingResult result){
+    public ResponseEntity<?> signIn(@Valid @RequestBody User user, BindingResult result) {
         //BindResult is an interface that gets the result of the validation
 
-        if(result.hasErrors()){
-            Map<String,String> errorMap = new HashMap<>();
-            for(FieldError error: result.getFieldErrors()){
-                errorMap.put(error.getField(),error.getDefaultMessage());
+        if (result.hasErrors()) {
+            Map<String, String> errorMap = new HashMap<>();
+            for (FieldError error : result.getFieldErrors()) {
+                errorMap.put(error.getField(), error.getDefaultMessage());
             }
-            return new ResponseEntity<Map<String,String>>(errorMap, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<Map<String, String>>(errorMap, HttpStatus.BAD_REQUEST);
         }
 
         Boolean status = userService.isValidUser(user);//check if the user exist
 
-        if(status){
+        if (status) {
             Optional<User> opt = userService.findById(user.getEmail());
             System.out.println("sign in");
             return new ResponseEntity<User>(opt.get(), HttpStatus.OK);
-        }else {
+        } else {
             System.out.println("user does not exist.");
             return new ResponseEntity("No such user ", HttpStatus.NOT_FOUND);
         }
 
     }
+
     @PostMapping(value = "/signup")//save the state to the database
-    public ResponseEntity<?> signUp(@Valid @RequestBody User user){
+    public ResponseEntity<?> signUp(@Valid @RequestBody User user) {
         //BindResult is an interface that gets the result of the validation
         User newUser = userService.saveOrUpdateUser(user);//save the model into database
         System.out.println("register completed. ");

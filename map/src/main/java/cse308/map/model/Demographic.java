@@ -12,24 +12,26 @@ public class Demographic {
     private int LATINO;
     private int NATIVAAMERICAN;
 
-    public Demographic(MajorMinor mm,int pop,int mmPop){
-        this.majorMinor=mm;
-        this.population=pop;
-        switch (mm){
+    public Demographic(MajorMinor mm, int pop, int mmPop) {
+        this.majorMinor = mm;
+        this.population = pop;
+        switch (mm) {
             case NATIVEAMERICAN:
-                this.NATIVAAMERICAN=mmPop;
+                this.NATIVAAMERICAN = mmPop;
         }
 
     }
+
     public int getNATIVAAMERICAN() {
         return NATIVAAMERICAN;
     }
 
     public void setNativeAmericanPop(double NATIVAAMERICAN) {
-        this.NATIVAAMERICAN = (int)NATIVAAMERICAN;
+        this.NATIVAAMERICAN = (int) NATIVAAMERICAN;
     }
-    public void combinDemo(Demographic demo){
-        population+= demo.getPopulation();
+
+    public void combinDemo(Demographic demo) {
+        population += demo.getPopulation();
         rvote += demo.getRvote();
         dvote += demo.getDvote();
         AFRICAN_AMERICAN += demo.getAFRICAN_AMERICAN();
@@ -103,14 +105,14 @@ public class Demographic {
         this.LATINO = LATINO;
     }
 
-    public Demographic(){
+    public Demographic() {
     }
 
 
     public int vote(Party pp) {
-        if(pp == Party.DEMOCRATIC)
+        if (pp == Party.DEMOCRATIC)
             return dvote;
-        else if(pp == Party.REPUBLICAN)
+        else if (pp == Party.REPUBLICAN)
             return dvote;
         else
             return 0;
