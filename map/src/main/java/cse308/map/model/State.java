@@ -41,6 +41,10 @@ public class State {
         this.name = name;
     }
 
+    public int getTargetPopulation(){
+        return population/clusters.size();
+    }
+
     public void initState(){
         setPopulation(0);
         for(Precinct p :precincts.values()){

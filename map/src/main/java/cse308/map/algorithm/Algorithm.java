@@ -53,28 +53,19 @@ public class Algorithm {
             Random r = new Random();
             Cluster c1=s.getClusters().get(keysAsArray.get(r.nextInt(keysAsArray.size())));
             System.out.println("1: "+c1.getClusterID()+"  "+s.getClusters().size());
-            while(s.getPopulation()/s.getClusters().size()> c1.getDemo().getPopulation() && s.getClusters().size()>desireNum) {
-                double maxjoin=0;
-                ClusterEdge desireClusterEdge=null;
-                System.out.println(" s.getPopulation()/clusters.size()> c1.getPopulation(): "+s.getPopulation()/s.getClusters().size()+", "+c1.getDemo().getPopulation());
-                for(ClusterEdge e:c1.getAllEdges()){
-                    Cluster c2=e.getNeighborCluster(c1);
-                    System.out.println("2: "+c2.getClusterID()+", "+e.getJoinability());
-                    if(maxjoin<e.getJoinability()){
-                        maxjoin=e.getJoinability();
-                        desireClusterEdge=e;
-                    }
-                }
+            while(s.getTargetPopulation()> c1.getDemo().getPopulation() && s.getClusters().size()>desireNum) {
+                ClusterEdge desireClusterEdge=c1.getBestClusterEdge();
                 if(desireClusterEdge!=null){
                     System.out.println("3: "+desireClusterEdge.getNeighborCluster(c1));
-                    combine(desireClusterEdge,c1);}
+                    combineByEdge(desireClusterEdge);}
             }
         }
     }
 
-    private void combine(ClusterEdge e, Cluster c1){
+    private void combineByEdge(ClusterEdge e){
         System.out.println("combine");
-        Cluster c2 = e.getNeighborCluster(c1);
+        Cluster c1=e.getC1();
+        Cluster c2 = e.getC2();
         System.out.println(c2.getClusterID());
         sb.append(c2 + " merge into " + c1).append("'\n'");
         c2.removeEdge(e);

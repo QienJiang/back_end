@@ -130,6 +130,21 @@ public class Cluster {
         }
         edges.removeAll(remove);
     }
+
+    public ClusterEdge getBestClusterEdge(){
+        double maxjoin=0;
+        ClusterEdge desireClusterEdge=null;
+        for(ClusterEdge e:edges){
+            Cluster c2=e.getNeighborCluster(this);
+            System.out.println("2: "+c2.getClusterID()+", "+e.getJoinability());
+            if(maxjoin<e.getJoinability()){
+                maxjoin=e.getJoinability();
+                desireClusterEdge=e;
+            }
+        }
+        return desireClusterEdge;
+    }
+
     public void combineCluster(Cluster c){
         if(!countyID.equals(c.getCountyID())){
             if(population<c.getPopulation()){
