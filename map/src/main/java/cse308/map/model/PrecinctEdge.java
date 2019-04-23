@@ -11,8 +11,7 @@ public class PrecinctEdge {
     public Precinct getNeighborPrecinct(Precinct p) {
         if (p1 == p) {
             return p2;
-        }
-        else if(p2 == p){
+        } else if (p2 == p) {
             return p1;
         }
         return null;
@@ -80,25 +79,25 @@ public class PrecinctEdge {
         int totalLATINO = p1.getDemo().getLATINO() + p2.getDemo().getLATINO();
         int totalNative = p1.getDemo().getNATIVAAMERICAN() + p2.getDemo().getNATIVAAMERICAN();
         double joinability = 0;
-        int countyValue= p1.getCountyfp10().equals(p2.getCountyfp10())?1:0;
+        int countyValue = p1.getCountyfp10().equals(p2.getCountyfp10()) ? 1 : 0;
         switch (p1.getDemo().getMajorMinor()) {
             case AFRICAN_AMERICAN:
                 joinability = totalAFRICAN_AMERICAN / totalPopulation;
                 break;
             case ASIAN_PACIFIC:
-                joinability = (double)totalASIAN_PACIFIC / totalPopulation;
+                joinability = (double) totalASIAN_PACIFIC / totalPopulation;
                 break;
             case HISPANIC:
-                joinability = (double)totalHISPANIC / totalPopulation;
+                joinability = (double) totalHISPANIC / totalPopulation;
                 break;
             case LATINO:
-                joinability = (double)totalLATINO / totalPopulation;
+                joinability = (double) totalLATINO / totalPopulation;
                 break;
             case NATIVEAMERICAN:
-                joinability = (double)totalNative / totalPopulation;
+                joinability = (double) totalNative / totalPopulation;
                 break;
         }
-        joinability=joinability*0.5+countyValue*0.5;
+        joinability = joinability * 0.5 + countyValue * 0.5;
         setJoinability(joinability);
     }
 

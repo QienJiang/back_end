@@ -11,7 +11,7 @@ public class Algorithm {
 
     private PrecinctService precinctService;
     private Map<Integer, State> states = new HashMap<>();
-    private State s;
+    private State state;
     StringBuilder sb = new StringBuilder();
     String[] colors = {"#8B4513", "#8B0000", "#006400", "#00008B", "#FF00FF", "#2F4F4F", "#FF8C00", "#6B5B95", "#FFA07A", "#00FF7F"};
 
@@ -22,36 +22,36 @@ public class Algorithm {
         for (int i = 0; i < configuration.getNumOfRun(); i++) {
             states.put(i, new State(i, stateName, configuration));
         }
-        this.s = new State(configuration);
+        this.state = new State(configuration);
         this.precinctService = precinctService;
         this.client = client;
     }
 
     private void init() {
-        sendMessage("fetching precinct's data...");
+        sendMessage("fetching precinct'state data...");
         Iterable<Precinct> allPrecincts = precinctService.getAllPrecincts();
         for (Precinct p : allPrecincts) {
-            s.addPrecinct(p);
+            state.addPrecinct(p);
         }
         sendMessage("Construct Clusters...");
-        for (Precinct p : s.getPrecincts().values()) {
-            s.addCluster(new Cluster(p));
+        for (Precinct p : state.getPrecincts().values()) {
+            state.addCluster(new Cluster(p));
         }
         sendMessage("Creating Edge...");
-        s.initState();
+        state.initState();
     }
 
 
     private void graphPartition() {
         System.out.println("phaseone");
         sendMessage("Phase 1 Graph partition...");
-        while (s.getClusters().size() > s.getConfiguration().getTargetDistricteNumber()) {
-//            List<String> keysAsArray = new ArrayList<String>(s.getClusters().keySet());
+        while (state.getClusters().size() > state.getConfiguration().getTargetDistricteNumber()) {
+//            List<String> keysAsArray = new ArrayList<String>(state.getClusters().keySet());
 //            Random r = new Random();
-//            Cluster c1=s.getClusters().get(keysAsArray.get(r.nextInt(keysAsArray.size())));
-            Cluster c1 = s.getSmallestCluster();
-            System.out.println("1: " + c1.getClusterID() + "  " + s.getClusters().size() + " " + s.getTargetPopulation() + " " + c1.getDemo().getPopulation() + " " + s.getConfiguration().getTargetDistricteNumber());
-            while (s.getTargetPopulation() > c1.getDemo().getPopulation() && s.getClusters().size() > s.getConfiguration().getTargetDistricteNumber()) {
+//            Cluster c1=state.getClusters().get(keysAsArray.get(r.nextInt(keysAsArray.size())));
+            Cluster c1 = state.getSmallestCluster();
+            System.out.println("1: " + c1.getClusterID() + "  " + state.getClusters().size() + " " + state.getTargetPopulation() + " " + c1.getDemo().getPopulation() + " " + state.getConfiguration().getTargetDistricteNumber());
+            while (state.getTargetPopulation() > c1.getDemo().getPopulation() && state.getClusters().size() > state.getConfiguration().getTargetDistricteNumber()) {
                 ClusterEdge desireClusterEdge = c1.getBestClusterEdge();
                 if (desireClusterEdge != null) {
                     System.out.println("3: " + desireClusterEdge.getNeighborCluster(c1));
@@ -67,7 +67,7 @@ public class Algorithm {
         c2.removeEdge(desireClusterEdge);
         c1.removeEdge(desireClusterEdge);
         c2.removeDuplicateEdge(c1);//remove c4
-        s.removeCluster(c2);
+        state.removeCluster(c2);
     }
 
     private void combine(Cluster c1, Cluster c2) {
@@ -92,7 +92,7 @@ public class Algorithm {
         sb.append("'\n'");
         int pn = 0;
         int cn = 1;
-        for (Cluster c : s.getClusters().values()) {
+        for (Cluster c : state.getClusters().values()) {
             System.out.println(c.getClusterID() + " : precinct size " + c.getPrecincts().size() + ", population " + c.getDemo().getPopulation());
             sb.append("No." + cn + ": " + c.getClusterID() + " : precinct size " + c.getPrecincts().size() + ", population " + c.getDemo().getPopulation()).append("'\n'");
             pn += c.getPrecincts().size();
@@ -104,7 +104,7 @@ public class Algorithm {
         String temp = "";
         int counter = 0;
         sendMessage("Assign Colors...");
-        for (Cluster c : s.getClusters().values()) {
+        for (Cluster c : state.getClusters().values()) {
             c.setColor(colors[counter]);
             System.out.println("color :" + colors[counter]);
             counter++;

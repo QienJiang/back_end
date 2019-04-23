@@ -16,10 +16,14 @@ public class Precinct {
     private String countyfp10;//countyID
     private String neighbors;
     private int nativeamericanpop;
-    @Transient private String parentCluster;
-    @Transient private Set<PrecinctEdge> precinctEdges = new HashSet<>();
-    @Transient private Demographic demo;
-    @Transient private boolean iscomput=false;
+    @Transient
+    private String parentCluster;
+    @Transient
+    private Set<PrecinctEdge> precinctEdges = new HashSet<>();
+    @Transient
+    private Demographic demo;
+    @Transient
+    private boolean iscomput = false;
 
     public double getPop100() {
         return pop100;
@@ -69,7 +73,7 @@ public class Precinct {
         this.iscomput = iscomput;
     }
 
-    public void setParentCluster(String cID){
+    public void setParentCluster(String cID) {
         parentCluster = cID;
     }
 
@@ -77,47 +81,56 @@ public class Precinct {
         return parentCluster;
     }
 
-    public Demographic getDemo(){
+    public Demographic getDemo() {
         return demo;
     }
 
-    public Set<PrecinctEdge> getAllEdges(){
+    public Set<PrecinctEdge> getAllEdges() {
         return precinctEdges;
     }
 
     public String getId() {
         return geoid10;
     }
-    public String getNeighbors(){return neighbors;}
-    public void setNeighbors(String neighbors){
+
+    public String getNeighbors() {
+        return neighbors;
+    }
+
+    public void setNeighbors(String neighbors) {
         this.neighbors = neighbors;
     }
-    public boolean isNeighbor(Precinct nei){
-        for(PrecinctEdge e : precinctEdges){
-            if(e.getNeighborPrecinct(this) == nei){
+
+    public boolean isNeighbor(Precinct nei) {
+        for (PrecinctEdge e : precinctEdges) {
+            if (e.getNeighborPrecinct(this) == nei) {
                 return true;
             }
         }
         return false;
     }
-    public void addEdge(PrecinctEdge e){
-        if(!precinctEdges.contains(e)){
+
+    public void addEdge(PrecinctEdge e) {
+        if (!precinctEdges.contains(e)) {
             precinctEdges.add(e);
         }
     }
-    public void removeEdge(PrecinctEdge e){
-        if(precinctEdges.contains(e)){
+
+    public void removeEdge(PrecinctEdge e) {
+        if (precinctEdges.contains(e)) {
             precinctEdges.remove(e);
         }
     }
-    public void setDemo(double nativeAmericanPop){
-        demo.setNativeAmericanPop((int)nativeAmericanPop);
+
+    public void setDemo(double nativeAmericanPop) {
+        demo.setNativeAmericanPop((int) nativeAmericanPop);
     }
-    public void setDemo(Demographic demo){
+
+    public void setDemo(Demographic demo) {
         this.demo = demo;
     }
 
-    public String toString(){
+    public String toString() {
         return geoid10;
     }
 }
