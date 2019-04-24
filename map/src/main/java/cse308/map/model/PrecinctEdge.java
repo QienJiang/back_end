@@ -73,7 +73,7 @@ public class PrecinctEdge {
 
     public void computJoin() {
         int totalPopulation = p1.getDemo().getPopulation() + p2.getDemo().getPopulation();
-        int totalMmPopulation=p1.getDemo().getMmPopulation();
+        int totalMmPopulation=p1.getDemo().getMmPopulation()+p2.getDemo().getMmPopulation();
         double majorMinorValue=(double) totalMmPopulation/totalPopulation;
         int countyValue = p1.getCountyfp10().equals(p2.getCountyfp10()) ? 1 : 0;
         this.joinability = majorMinorValue * 0.5 + countyValue * 0.5;
