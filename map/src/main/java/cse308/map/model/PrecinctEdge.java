@@ -73,31 +73,10 @@ public class PrecinctEdge {
 
     public void computJoin() {
         int totalPopulation = p1.getDemo().getPopulation() + p2.getDemo().getPopulation();
-        int totalAFRICAN_AMERICAN = p1.getDemo().getAFRICAN_AMERICAN() + p2.getDemo().getAFRICAN_AMERICAN();
-        int totalASIAN_PACIFIC = p1.getDemo().getASIAN_PACIFIC() + p2.getDemo().getASIAN_PACIFIC();
-        int totalHISPANIC = p1.getDemo().getHISPANIC() + p2.getDemo().getHISPANIC();
-        int totalLATINO = p1.getDemo().getLATINO() + p2.getDemo().getLATINO();
-        int totalNative = p1.getDemo().getNATIVAAMERICAN() + p2.getDemo().getNATIVAAMERICAN();
-        double joinability = 0;
+        int totalMmPopulation=p1.getDemo().getMmPopulation();
+        double majorMinorValue=(double) totalMmPopulation/totalPopulation;
         int countyValue = p1.getCountyfp10().equals(p2.getCountyfp10()) ? 1 : 0;
-        switch (p1.getDemo().getMajorMinor()) {
-            case AFRICAN_AMERICAN:
-                joinability = totalAFRICAN_AMERICAN / totalPopulation;
-                break;
-            case ASIAN_PACIFIC:
-                joinability = (double) totalASIAN_PACIFIC / totalPopulation;
-                break;
-            case HISPANIC:
-                joinability = (double) totalHISPANIC / totalPopulation;
-                break;
-            case LATINO:
-                joinability = (double) totalLATINO / totalPopulation;
-                break;
-            case NATIVEAMERICAN:
-                joinability = (double) totalNative / totalPopulation;
-                break;
-        }
-        joinability = joinability * 0.5 + countyValue * 0.5;
+        this.joinability = majorMinorValue * 0.5 + countyValue * 0.5;
         setJoinability(joinability);
     }
 

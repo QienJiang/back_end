@@ -57,6 +57,7 @@ public class Algorithm {
                     System.out.println("3: " + desireClusterEdge.getNeighborCluster(c1));
                     Cluster c2 = desireClusterEdge.getNeighborCluster(c1);
                     disconnectNeighborEdge(desireClusterEdge, c1, c2);
+                    state.removeCluster(c2);
                     combine(c1, c2);
                 }
             }
@@ -67,7 +68,6 @@ public class Algorithm {
         c2.removeEdge(desireClusterEdge);
         c1.removeEdge(desireClusterEdge);
         c2.removeDuplicateEdge(c1);//remove c4
-        state.removeCluster(c2);
     }
 
     private void combine(Cluster c1, Cluster c2) {
@@ -80,7 +80,6 @@ public class Algorithm {
         }
         c1.combineCluster(c2);//combine demo data
         for (ClusterEdge e1 : c1.getAllEdges()) {//re-compute c1 join
-            System.out.println("xxx");
             e1.computJoin();
         }
     }

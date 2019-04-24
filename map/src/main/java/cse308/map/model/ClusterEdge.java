@@ -70,33 +70,12 @@ public class ClusterEdge {
 
     public void computJoin() {
         int totalPopulation = c1.getDemo().getPopulation() + c2.getDemo().getPopulation();
-        double joinability = 0;
         int countyValue = c1.getCountyID().equals(c2.getCountyID()) ? 1 : 0;
-        switch (c1.getDemo().getMajorMinor()) {
-            case AFRICAN_AMERICAN:
-                int totalAFRICAN_AMERICAN = c1.getDemo().getAFRICAN_AMERICAN() + c2.getDemo().getAFRICAN_AMERICAN();
-                joinability = (double) totalAFRICAN_AMERICAN / totalPopulation;
-                break;
-            case ASIAN_PACIFIC:
-                int totalASIAN_PACIFIC = c1.getDemo().getASIAN_PACIFIC() + c2.getDemo().getASIAN_PACIFIC();
-                joinability = (double) totalASIAN_PACIFIC / totalPopulation;
-                break;
-            case HISPANIC:
-                int totalHISPANIC = c1.getDemo().getHISPANIC() + c2.getDemo().getHISPANIC();
-                joinability = (double) totalHISPANIC / totalPopulation;
-                break;
-            case LATINO:
-                int totalLATINO = c1.getDemo().getLATINO() + c2.getDemo().getLATINO();
-                joinability = (double) totalLATINO / totalPopulation;
-                break;
-            case NATIVEAMERICAN:
-                int totalNative = c1.getDemo().getNATIVAAMERICAN() + c2.getDemo().getNATIVAAMERICAN();
-                joinability = (double) totalNative / totalPopulation;
-                break;
-        }
-        joinability = joinability * 0.5 + countyValue * 0.5;
+        int totalMmPopulation = c1.getDemo().getMmPopulation();
+        double majorMinorValue = (double) totalMmPopulation / totalPopulation;
+        System.out.println("computeJoin: "+majorMinorValue+" "+countyValue);
+        joinability = majorMinorValue * 0.5 + countyValue * 0.5;
         setJoinability(joinability);
-
     }
 
     public void assignJoin() {
@@ -104,7 +83,6 @@ public class ClusterEdge {
     }
 
     public double getJoinability() {
-
         return joinability;
     }
 
