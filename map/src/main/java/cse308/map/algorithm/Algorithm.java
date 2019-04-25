@@ -131,6 +131,6 @@ public class Algorithm {
         client.sendEvent("message", msg);
     }
     private void sendDistrictBoundary(String msg) {
-        client.sendEvent("updateBoundary", msg);
+        client.sendEvent("updateDistrictBoundary", msg);
     }
 }
