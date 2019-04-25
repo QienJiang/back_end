@@ -1,17 +1,17 @@
 package cse308.map.model;
 
+import com.vividsolutions.jts.geom.Geometry;
+
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "pa_finalqgis")
 public class Precinct {
     @Id
     private String geoid10;//precinct id
+    private Geometry shape;
     private double pop100;//population
     private String countyfp10;//countyID
     private String neighbors;
@@ -122,6 +122,13 @@ public class Precinct {
         }
     }
 
+    public Geometry getShape() {
+        return shape;
+    }
+
+    public void setShape(Geometry shape) {
+        this.shape = shape;
+    }
 
     public void setDemo(Demographic demo) {
         this.demo = demo;
@@ -130,4 +137,6 @@ public class Precinct {
     public String toString() {
         return geoid10;
     }
+
+
 }

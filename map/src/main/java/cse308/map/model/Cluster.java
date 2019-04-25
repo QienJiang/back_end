@@ -1,5 +1,10 @@
 package cse308.map.model;
 
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryCollection;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.io.geojson.GeoJsonWriter;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -8,10 +13,10 @@ import java.util.Set;
 public class Cluster {
 
     private String clusterID;
+    private Geometry shape;
     private Set<ClusterEdge> edges = new HashSet<>();
     private Set<Precinct> precincts;
     private Demographic demo;
-    private int population;
     private boolean isAssigned;
     private String countyID;
     private String color;
@@ -50,10 +55,6 @@ public class Cluster {
         this.demo = demo;
     }
 
-    public void setPopulation(int population) {
-        this.population = population;
-    }
-
     public boolean isAssigned() {
         return isAssigned;
     }
@@ -78,6 +79,7 @@ public class Cluster {
 
     public Cluster(Precinct p) {
         clusterID = p.getId();
+        shape = new GeometryFactory().createGeometry(p.getShape());
         p.setParentCluster(clusterID);
         precincts = new HashSet<Precinct>();
         precincts.add(p);
@@ -145,11 +147,11 @@ public class Cluster {
 
     public void combineCluster(Cluster c) {
         if (!countyID.equals(c.getCountyID())) {
-            if (population < c.getPopulation()) {
+            if (demo.getPopulation()< c.getDemo().getPopulation()) {
                 countyID = c.getCountyID();
             }
         }
-        population += c.getPopulation();
+        shape = shape.union(c.shape);
         demo.combinDemo(c.getDemo());
         precincts.addAll(c.getPrecincts());
     }
@@ -181,11 +183,6 @@ public class Cluster {
     public Demographic getDemo() {
         return demo;
     }
-
-    public int getPopulation() {
-        return population;
-    }
-
     public Set<ClusterEdge> getAllEdges() {
         return edges;
     }
@@ -199,14 +196,33 @@ public class Cluster {
     }
 
     public void updataInfo(Cluster c1, Cluster c2) {
-        c1.population += c2.population;
         //demo??
         //edge
         //precincts.......
     }
 
+    public Geometry getShape() {
+        return shape;
+    }
+
+    public void setShape(Geometry shape) {
+        this.shape = shape;
+    }
+
     public String toString() {
         return clusterID;
+    }
+
+    public String toGeoJsonFormat(){
+        GeoJsonWriter writer = new GeoJsonWriter();
+        String out = writer.write(shape);
+        return "{\"type\":\"Feature\",\"geometry\":" + out + "," + getProperty();
+    }
+
+    public String getProperty(){
+        StringBuilder s = new StringBuilder();
+        s.append("\"properties\":{\"GEOID10\": \"").append(clusterID).append("\",").append("\"POP100\":\"").append(demo.getPopulation()).append("\"}");
+        return s.toString();
     }
 
 }

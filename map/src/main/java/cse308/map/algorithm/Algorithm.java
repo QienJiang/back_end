@@ -103,8 +103,11 @@ public class Algorithm {
         String temp = "";
         int counter = 0;
         sendMessage("Assign Colors...");
+        StringBuilder districJson = new StringBuilder();
+        districJson.append("{\"type\":\"FeatureCollection\", \"features\": [");
         for (Cluster c : state.getClusters().values()) {
             c.setColor(colors[counter]);
+            districJson.append(c.toGeoJsonFormat()).append("},\n");
             System.out.println("color :" + colors[counter]);
             counter++;
             for (Precinct ps : c.getPrecincts()) {
@@ -118,11 +121,16 @@ public class Algorithm {
             }
             temp = "";
         }
+        districJson.deleteCharAt(districJson.length()-2).append("]}");
+        sendDistrictBoundary(districJson.toString());
         sendMessage(sb.toString());
         sendMessage("Algorithm finished!");
     }
 
     private void sendMessage(String msg) {
         client.sendEvent("message", msg);
+    }
+    private void sendDistrictBoundary(String msg) {
+        client.sendEvent("updateBoundary", msg);
     }
 }
