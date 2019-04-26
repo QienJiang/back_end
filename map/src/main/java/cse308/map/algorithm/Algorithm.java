@@ -84,10 +84,74 @@ public class Algorithm {
         }
     }
 
+    public void annealing(){
+
+        while(district number>0) {
+            District smallestDistrict = state.getSmallestDistrict();
+            for (Precinct precinct : smallestDistrict.getBorderPrecincts()) {
+                Move bestMove = getMove(smallestDistrict, precinct);
+                if (bestMove != null)
+                    bestMove.execute();
+
+            }
+            remove(smallestDistrict);
+            district_number--;
+
+        }
+
+
+
+    }
+
+    public Move getMove(District current,Precinct precinct){
+        Move bestMove=null;
+        double bestImprovament=0;
+        for(Precinct otherDistrictPrecinct : precinct.getOtherDistrctPrecincts()){
+            District neighborDistrict=state.getFromDistrict(otherDistrictPrecinct);
+            Move move = new Move(current,neighborDistrict,otherDistrictPrecinct);
+            double improvement = testMove(move);
+
+            if(improvement > bestImprovament) {
+                bestMove = move;
+                bestImprovament = improvement;
+            }
+        }
+        return bestMove;
+    }
+
+    public double testMove(Move move){
+        if(!move.getFrom().isContigunity()){
+            return 0;
+        }
+
+        double initial_score = move.getTo().getCurrentScore()+move.getFrom().getCurrentScore();
+        move.execute();
+        double to_score=rateDistrict(move.getTo());
+        double from_score=rateDistrict(move.getFrom());
+        double final_score =to_score+from_score;
+        double improvement = final_score-initial_score;
+//        to.setCurrentScore(to_score);
+//        from.setCurrentScore(from_score);
+//        p.setParentCluster(to.getdistrictID());
+        move.undo();
+        return improvement<=0? 0: improvement;
+    }
+
+    public double rateDistrict(District district){
+        return 0;
+    }
+
+
+
+
+
+
     public void run() {
         sendMessage("Algorithm Start...");
         init();
         graphPartition();
+
+
         sb.append("'\n'");
         int pn = 0;
         int cn = 1;
@@ -98,8 +162,6 @@ public class Algorithm {
             cn++;
         }
         System.out.println("total precinct size: " + pn);
-
-
         String temp = "";
         int counter = 0;
         sendMessage("Assign Colors...");

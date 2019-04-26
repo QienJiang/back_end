@@ -80,6 +80,10 @@ public class PrecinctEdge {
         setJoinability(joinability);
     }
 
+    public Precinct getNeighbor(Precinct p){
+        return p==p1? p2:p1;// if p==p1 then return p2, else p1.
+    }
+
     public void assignJoin() {
         //????????
     }

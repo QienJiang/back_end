@@ -20,6 +20,8 @@ public class Cluster {
     private boolean isAssigned;
     private String countyID;
     private String color;
+    private double CurrentScore;
+
 
 
     public void assignedColor(String[] color) {
@@ -225,4 +227,12 @@ public class Cluster {
         return s.toString();
     }
 
+
+    public double getCurrentScore() {
+        return CurrentScore;
+    }
+
+    public void setCurrentScore(double CurrentScore) {
+        this.CurrentScore = CurrentScore;
+    }
 }

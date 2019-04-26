@@ -20,6 +20,8 @@ public class State {
     @Transient
     private Map<String, Cluster> clusters = new HashMap<>();
     @Transient
+    private Map<String, District> districts = new HashMap<>();
+    @Transient
     private Configuration configuration;
 
     public State(Configuration configuration) {
@@ -44,6 +46,10 @@ public class State {
         this.configuration = configuration;
     }
 
+    public District getFromDistrict(Precinct precinct){
+        return districts.get(precinct.getParentCluster());
+    }
+
     public Cluster getSmallestCluster() {
         int i = Integer.MAX_VALUE;
         Cluster smallestCluster = null;
@@ -54,7 +60,6 @@ public class State {
             }
         }
         return smallestCluster;
-
     }
 
     public int getTargetPopulation() {
@@ -157,5 +162,17 @@ public class State {
 
     public void setConfiguration(Configuration configuration) {
         this.configuration = configuration;
+    }
+
+    public District getSmallestDistrict() {
+        int i = Integer.MAX_VALUE;
+        District smallestDistrict = null;
+        for (District district : districts.values()) {
+            if (district.getDemo().getPopulation() < i && district.getDemo().getPopulation() > 0) {
+                smallestDistrict = district;
+                i = district.getDemo().getPopulation();
+            }
+        }
+        return smallestDistrict;
     }
 }

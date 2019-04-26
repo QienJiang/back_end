@@ -101,6 +101,16 @@ public class Precinct {
         this.neighbors = neighbors;
     }
 
+    public Set<Precinct> getOtherDistrctPrecincts(){
+        Set<Precinct> otherDistrctPrecincts=new HashSet<Precinct>();
+        for(PrecinctEdge e:precinctEdges){
+            if(!e.getNeighbor(this).getParentCluster().equals(parentCluster))
+                otherDistrctPrecincts.add(e.getNeighborPrecinct(this));
+        }
+        return otherDistrctPrecincts;
+    }
+
+
     public boolean isNeighbor(Precinct nei) {
         for (PrecinctEdge e : precinctEdges) {
             if (e.getNeighborPrecinct(this) == nei) {
@@ -137,6 +147,18 @@ public class Precinct {
     public String toString() {
         return geoid10;
     }
+
+    public Boolean isBorderPrecinct(){
+        for(PrecinctEdge precinctEdge : precinctEdges){
+            Precinct neighbor = precinctEdge.getNeighbor(this);
+            if(!neighbor.getParentCluster().equals(this.getParentCluster()))
+                return true;
+        }
+        return false;
+    }
+
+
+
 
 
 }
