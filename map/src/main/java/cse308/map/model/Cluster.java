@@ -223,7 +223,8 @@ public class Cluster {
 
     public String getProperty(){
         StringBuilder s = new StringBuilder();
-        s.append("\"properties\":{\"GEOID10\": \"").append(clusterID).append("\",").append("\"POP100\":\"").append(demo.getPopulation()).append("\"}");
+        s.append("\"properties\":{\"GEOID10\": \"").append(clusterID).append("\",").append("\"POP100\":\"").append(demo.getPopulation()).append("\",").
+                append("\"COLOR\":\"").append(color).append("\"}");
         return s.toString();
     }
 
