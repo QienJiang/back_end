@@ -13,7 +13,7 @@ public class Algorithm {
     private PrecinctService precinctService;
     private Map<Integer, State> states = new HashMap<>();
     private State state;
-    StringBuilder sb = new StringBuilder();
+    StringBuilder msg = new StringBuilder();
     String[] colors = {"#8B4513", "#8B0000", "#006400", "#00008B", "#FF00FF", "#2F4F4F", "#FF8C00", "#6B5B95", "#FFA07A", "#00FF7F"};
     private SocketIOClient client;
 
@@ -43,18 +43,15 @@ public class Algorithm {
 
 
     private void graphPartition() {
-        System.out.println("phaseone");
         sendMessage("Phase 1 Graph partition...");
         while (state.getClusters().size() > state.getConfiguration().getTargetDistricteNumber()) {
 //            List<String> keysAsArray = new ArrayList<String>(state.getClusters().keySet());
 //            Random r = new Random();
 //            Cluster c1=state.getClusters().get(keysAsArray.get(r.nextInt(keysAsArray.size())));
             Cluster c1 = state.getSmallestCluster();
-            System.out.println("1: " + c1.getClusterID() + "  " + state.getClusters().size() + " " + state.getTargetPopulation() + " " + c1.getDemo().getPopulation() + " " + state.getConfiguration().getTargetDistricteNumber());
             while (state.getTargetPopulation() > c1.getDemo().getPopulation() && state.getClusters().size() > state.getConfiguration().getTargetDistricteNumber()) {
                 ClusterEdge desireClusterEdge = c1.getBestClusterEdge();
                 if (desireClusterEdge != null) {
-                    System.out.println("3: " + desireClusterEdge.getNeighborCluster(c1));
                     Cluster c2 = desireClusterEdge.getNeighborCluster(c1);
                     disconnectNeighborEdge(desireClusterEdge, c1, c2);
                     state.removeCluster(c2);
@@ -71,9 +68,7 @@ public class Algorithm {
     }
 
     private void combine(Cluster c1, Cluster c2) {
-        System.out.println("combine");
-        System.out.println(c2.getClusterID());
-        sb.append(c2 + " merge into " + c1).append("'\n'");
+        msg.append(c2).append(" merge into ").append(c1).append("'\n'");
         for (ClusterEdge e2 : c2.getAllEdges()) { //add edges(c5) from c2 to c1
             e2.changeNeighbor(e2.getNeighborCluster(c2), c1);
             c1.addEdge(e2);
@@ -251,11 +246,6 @@ public class Algorithm {
     }
 
 
-
-
-
-
-
     public void run() {
         sendMessage("Algorithm Start...");
         init();
@@ -263,25 +253,20 @@ public class Algorithm {
 //        state.initDistrict();
 //        annealing();
 
-        sb.append("'\n'");
-        int pn = 0;
+        msg.append("'\n'");
         int cn = 1;
         for (Cluster c : state.getClusters().values()) {
-            System.out.println(c.getClusterID() + " : precinct size " + c.getPrecincts().size() + ", population " + c.getDemo().getPopulation());
-            sb.append("No." + cn + ": " + c.getClusterID() + " : precinct size " + c.getPrecincts().size() + ", population " + c.getDemo().getPopulation()).append("'\n'");
-            pn += c.getPrecincts().size();
+            msg.append("No." + cn + ": " + c.getClusterID() + " : precinct size " + c.getPrecincts().size() + ", population " + c.getDemo().getPopulation()).append("'\n'");
             cn++;
         }
-        System.out.println("total precinct size: " + pn);
         String temp = "";
         int counter = 0;
-        sendMessage("Assign Colors...");
-        StringBuilder districJson = new StringBuilder();
-        districJson.append("{\"type\":\"FeatureCollection\", \"features\": [");
+        sendMessage("Assigning Colors...");
+        StringBuilder districtJson = new StringBuilder();
+        districtJson.append("{\"type\":\"FeatureCollection\", \"features\": [");
         for (Cluster c : state.getClusters().values()) {
             c.setColor(colors[counter]);
-            districJson.append(c.toGeoJsonFormat()).append("},\n");
-            System.out.println("color :" + colors[counter]);
+            districtJson.append(c.toGeoJsonFormat()).append("},\n");
             counter++;
             for (Precinct ps : c.getPrecincts()) {
                 temp += ps.getId() + ":" + c.getColor() + ",";
@@ -294,9 +279,9 @@ public class Algorithm {
             }
             temp = "";
         }
-        districJson.deleteCharAt(districJson.length()-2).append("]}");
-        sendDistrictBoundary(districJson.toString());
-        sendMessage(sb.toString());
+        districtJson.deleteCharAt(districtJson.length()-2).append("]}");
+        sendDistrictBoundary(districtJson.toString());
+        sendMessage(msg.toString());
         sendMessage("Algorithm finished!");
     }
 
