@@ -12,17 +12,20 @@ public class Algorithm {
 
     private PrecinctService precinctService;
     private Map<Integer, State> states = new HashMap<>();
-    private State state;
+    private State currentState;
     StringBuilder msg = new StringBuilder();
     String[] colors = {"#8B4513", "#8B0000", "#006400", "#00008B", "#FF00FF", "#2F4F4F", "#FF8C00", "#6B5B95", "#FFA07A", "#00FF7F"};
     private SocketIOClient client;
 
     //pass the precinctService to the algorithm object because we can't autowired precinctService for each object it is not working.
     public Algorithm(String stateName, Configuration configuration, PrecinctService precinctService, SocketIOClient client) {
-        for (int i = 0; i < configuration.getNumOfRun(); i++) {
-            states.put(i, new State(i, stateName, configuration));
+        if(configuration.getNumOfRun() == 1){
+            this.currentState = new State(configuration);
+        }else {
+            for (int i = 0; i < configuration.getNumOfRun(); i++){
+                states.put(i, new State(i, stateName, configuration));
+            }
         }
-        this.state = new State(configuration);
         this.precinctService = precinctService;
         this.client = client;
     }
@@ -31,30 +34,30 @@ public class Algorithm {
         sendMessage("fetching precinct'state data...");
         Iterable<Precinct> allPrecincts = precinctService.getAllPrecincts();
         for (Precinct p : allPrecincts) {
-            state.addPrecinct(p);
+            currentState.addPrecinct(p);
         }
-        sendMessage("Construct Clusters...");
-        for (Precinct p : state.getPrecincts().values()) {
-            state.addCluster(new Cluster(p));
+        sendMessage("Constructing Clusters...");
+        for (Precinct p : currentState.getPrecincts().values()) {
+            currentState.addCluster(new Cluster(p));
         }
-        sendMessage("Creating Edge...");
-        state.initState();
+        sendMessage("Initializing State...");
+        currentState.initState();
     }
 
 
     private void graphPartition() {
         sendMessage("Phase 1 Graph partition...");
-        while (state.getClusters().size() > state.getConfiguration().getTargetDistricteNumber()) {
+        while (currentState.getClusters().size() > currentState.getConfiguration().getTargetDistricteNumber()) {
 //            List<String> keysAsArray = new ArrayList<String>(state.getClusters().keySet());
 //            Random r = new Random();
 //            Cluster c1=state.getClusters().get(keysAsArray.get(r.nextInt(keysAsArray.size())));
-            Cluster c1 = state.getSmallestCluster();
-            while (state.getTargetPopulation() > c1.getDemo().getPopulation() && state.getClusters().size() > state.getConfiguration().getTargetDistricteNumber()) {
+            Cluster c1 = currentState.getSmallestCluster();
+            while (currentState.getTargetPopulation() > c1.getDemo().getPopulation() && currentState.getClusters().size() > currentState.getConfiguration().getTargetDistricteNumber()) {
                 ClusterEdge desireClusterEdge = c1.getBestClusterEdge();
                 if (desireClusterEdge != null) {
                     Cluster c2 = desireClusterEdge.getNeighborCluster(c1);
                     disconnectNeighborEdge(desireClusterEdge, c1, c2);
-                    state.removeCluster(c2);
+                    currentState.removeCluster(c2);
                     combine(c1, c2);
                 }
             }
@@ -80,8 +83,8 @@ public class Algorithm {
     }
 
     public void annealing(){
-        Map<String, District> districts = state.getDistricts();
-        int equalPopulation=state.getPopulation()/state.getConfiguration().getTargetDistricteNumber();
+        Map<String, District> districts = currentState.getDistricts();
+        int equalPopulation=currentState.getPopulation()/currentState.getConfiguration().getTargetDistricteNumber();
         while(districts.size()>0) {
             District smallestDistrict = getSmallestDistrict(districts);
             while(smallestDistrict.getPopulation()<equalPopulation){
@@ -100,7 +103,7 @@ public class Algorithm {
         Move bestMove=null;
         double bestImprovament=0;
         for(Precinct otherDistrictPrecinct : precinct.getOtherDistrctPrecincts()){
-            District neighborDistrict=state.getFromDistrict(otherDistrictPrecinct);
+            District neighborDistrict=currentState.getFromDistrict(otherDistrictPrecinct);
             Move move = new Move(current,neighborDistrict,otherDistrictPrecinct);
             double improvement = testMove(move);
 
@@ -144,7 +147,7 @@ public class Algorithm {
 
     public double calculateObjective(){
         double score=0;
-        for(District d:state.getDistricts().values()){
+        for(District d:currentState.getDistricts().values()){
             score+=d.getCurrentScore();
         }
         return score;
@@ -157,7 +160,7 @@ public class Algorithm {
     }
 
     public double ratePopequality(District d){
-        int idealPopulation=state.getPopulation()/state.getDistricts().size();
+        int idealPopulation=currentState.getPopulation()/currentState.getDistricts().size();
         int truePopulation = d.getPopulation();
         double suboptimality;
         if(idealPopulation>=truePopulation){
@@ -171,7 +174,7 @@ public class Algorithm {
         int totalGOPvote=0;
         int totalDistricts=0;
         int totalGOPDistricts=0;
-        for(District sd:state.getDistricts().values()){
+        for(District sd:currentState.getDistricts().values()){
             totalVote+=sd.getGOPVote();
             totalVote+=sd.getDEMVote();
             totalGOPvote+=sd.getGOPVote();
@@ -210,7 +213,7 @@ public class Algorithm {
         int iv_g=0;
         int iv_d=0;
         int tv=0;
-        for(District sd:state.getDistricts().values()){
+        for(District sd:currentState.getDistricts().values()){
             int gv=sd.getGOPVote();
             int dv=sd.getDEMVote();
             if(gv>dv){
@@ -255,7 +258,7 @@ public class Algorithm {
 
         msg.append("'\n'");
         int cn = 1;
-        for (Cluster c : state.getClusters().values()) {
+        for (Cluster c : currentState.getClusters().values()) {
             msg.append("No." + cn + ": " + c.getClusterID() + " : precinct size " + c.getPrecincts().size() + ", population " + c.getDemo().getPopulation()).append("'\n'");
             cn++;
         }
@@ -264,7 +267,7 @@ public class Algorithm {
         sendMessage("Assigning Colors...");
         StringBuilder districtJson = new StringBuilder();
         districtJson.append("{\"type\":\"FeatureCollection\", \"features\": [");
-        for (Cluster c : state.getClusters().values()) {
+        for (Cluster c : currentState.getClusters().values()) {
             c.setColor(colors[counter]);
             districtJson.append(c.toGeoJsonFormat()).append("},\n");
             counter++;

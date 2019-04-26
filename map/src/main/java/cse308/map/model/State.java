@@ -76,9 +76,9 @@ public class State {
     }
 
     public void initState() {
-        setPopulation(0);
+        int totalPopulation = 0;
         for (Precinct p : precincts.values()) {
-            setPopulation((int) (population + p.getPop100()));
+            totalPopulation += p.getPop100();
             Demographic demo1 = new Demographic(MajorMinor.NATIVEAMERICAN, (int) p.getPop100(), p.getNativeamericanpop(),p.getDEMVote(),p.getGOPVote());
             p.setDemo(demo1);
             String[] neighbors = p.getNeighbors().split(",");
@@ -104,6 +104,7 @@ public class State {
                 }
             }
         }
+        population = totalPopulation;
     }
 
     public String getRvote() {
