@@ -16,6 +16,8 @@ public class Precinct {
     private String countyfp10;//countyID
     private String neighbors;
     private int nativeamericanpop;
+    private int GOPVote;
+    private int DEMVote;
     @Transient
     private String parentCluster;
     @Transient
@@ -158,7 +160,19 @@ public class Precinct {
     }
 
 
+    public int getGOPVote() {
+        return GOPVote;
+    }
 
+    public void setGOPVote(int GOPVote) {
+        this.GOPVote = GOPVote;
+    }
 
+    public int getDEMVote() {
+        return DEMVote;
+    }
 
+    public void setDEMVote(int DEMVote) {
+        this.DEMVote = DEMVote;
+    }
 }

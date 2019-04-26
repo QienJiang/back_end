@@ -30,6 +30,12 @@ public class District {
     private String districtID;
     private Cluster cluster;
 
+    public District(Cluster c) {
+        cluster=c;
+        districtID=cluster.getClusterID();
+    }
+
+
     public Cluster getCluster() {
         return cluster;
     }
@@ -61,10 +67,7 @@ public class District {
 //
 //    }
 
-    public District(Cluster c) {
-       cluster=c;
-       districtID=cluster.getClusterID();
-    }
+
 
 
 //    public Set<Precinct> getPrecincts() {
@@ -181,13 +184,7 @@ public class District {
         return cluster.getDemo();
     }
 
-    public void adAll(PrecinctEdge e) {
 
-    }
-
-    public void retainAll(PrecinctEdge e) {
-
-    }
 
 
 
@@ -213,4 +210,15 @@ public class District {
     }
 
 
+    public int getPopulation() {
+        return cluster.getDemo().getPopulation();
+    }
+
+    public int getGOPVote() {
+        return cluster.getDemo().getVotePopulation(Party.REPUBLICAN);
+    }
+
+    public int getDEMVote() {
+        return cluster.getDemo().getVotePopulation(Party.DEMOCRATIC);
+    }
 }

@@ -19,6 +19,15 @@ public class State {
     private Map<String, Precinct> precincts = new HashMap<>();
     @Transient
     private Map<String, Cluster> clusters = new HashMap<>();
+
+    public Map<String, District> getDistricts() {
+        return districts;
+    }
+
+    public void setDistricts(Map<String, District> districts) {
+        this.districts = districts;
+    }
+
     @Transient
     private Map<String, District> districts = new HashMap<>();
     @Transient
@@ -70,7 +79,7 @@ public class State {
         setPopulation(0);
         for (Precinct p : precincts.values()) {
             setPopulation((int) (population + p.getPop100()));
-            Demographic demo1 = new Demographic(MajorMinor.NATIVEAMERICAN, (int) p.getPop100(), p.getNativeamericanpop());
+            Demographic demo1 = new Demographic(MajorMinor.NATIVEAMERICAN, (int) p.getPop100(), p.getNativeamericanpop(),p.getDEMVote(),p.getGOPVote());
             p.setDemo(demo1);
             String[] neighbors = p.getNeighbors().split(",");
             Cluster c1 = clusters.get(p.getId());
@@ -79,7 +88,7 @@ public class State {
             for (String name : neighbors) {
                 Precinct neighbor = precincts.get(name);
                 if (!p.isNeighbor(neighbor)) {
-                    Demographic demo2 = new Demographic(MajorMinor.NATIVEAMERICAN, (int) neighbor.getPop100(), neighbor.getNativeamericanpop());
+                    Demographic demo2 = new Demographic(MajorMinor.NATIVEAMERICAN, (int) neighbor.getPop100(), neighbor.getNativeamericanpop(),neighbor.getDEMVote(),neighbor.getGOPVote());
                     neighbor.setDemo(demo2);
                     PrecinctEdge precinctEdge = new PrecinctEdge(p, neighbor);
                     precinctEdge.computJoin();
@@ -164,15 +173,11 @@ public class State {
         this.configuration = configuration;
     }
 
-    public District getSmallestDistrict() {
-        int i = Integer.MAX_VALUE;
-        District smallestDistrict = null;
-        for (District district : districts.values()) {
-            if (district.getDemo().getPopulation() < i && district.getDemo().getPopulation() > 0) {
-                smallestDistrict = district;
-                i = district.getDemo().getPopulation();
-            }
+    public  void initDistrict(){
+        for(Cluster c:clusters.values()){
+            districts.put(c.getClusterID(),new District(c));
         }
-        return smallestDistrict;
     }
+
+
 }

@@ -1,7 +1,7 @@
 package cse308.map.model;
 
 public class Demographic {
-    private Party politicalParty;
+//    private Party politicalParty;
     private int population;
     private MajorMinor majorMinor;
     private int[] mmPopulation;
@@ -9,11 +9,14 @@ public class Demographic {
 //    private int rvote;
 //    private int dvote;
 
-    public Demographic(MajorMinor mm, int pop, int mmPop) {
+    public Demographic(MajorMinor mm, int pop, int mmPop, int demvote, int gopvote) {
         this.majorMinor = mm;
         this.population = pop;
         this.mmPopulation=new int[MajorMinor.values().length];
         this.mmPopulation[mm.ordinal()]=mmPop;
+        this.votePopulation=new int[Party.values().length];
+        this.votePopulation[0]=demvote;
+        this.votePopulation[1]=gopvote;
     }
 
     public int[] getAllmmPopulation(){
@@ -28,27 +31,27 @@ public class Demographic {
         return votePopulation;
     }
 
-    public int getVotePopulation(){
+    public int getVotePopulation(Party politicalParty){
         return votePopulation[politicalParty.ordinal()];
     }
 
     public void combinDemo(Demographic demo) {
         population += demo.getPopulation();
-//        for(int v=0;v<demo.getAllVotePopulation().length;v++){
-//            this.getAllVotePopulation()[v]=demo.getAllVotePopulation()[v];
-//        }
+        for(int v=0;v<demo.getAllVotePopulation().length;v++){
+            this.getAllVotePopulation()[v]=demo.getAllVotePopulation()[v];
+        }
         for(int i=0;i<demo.getAllmmPopulation().length;i++){
             this.mmPopulation[i]+=demo.getAllmmPopulation()[i];
         }
     }
 
-    public Party getPoliticalParty() {
-        return politicalParty;
-    }
+//    public Party getPoliticalParty() {
+//        return politicalParty;
+//    }
 
-    public void setPoliticalParty(Party politicalParty) {
-        this.politicalParty = politicalParty;
-    }
+//    public void setPoliticalParty(Party politicalParty) {
+//        this.politicalParty = politicalParty;
+//    }
 
     public MajorMinor getMajorMinor() {
         return majorMinor;
