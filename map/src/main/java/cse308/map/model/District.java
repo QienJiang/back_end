@@ -29,6 +29,16 @@ public class District {
     */
     private String districtID;
     private Cluster cluster;
+    private double compactness;
+
+
+    public double calCompactness(District district){
+        int allPrecincts = district.getCluster().getPrecincts().size();
+        int borderPrecincts = district.getCluster().getPrecincts().size();
+        return borderPrecincts/(allPrecincts-borderPrecincts);
+    }
+
+
 
     public District(Cluster c) {
         cluster=c;

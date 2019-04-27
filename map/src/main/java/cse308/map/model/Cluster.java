@@ -21,7 +21,6 @@ public class Cluster {
     private double CurrentScore;
 
 
-
     public void assignedColor(String[] color) {
         ArrayList<String> arrayList = new ArrayList<String>(Arrays.asList(color));
         if (this.color == null) {
