@@ -5,6 +5,7 @@ import com.vividsolutions.jts.geom.GeometryCollection;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.io.geojson.GeoJsonWriter;
 
+import javax.validation.constraints.Null;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -123,7 +124,7 @@ public class Cluster {
                 Cluster c4 = e2.getNeighborCluster(this);
                 if (c4 != null) {
                     if (e1.getNeighborCluster(c1) == c4) {
-                        System.out.println("c4: " + c4.getClusterID());
+//                        System.out.println("c4: " + c4.getClusterID());
                         c4.removeEdge(e2);
                         remove.add(e2);
                     }
@@ -138,8 +139,8 @@ public class Cluster {
         ClusterEdge desireClusterEdge = null;
         for (ClusterEdge e : edges) {
             Cluster c2 = e.getNeighborCluster(this);
-            System.out.println("2: " + c2.getClusterID() + ", " + e.getJoinability());
-            if (maxjoin < e.getJoinability()) {
+//            System.out.println("2: " + c2.getClusterID() + ", " + e.getJoinability());
+            if (maxjoin < e.getJoinability() ) {
                 maxjoin = e.getJoinability();
                 desireClusterEdge = e;
             }

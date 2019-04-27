@@ -5,6 +5,7 @@ import cse308.map.model.*;
 import cse308.map.server.PrecinctService;
 import org.hibernate.transform.DistinctResultTransformer;
 
+import java.sql.SQLSyntaxErrorException;
 import java.util.*;
 
 public class Algorithm {
@@ -45,41 +46,132 @@ public class Algorithm {
     }
 
 
+
     private void graphPartition() {
+
+
+
+
+
         sendMessage("Phase 1 Graph partition...");
-        while (currentState.getClusters().size() > currentState.getConfiguration().getTargetDistricteNumber()) {
-//            List<String> keysAsArray = new ArrayList<String>(state.getClusters().keySet());
-//            Random r = new Random();
-//            Cluster c1=state.getClusters().get(keysAsArray.get(r.nextInt(keysAsArray.size())));
-            Cluster c1 = currentState.getSmallestCluster();
-            while (currentState.getTargetPopulation() > c1.getDemo().getPopulation() && currentState.getClusters().size() > currentState.getConfiguration().getTargetDistricteNumber()) {
+//        while (currentState.getClusters().size() > currentState.getConfiguration().getTargetDistricteNumber()) {
+//            Cluster c1 = currentState.getSmallestCluster();
+//            while (currentState.getTargetPopulation() > c1.getDemo().getPopulation() && currentState.getClusters().size() > currentState.getConfiguration().getTargetDistricteNumber()) {
+//                ClusterEdge desireClusterEdge = c1.getBestClusterEdge();
+//                if (desireClusterEdge != null) {
+//                    Cluster c2 = desireClusterEdge.getNeighborCluster(c1);
+//                    disconnectNeighborEdge(desireClusterEdge, c1, c2);
+//                    currentState.removeCluster(c2);
+//                    combine(c1, c2);
+//                }
+//            }
+//        }
+        int i=0;
+        int y=0;
+        while(currentState.getClusters().size() > currentState.getConfiguration().getTargetDistricteNumber()){
+            Iterator<Map.Entry<String,Cluster>> clusterIterator =  currentState.getClusters().entrySet().iterator();
+            System.out.println(i+++", "+currentState.getClusters().size());
+            while (clusterIterator.hasNext()){
+                Set<String> mergedCluster = new HashSet<>();
+                Map.Entry<String,Cluster> clusterEntry = clusterIterator.next();
+                Cluster c1 = clusterEntry.getValue();
                 ClusterEdge desireClusterEdge = c1.getBestClusterEdge();
-                if (desireClusterEdge != null) {
+                if(!mergedCluster.contains(c1.getClusterID())&&desireClusterEdge!=null&&currentState.getTargetPopulation() > c1.getDemo().getPopulation() && currentState.getClusters().size() > currentState.getConfiguration().getTargetDistricteNumber()){
                     Cluster c2 = desireClusterEdge.getNeighborCluster(c1);
-                    disconnectNeighborEdge(desireClusterEdge, c1, c2);
-                    currentState.removeCluster(c2);
-                    combine(c1, c2);
+                    disconnectNeighborEdge(desireClusterEdge,c1,c2);
+                    combine(c1,c2);
+                    mergedCluster.add(c2.getClusterID());
+                    clusterIterator.remove();
+                    y++;
                 }
             }
+            System.out.println(y+"combine");
         }
+
+
+//        int i=0;
+//        while (currentState.getClusters().size() > currentState.getConfiguration().getTargetDistricteNumber()) {
+//            System.out.println("sssssssssssssssssssssssssssssssssssssssssss "+currentState.getClusters().size()+", "+i++);
+//
+////            Map<String,Cluster> currentClusters=currentState.getClusters();
+//            Map<String,Cluster> mergeSet=new HashMap<String,Cluster>();
+//
+//            int v=0;
+//            while(currentState.getClusters().size()!=mergeSet.size()){
+////                HashMap<String,Cluster> mergeSet=new HashMap<String, Cluster>();
+//                List<String> keyArray=new ArrayList<String>(currentState.getClusters().keySet());
+//                Random r=new Random();
+//                Cluster c1=currentState.getClusters().get(keyArray.get(r.nextInt(keyArray.size())));
+//                System.out.println("sssssssssssssssss "+c1.getClusterID()+ ", "+currentState.getClusters().size()+", "+currentState.getClusters().size()+", "+v++);
+//                if (currentState.getTargetPopulation() > c1.getDemo().getPopulation()
+//                        && currentState.getClusters().size() > currentState.getConfiguration().getTargetDistricteNumber()
+//                        && !checkIfCombined(c1,mergeSet)) {
+//                    ClusterEdge desireClusterEdge = c1.getBestClusterEdge();
+//                    if(desireClusterEdge!=null){
+//                        System.out.println("c1: "+c1.getClusterID()+", "+desireClusterEdge.getJoinability());
+//                        Cluster c2=desireClusterEdge.getNeighborCluster(c1);
+//                        if(c2!=null){
+//                        System.out.println("c2: "+c2.getClusterID());
+//                        }else{
+//
+//                        }
+//                        disconnectNeighborEdge(desireClusterEdge,c1,c2);
+//                        combine(c1,c2);
+//                        currentState.removeCluster(c2);
+////                        else{System.out.println("wrong");}
+//
+////                        currentClusters.remove(c2.getClusterID());
+//                    }
+//                    mergeSet.put(c1.getClusterID(),c1);
+//                }
+////                currentClusters.remove(c1.getClusterID());
+//
+//            }
+////            currentClusters=mergeSet;
+//            currentState.setClusters(mergeSet);
+//
+//
+//        }
+
+
+
+
+
+
+
+
+
     }
+
+    public boolean checkIfCombined(Cluster currentClsuter,Map<String,Cluster> stateCluster){
+            if(stateCluster.containsKey(currentClsuter.getClusterID())){
+                return true;
+            }
+
+        return false;
+    }
+
+
+
 
     private void disconnectNeighborEdge(ClusterEdge desireClusterEdge, Cluster c1, Cluster c2) {
         c2.removeEdge(desireClusterEdge);
         c1.removeEdge(desireClusterEdge);
-        c2.removeDuplicateEdge(c1);//remove c4
+        c1.removeDuplicateEdge(c2);//remove c4
     }
 
-    private void combine(Cluster c1, Cluster c2) {
-        msg.append(c2).append(" merge into ").append(c1).append("'\n'");
-        for (ClusterEdge e2 : c2.getAllEdges()) { //add edges(c5) from c2 to c1
-            e2.changeNeighbor(e2.getNeighborCluster(c2), c1);
-            c1.addEdge(e2);
+    private void  combine(Cluster c1, Cluster c2) {
+        msg.append(c1).append(" merge into ").append(c2).append("'\n'");
+        for (ClusterEdge edge : c1.getAllEdges()) { //add edges(c5) from c2 to c1
+            edge.changeNeighbor(edge.getNeighborCluster(c1), c2);
+//            System.out.println("c1: "+edge.getC1()+" c2: "+edge.getC2());
+            c2.addEdge(edge);
         }
-        c1.combineCluster(c2);//combine demo data
-        for (ClusterEdge e1 : c1.getAllEdges()) {//re-compute c1 join
-            e1.computJoin();
+        c2.combineCluster(c1);//combine demo data
+        for (ClusterEdge edge : c2.getAllEdges()) {//re-compute c1 join
+            edge.computJoin();
         }
+      //  System.exit(0);
     }
 
     public void annealing(){

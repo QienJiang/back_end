@@ -73,7 +73,7 @@ public class ClusterEdge {
         int countyValue = c1.getCountyID().equals(c2.getCountyID()) ? 1 : 0;
         int totalMmPopulation = c1.getDemo().getMmPopulation()+c2.getDemo().getMmPopulation();
         double majorMinorValue = (double) totalMmPopulation / totalPopulation;
-        System.out.println("computeJoin: "+majorMinorValue+" "+countyValue);
+//        System.out.println("computeJoin: "+majorMinorValue+" "+countyValue);
         joinability = majorMinorValue * 0.5 + countyValue * 0.5;
         setJoinability(joinability);
     }
