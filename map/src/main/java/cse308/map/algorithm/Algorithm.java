@@ -3,20 +3,29 @@ package cse308.map.algorithm;
 import com.corundumstudio.socketio.SocketIOClient;
 import cse308.map.model.*;
 import cse308.map.server.PrecinctService;
-import org.hibernate.transform.DistinctResultTransformer;
+import java.lang.reflect.*;
 
-import java.sql.SQLSyntaxErrorException;
 import java.util.*;
 
 public class Algorithm {
-
-
     private PrecinctService precinctService;
     private Map<Integer, State> states = new HashMap<>();
     private State currentState;
     StringBuilder msg = new StringBuilder();
     String[] colors = {"#8B4513", "#8B0000", "#006400", "#00008B", "#FF00FF", "#2F4F4F", "#FF8C00", "#6B5B95", "#FFA07A", "#00FF7F"};
     private SocketIOClient client;
+    private HashMap<Measure,Double> weights;
+    private HashMap<District,Double> currentScores;
+    private static final HashMap<Measure,String> measures;
+    static{
+        measures = new HashMap<Measure,String>();
+        measures.put(Measure.POPULATION_EQUALITY,"ratePopequality");
+        measures.put(Measure.EFFICIENCY_GAP,"rateStatewideEfficiencyGap");
+        measures.put(Measure.COMPACTNESS,"rateCompactness");
+        measures.put(Measure.PARTISAN_FAIRNESS,"ratePartisanFairness");
+        measures.put(Measure.COMPETITIVENESS,"rateCompetitiveness");
+//        measures.put(Measure.GERRYMANDER_REPUBLICAN,"")
+    }
 
     //pass the precinctService to the algorithm object because we can't autowired precinctService for each object it is not working.
     public Algorithm(String stateName, Configuration configuration, PrecinctService precinctService, SocketIOClient client) {
@@ -46,13 +55,7 @@ public class Algorithm {
     }
 
 
-
     private void graphPartition() {
-
-
-
-
-
         sendMessage("Phase 1 Graph partition...");
 //        while (currentState.getClusters().size() > currentState.getConfiguration().getTargetDistricteNumber()) {
 //            Cluster c1 = currentState.getSmallestCluster();
@@ -69,7 +72,6 @@ public class Algorithm {
         int i=0;
         while(currentState.getClusters().size() > currentState.getConfiguration().getTargetDistricteNumber()){
             Set<String> mergedCluster = new HashSet<>();
-
             Iterator<Map.Entry<String,Cluster>> clusterIterator =  currentState.getClusters().entrySet().iterator();
             System.out.println(i+++", "+currentState.getClusters().size());
             while (clusterIterator.hasNext()){
@@ -77,7 +79,9 @@ public class Algorithm {
                 Cluster c1 = clusterEntry.getValue();
                 ArrayList<ClusterEdge> desireClusterEdges = c1.getBestClusterEdge();
                 for(ClusterEdge edge: desireClusterEdges){
-                    if(!mergedCluster.contains(c1.getClusterID())&&currentState.getTargetPopulation() > c1.getDemographic().getPopulation() && currentState.getClusters().size() > currentState.getConfiguration().getTargetDistricteNumber()){
+                    if(!mergedCluster.contains(c1.getClusterID())
+                            &&currentState.getTargetPopulation() > c1.getDemographic().getPopulation()
+                            && currentState.getClusters().size() > currentState.getConfiguration().getTargetDistricteNumber()){
                         Cluster c2 = edge.getNeighborCluster(c1);
                         if(!mergedCluster.contains(c2.getClusterID())){
                             disconnectNeighborEdge(edge,c1,c2);
@@ -106,10 +110,7 @@ public class Algorithm {
 //            } catch (InterruptedException e) {
 //                e.printStackTrace();
 //            }
-
         }
-
-
 //        int i=0;
 //        while (currentState.getClusters().size() > currentState.getConfiguration().getTargetDistricteNumber()) {
 //            System.out.println("sssssssssssssssssssssssssssssssssssssssssss "+currentState.getClusters().size()+", "+i++);
@@ -153,26 +154,13 @@ public class Algorithm {
 //
 //
 //        }
-
-
-
-
-
-
-
-
-
     }
-
-    public boolean checkIfCombined(Cluster currentClsuter,Map<String,Cluster> stateCluster){
-            if(stateCluster.containsKey(currentClsuter.getClusterID())){
-                return true;
-            }
-
-        return false;
-    }
-
-
+//    public boolean checkIfCombined(Cluster currentClsuter,Map<String,Cluster> stateCluster){
+//            if(stateCluster.containsKey(currentClsuter.getClusterID())){
+//                return true;
+//            }
+//        return false;
+//    }
 
 
     private void disconnectNeighborEdge(ClusterEdge desireClusterEdge, Cluster c1, Cluster c2) {
@@ -197,18 +185,17 @@ public class Algorithm {
 
     public void annealing(){
         Map<String, District> districts = currentState.getDistricts();
-        int equalPopulation=currentState.getPopulation()/currentState.getConfiguration().getTargetDistricteNumber();
+        int equalPopulation = currentState.getPopulation() / currentState.getConfiguration().getTargetDistricteNumber();
         while(districts.size()>0) {
             District smallestDistrict = getSmallestDistrict(districts);
-            while(smallestDistrict.getPopulation()<equalPopulation){
+            while(smallestDistrict.getPopulation() < equalPopulation){
             for (Precinct precinct : smallestDistrict.getBorderPrecincts()) {
                 Move bestMove = getMove(smallestDistrict, precinct);
                 if (bestMove != null)
                     bestMove.execute();
-
             }
         }
-            districts.remove(smallestDistrict.getDistrictID());
+//            districts.remove(smallestDistrict.getDistrictID());
         }
     }
 
@@ -232,13 +219,12 @@ public class Algorithm {
         if(!move.getFrom().isContigunity()){
             return 0;
         }
-
         double initial_score = move.getTo().getCurrentScore()+move.getFrom().getCurrentScore();
         move.execute();
-        double to_score=rateDistrict(move.getTo());
-        double from_score=rateDistrict(move.getFrom());
-        double final_score =to_score+from_score;
-        double improvement = final_score-initial_score;
+        double to_score = rateDistrict(move.getTo());
+        double from_score = rateDistrict(move.getFrom());
+        double final_score = to_score + from_score;
+        double improvement = final_score - initial_score;
 //        to.setCurrentScore(to_score);
 //        from.setCurrentScore(from_score);
 //        p.setParentCluster(to.getdistrictID());
@@ -258,17 +244,51 @@ public class Algorithm {
         return smallestDistrict;
     }
 
-    public double calculateObjective(){
-        double score=0;
-        for(District d:currentState.getDistricts().values()){
-            score+=d.getCurrentScore();
+//    public List<District> getSmallestDistricts(){
+//        List<Entry<District,Double>> list = new LinkedList<>(currentScores.entrySet());
+//        return list;
+//    }
+//
+//    public double calculateObjective(){
+//        double score=0;
+//        for(District d:currentState.getDistricts().values()){
+//            score+=d.getCurrentScore();
+//        }
+//        return score;
+//    }
+
+    public void setWeights(HashMap<Measure, Double> w){
+        weights = w;
+        currentScores = new HashMap<District, Double>();
+        for(District d : currentState.getDistricts().values()){
+            currentScores.put(d,rateDistrict(d));
         }
-        return score;
     }
+
 
     public double rateDistrict(District d){
         double score=0;
-
+        for (Measure m : weights.keySet()){
+            if(weights.get(m) != 0){
+                try{
+                    Method rate = this.getClass().getMethod(measures.get(m),District.class);
+                    double rating = ((Double) rate.invoke(this,d));
+                    rating = 1 - Math.pow((1-rating),2);
+                    score += weights.get(m) * rating;
+                }catch (Exception e){
+                    System.out.println(m.name() + " - "+e.getClass().getCanonicalName());
+                    System.out.println(e.getMessage());
+                    return -1;
+                }
+            }
+        }
+        return score;
+    }
+    public double calculateObjectiveFunction(){
+        double score = 0;
+        for(District d : currentState.getDistricts().values()){
+            score += currentScores.get(d);
+        }
         return score;
     }
 
