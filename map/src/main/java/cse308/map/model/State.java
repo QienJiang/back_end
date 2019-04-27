@@ -2,8 +2,7 @@ package cse308.map.model;
 
 
 import javax.persistence.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Entity
 @Table(name = "State")

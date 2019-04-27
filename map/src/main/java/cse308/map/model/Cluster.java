@@ -6,10 +6,7 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.io.geojson.GeoJsonWriter;
 
 import javax.validation.constraints.Null;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class Cluster {
 
@@ -117,35 +114,36 @@ public class Cluster {
         }
     }
 
-    public void removeDuplicateEdge(Cluster c1) {
+    public void removeDuplicateEdge(Cluster c2) {
         Set<ClusterEdge> remove = new HashSet<>();
-        for (ClusterEdge e1 : c1.getAllEdges()) {
+        for (ClusterEdge e1 : c2.getAllEdges()) {
+            Cluster c2Neighbor = e1.getNeighborCluster(c2);
             for (ClusterEdge e2 : edges) {
-                Cluster c4 = e2.getNeighborCluster(this);
-                if (c4 != null) {
-                    if (e1.getNeighborCluster(c1) == c4) {
+                Cluster c1Neighbor = e2.getNeighborCluster(this);//get c1 neighbor
+                if (c1Neighbor != null) {
+                    if (c2Neighbor == c1Neighbor) {//get c2 neighbor
 //                        System.out.println("c4: " + c4.getClusterID());
-                        c4.removeEdge(e2);
+                        c1Neighbor.removeEdge(e2);
                         remove.add(e2);
                     }
                 }
             }
         }
+
         edges.removeAll(remove);
+
+
     }
 
-    public ClusterEdge getBestClusterEdge() {
+    public ArrayList<ClusterEdge> getBestClusterEdge() {
         double maxjoin = 0;
+        ArrayList<ClusterEdge> sortedEdges=new ArrayList<>();
         ClusterEdge desireClusterEdge = null;
         for (ClusterEdge e : edges) {
-            Cluster c2 = e.getNeighborCluster(this);
-//            System.out.println("2: " + c2.getClusterID() + ", " + e.getJoinability());
-            if (maxjoin < e.getJoinability() ) {
-                maxjoin = e.getJoinability();
-                desireClusterEdge = e;
-            }
+            sortedEdges.add(e);
         }
-        return desireClusterEdge;
+        Collections.sort(sortedEdges);
+        return sortedEdges;
     }
 
     public void combineCluster(Cluster c) {

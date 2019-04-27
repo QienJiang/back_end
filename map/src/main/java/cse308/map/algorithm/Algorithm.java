@@ -67,25 +67,46 @@ public class Algorithm {
 //            }
 //        }
         int i=0;
-        int y=0;
         while(currentState.getClusters().size() > currentState.getConfiguration().getTargetDistricteNumber()){
+            Set<String> mergedCluster = new HashSet<>();
+
             Iterator<Map.Entry<String,Cluster>> clusterIterator =  currentState.getClusters().entrySet().iterator();
             System.out.println(i+++", "+currentState.getClusters().size());
             while (clusterIterator.hasNext()){
-                Set<String> mergedCluster = new HashSet<>();
                 Map.Entry<String,Cluster> clusterEntry = clusterIterator.next();
                 Cluster c1 = clusterEntry.getValue();
-                ClusterEdge desireClusterEdge = c1.getBestClusterEdge();
-                if(!mergedCluster.contains(c1.getClusterID())&&desireClusterEdge!=null&&currentState.getTargetPopulation() > c1.getDemo().getPopulation() && currentState.getClusters().size() > currentState.getConfiguration().getTargetDistricteNumber()){
-                    Cluster c2 = desireClusterEdge.getNeighborCluster(c1);
-                    disconnectNeighborEdge(desireClusterEdge,c1,c2);
-                    combine(c1,c2);
-                    mergedCluster.add(c2.getClusterID());
-                    clusterIterator.remove();
-                    y++;
+                ArrayList<ClusterEdge> desireClusterEdges = c1.getBestClusterEdge();
+                for(ClusterEdge edge: desireClusterEdges){
+                    if(!mergedCluster.contains(c1.getClusterID())&&currentState.getTargetPopulation() > c1.getDemo().getPopulation() && currentState.getClusters().size() > currentState.getConfiguration().getTargetDistricteNumber()){
+                        Cluster c2 = edge.getNeighborCluster(c1);
+                        if(!mergedCluster.contains(c2.getClusterID())){
+                            disconnectNeighborEdge(edge,c1,c2);
+                            combine(c1,c2);
+                            mergedCluster.add(c2.getClusterID());
+                            clusterIterator.remove();
+                            break;
+                        }
+                    }
                 }
             }
-            System.out.println(y+"combine");
+//            int counter=0;
+//            String temp = "";
+//            for (Cluster c : currentState.getClusters().values()) {
+//                c.setColor(colors[counter%10]);
+//                counter++;
+//                for (Precinct ps : c.getPrecincts()) {
+//                    temp += ps.getId() + ":" + c.getColor() + ",";
+//
+//                }
+//            }
+//            client.sendEvent("updateColor", temp);
+//            temp = "";
+//            try {
+//                Thread.sleep(1000);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+
         }
 
 

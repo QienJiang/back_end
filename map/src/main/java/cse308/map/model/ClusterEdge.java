@@ -1,6 +1,6 @@
 package cse308.map.model;
 
-public class ClusterEdge {
+public class ClusterEdge implements Comparable<ClusterEdge>{
     private double comactness;
     private Cluster c1;
     private Cluster c2;
@@ -88,5 +88,15 @@ public class ClusterEdge {
 
     public String toString() {
         return c1.getClusterID() + ": " + c2.getClusterID();
+    }
+
+    @Override
+    public int compareTo(ClusterEdge o) {
+        if(joinability == o.joinability){
+            return  0;
+        }else if(joinability > o.joinability){
+            return -1;
+        }
+        return 1;
     }
 }
