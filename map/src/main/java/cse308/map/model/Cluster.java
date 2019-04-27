@@ -14,7 +14,7 @@ public class Cluster {
     private Geometry shape;
     private Set<ClusterEdge> edges = new HashSet<>();
     private Set<Precinct> precincts;
-    private Demographic demo;
+    private Demographic demographic;
     private boolean isAssigned;
     private String countyID;
     private String color;
@@ -51,9 +51,6 @@ public class Cluster {
         this.precincts = precincts;
     }
 
-    public void setDemo(Demographic demo) {
-        this.demo = demo;
-    }
 
     public boolean isAssigned() {
         return isAssigned;
@@ -148,12 +145,12 @@ public class Cluster {
 
     public void combineCluster(Cluster c) {
         if (!countyID.equals(c.getCountyID())) {
-            if (demo.getPopulation()< c.getDemo().getPopulation()) {
+            if (demographic.getPopulation()< c.getDemographic().getPopulation()) {
                 countyID = c.getCountyID();
             }
         }
         shape = shape.union(c.shape);
-        demo.combinDemo(c.getDemo());
+        demographic.combineDemo(c.getDemographic());
         precincts.addAll(c.getPrecincts());
     }
 
@@ -181,9 +178,14 @@ public class Cluster {
 
     }
 
-    public Demographic getDemo() {
-        return demo;
+    public Demographic getDemographic() {
+        return demographic;
     }
+
+    public void setDemographic(Demographic demographic) {
+        this.demographic = demographic;
+    }
+
     public Set<ClusterEdge> getAllEdges() {
         return edges;
     }
@@ -222,7 +224,7 @@ public class Cluster {
 
     public String getProperty(){
         StringBuilder s = new StringBuilder();
-        s.append("\"properties\":{\"GEOID10\": \"").append(clusterID).append("\",").append("\"POP100\":\"").append(demo.getPopulation()).append("\",").
+        s.append("\"properties\":{\"GEOID10\": \"").append(clusterID).append("\",").append("\"POP100\":\"").append(demographic.getPopulation()).append("\",").
                 append("\"COLOR\":\"").append(color).append("\"}");
         return s.toString();
     }

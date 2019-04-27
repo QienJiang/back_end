@@ -1,7 +1,7 @@
 package cse308.map.model;
 
 public class ClusterEdge implements Comparable<ClusterEdge>{
-    private double comactness;
+    private double compactness;
     private Cluster c1;
     private Cluster c2;
 
@@ -9,12 +9,12 @@ public class ClusterEdge implements Comparable<ClusterEdge>{
 
     private double joinability;
 
-    public double getComactness() {
-        return comactness;
+    public double getCompactness() {
+        return compactness;
     }
 
-    public void setComactness(double comactness) {
-        this.comactness = comactness;
+    public void setCompactness(double compactness) {
+        this.compactness = compactness;
     }
 
     public Cluster getC1() {
@@ -66,12 +66,13 @@ public class ClusterEdge implements Comparable<ClusterEdge>{
     public ClusterEdge(Cluster c1, Cluster c2) {
         this.c1 = c1;
         this.c2 = c2;
+        computeJoin();
     }
 
-    public void computJoin() {
-        int totalPopulation = c1.getDemo().getPopulation() + c2.getDemo().getPopulation();
+    public void computeJoin() {
+        int totalPopulation = c1.getDemographic().getPopulation() + c2.getDemographic().getPopulation();
         int countyValue = c1.getCountyID().equals(c2.getCountyID()) ? 1 : 0;
-        int totalMmPopulation = c1.getDemo().getMmPopulation()+c2.getDemo().getMmPopulation();
+        int totalMmPopulation = c1.getDemographic().getNativeAmerican()+c2.getDemographic().getNativeAmerican();
         double majorMinorValue = (double) totalMmPopulation / totalPopulation;
 //        System.out.println("computeJoin: "+majorMinorValue+" "+countyValue);
         joinability = majorMinorValue * 0.5 + countyValue * 0.5;

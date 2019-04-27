@@ -62,9 +62,9 @@ public class State {
         int i = Integer.MAX_VALUE;
         Cluster smallestCluster = null;
         for (Cluster c : clusters.values()) {
-            if (c.getDemo().getPopulation() < i && c.getDemo().getPopulation() > 0) {
+            if (c.getDemographic().getPopulation() < i && c.getDemographic().getPopulation() > 0) {
                 smallestCluster = c;
-                i = c.getDemo().getPopulation();
+                i = c.getDemographic().getPopulation();
             }
         }
         return smallestCluster;
@@ -77,27 +77,21 @@ public class State {
     public void initState() {
         int totalPopulation = 0;
         for (Precinct p : precincts.values()) {
-            totalPopulation += p.getPop100();
-            Demographic demo1 = new Demographic(MajorMinor.NATIVEAMERICAN, (int) p.getPop100(), p.getNativeamericanpop(),p.getDEMVote(),p.getGOPVote());
-            p.setDemo(demo1);
+            totalPopulation += p.getDemographic().getPopulation();
             String[] neighbors = p.getNeighbors().split(",");
             Cluster c1 = clusters.get(p.getId());
-            c1.setCountyID(p.getCountyfp10());
-            c1.setDemo(p.getDemo());
+            c1.setCountyID(p.getCounty());
+            c1.setDemographic(p.getDemographic());
             for (String name : neighbors) {
                 Precinct neighbor = precincts.get(name);
                 if (!p.isNeighbor(neighbor)) {
-                    Demographic demo2 = new Demographic(MajorMinor.NATIVEAMERICAN, (int) neighbor.getPop100(), neighbor.getNativeamericanpop(),neighbor.getDEMVote(),neighbor.getGOPVote());
-                    neighbor.setDemo(demo2);
                     PrecinctEdge precinctEdge = new PrecinctEdge(p, neighbor);
-                    precinctEdge.computJoin();
                     p.addEdge(precinctEdge);
                     neighbor.addEdge(precinctEdge);
                     Cluster c2 = clusters.get(neighbor.getId());
-                    c2.setCountyID(neighbor.getCountyfp10());
-                    c2.setDemo(neighbor.getDemo());
+                    c2.setCountyID(neighbor.getCounty());
+                    c2.setDemographic(neighbor.getDemographic());
                     ClusterEdge clusterEdge = new ClusterEdge(c1, c2);
-                    clusterEdge.setJoinability(precinctEdge.getJoinability());
                     c1.addEdge(clusterEdge);
                     c2.addEdge(clusterEdge);
                 }

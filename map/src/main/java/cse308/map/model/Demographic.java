@@ -1,104 +1,33 @@
 package cse308.map.model;
 
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+
+@Embeddable
 public class Demographic {
-//    private Party politicalParty;
     private int population;
-    private MajorMinor majorMinor;
-    private int[] mmPopulation;
-    private int[] votePopulation;
-//    private int rvote;
-//    private int dvote;
+    @Column(name = "democraticvote")
+    private int democraticVote;
+    @Column(name = "republicanvote")
+    private int republicanVote;
+    @Column(name = "nativeamerican")
+    private int nativeAmerican;
+    @Column(name = "africanamerican")
+    private int africanAmerican;
+    private int asian;
 
-    public Demographic(MajorMinor mm, int pop, int mmPop, int demvote, int gopvote) {
-        this.majorMinor = mm;
-        this.population = pop;
-        this.mmPopulation=new int[MajorMinor.values().length];
-        this.mmPopulation[mm.ordinal()]=mmPop;
-        this.votePopulation=new int[Party.values().length];
-        this.votePopulation[0]=demvote;
-        this.votePopulation[1]=gopvote;
+    public Demographic(){
+
     }
 
-    public int[] getAllmmPopulation(){
-        return mmPopulation;
-    }
-
-    public int getMmPopulation(){
-        return mmPopulation[majorMinor.ordinal()];
-    }
-
-    public int[] getAllVotePopulation() {
-        return votePopulation;
-    }
-
-    public int getVotePopulation(Party politicalParty){
-        return votePopulation[politicalParty.ordinal()];
-    }
-
-    public void combinDemo(Demographic demo) {
+    public void combineDemo(Demographic demo) {
         population += demo.getPopulation();
-        for(int v=0;v<demo.getAllVotePopulation().length;v++){
-            this.getAllVotePopulation()[v]=demo.getAllVotePopulation()[v];
-        }
-        for(int i=0;i<demo.getAllmmPopulation().length;i++){
-            this.mmPopulation[i]+=demo.getAllmmPopulation()[i];
-        }
+        this.democraticVote += demo.getDemocraticVote();
+        this.republicanVote += demo.getRepublicanVote();
+        this.nativeAmerican += demo.getNativeAmerican();
+        this.africanAmerican += demo.getAfricanAmerican();
+        this.asian += demo.getAsian();
     }
-
-//    public Party getPoliticalParty() {
-//        return politicalParty;
-//    }
-
-//    public void setPoliticalParty(Party politicalParty) {
-//        this.politicalParty = politicalParty;
-//    }
-
-    public MajorMinor getMajorMinor() {
-        return majorMinor;
-    }
-
-    public void setMajorMinor(MajorMinor majorMinor) {
-        this.majorMinor = majorMinor;
-    }
-
-
-
-//    public int getAFRICAN_AMERICAN() {
-//        return AFRICAN_AMERICAN;
-//    }
-//
-//    public void setAFRICAN_AMERICAN(int AFRICAN_AMERICAN) {
-//        this.AFRICAN_AMERICAN = AFRICAN_AMERICAN;
-//    }
-//
-//    public int getASIAN_PACIFIC() {
-//        return ASIAN_PACIFIC;
-//    }
-//
-//    public void setASIAN_PACIFIC(int ASIAN_PACIFIC) {
-//        this.ASIAN_PACIFIC = ASIAN_PACIFIC;
-//    }
-//
-//    public int getHISPANIC() {
-//        return HISPANIC;
-//    }
-//
-//    public void setHISPANIC(int HISPANIC) {
-//        this.HISPANIC = HISPANIC;
-//    }
-//
-//    public int getLATINO() {
-//        return LATINO;
-//    }
-//
-//    public void setLATINO(int LATINO) {
-//        this.LATINO = LATINO;
-//    }
-
-    public Demographic() {
-    }
-
-
 
     public int getPopulation() {
         return population;
@@ -108,8 +37,43 @@ public class Demographic {
         this.population = population;
     }
 
+    public int getDemocraticVote() {
+        return democraticVote;
+    }
 
-    public void setMmPopulation(int[] mmPopulation) {
-        this.mmPopulation = mmPopulation;
+    public void setDemocraticVote(int democraticVote) {
+        this.democraticVote = democraticVote;
+    }
+
+    public int getRepublicanVote() {
+        return republicanVote;
+    }
+
+    public void setRepublicanVote(int republicanVote) {
+        this.republicanVote = republicanVote;
+    }
+
+    public int getNativeAmerican() {
+        return nativeAmerican;
+    }
+
+    public void setNativeAmerican(int nativeAmerican) {
+        this.nativeAmerican = nativeAmerican;
+    }
+
+    public int getAfricanAmerican() {
+        return africanAmerican;
+    }
+
+    public void setAfricanAmerican(int africanAmerican) {
+        this.africanAmerican = africanAmerican;
+    }
+
+    public int getAsian() {
+        return asian;
+    }
+
+    public void setAsian(int asian) {
+        this.asian = asian;
     }
 }

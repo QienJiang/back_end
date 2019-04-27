@@ -1,10 +1,10 @@
 package cse308.map.model;
 
 public class PrecinctEdge {
-    private double comactness;
+    private double compactness;
     private Precinct p1;
     private Precinct p2;
-    private double communityifInterset;
+    private double communityOfInterset;
     private double countyJoinability;
     private double joinability;
 
@@ -20,15 +20,23 @@ public class PrecinctEdge {
     public PrecinctEdge(Precinct p1, Precinct p2) {
         this.p1 = p1;
         this.p2 = p2;
-
+        computeJoin();
     }
 
-    public double getComactness() {
-        return comactness;
+    public double getCompactness() {
+        return compactness;
     }
 
-    public void setComactness(double comactness) {
-        this.comactness = comactness;
+    public void setCompactness(double compactness) {
+        this.compactness = compactness;
+    }
+
+    public double getCommunityOfInterset() {
+        return communityOfInterset;
+    }
+
+    public void setCommunityOfInterset(double communityOfInterset) {
+        this.communityOfInterset = communityOfInterset;
     }
 
     public Precinct getP1() {
@@ -47,14 +55,6 @@ public class PrecinctEdge {
         this.p2 = p2;
     }
 
-    public double getCommunityifInterset() {
-        return communityifInterset;
-    }
-
-    public void setCommunityifInterset(double communityifInterset) {
-        this.communityifInterset = communityifInterset;
-    }
-
     public double getCountyJoinability() {
         return countyJoinability;
     }
@@ -71,11 +71,11 @@ public class PrecinctEdge {
         this.joinability = joinability;
     }
 
-    public void computJoin() {
-        int totalPopulation = p1.getDemo().getPopulation() + p2.getDemo().getPopulation();
-        int totalMmPopulation=p1.getDemo().getMmPopulation()+p2.getDemo().getMmPopulation();
+    public void computeJoin() {
+        int totalPopulation = p1.getDemographic().getPopulation() + p2.getDemographic().getPopulation();
+        int totalMmPopulation=p1.getDemographic().getNativeAmerican()+p2.getDemographic().getNativeAmerican();
         double majorMinorValue=(double) totalMmPopulation/totalPopulation;
-        int countyValue = p1.getCountyfp10().equals(p2.getCountyfp10()) ? 1 : 0;
+        int countyValue = p1.getId().equals(p2.getId()) ? 1 : 0;
         this.joinability = majorMinorValue * 0.5 + countyValue * 0.5;
         setJoinability(joinability);
     }

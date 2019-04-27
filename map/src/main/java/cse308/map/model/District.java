@@ -79,7 +79,7 @@ public class District {
 //    }
 //
     public void setDemo(Demographic demo) {
-        cluster.setDemo(demo);
+        cluster.setDemographic(demo);
     }
     public double getCurrentScore(){
         return cluster.getCurrentScore();
@@ -181,7 +181,7 @@ public class District {
 //
 //
     public Demographic getDemo() {
-        return cluster.getDemo();
+        return cluster.getDemographic();
     }
 
 
@@ -211,14 +211,14 @@ public class District {
 
 
     public int getPopulation() {
-        return cluster.getDemo().getPopulation();
+        return cluster.getDemographic().getPopulation();
     }
 
     public int getGOPVote() {
-        return cluster.getDemo().getVotePopulation(Party.REPUBLICAN);
+        return cluster.getDemographic().getRepublicanVote();
     }
 
     public int getDEMVote() {
-        return cluster.getDemo().getVotePopulation(Party.DEMOCRATIC);
+        return cluster.getDemographic().getDemocraticVote();
     }
 }

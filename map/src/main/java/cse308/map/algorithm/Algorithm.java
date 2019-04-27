@@ -77,7 +77,7 @@ public class Algorithm {
                 Cluster c1 = clusterEntry.getValue();
                 ArrayList<ClusterEdge> desireClusterEdges = c1.getBestClusterEdge();
                 for(ClusterEdge edge: desireClusterEdges){
-                    if(!mergedCluster.contains(c1.getClusterID())&&currentState.getTargetPopulation() > c1.getDemo().getPopulation() && currentState.getClusters().size() > currentState.getConfiguration().getTargetDistricteNumber()){
+                    if(!mergedCluster.contains(c1.getClusterID())&&currentState.getTargetPopulation() > c1.getDemographic().getPopulation() && currentState.getClusters().size() > currentState.getConfiguration().getTargetDistricteNumber()){
                         Cluster c2 = edge.getNeighborCluster(c1);
                         if(!mergedCluster.contains(c2.getClusterID())){
                             disconnectNeighborEdge(edge,c1,c2);
@@ -190,7 +190,7 @@ public class Algorithm {
         }
         c2.combineCluster(c1);//combine demo data
         for (ClusterEdge edge : c2.getAllEdges()) {//re-compute c1 join
-            edge.computJoin();
+            edge.computeJoin();
         }
       //  System.exit(0);
     }
@@ -215,7 +215,7 @@ public class Algorithm {
     public Move getMove(District current,Precinct precinct){
         Move bestMove=null;
         double bestImprovament=0;
-        for(Precinct otherDistrictPrecinct : precinct.getOtherDistrctPrecincts()){
+        for(Precinct otherDistrictPrecinct : precinct.getOtherDistrctPreicincts()){
             District neighborDistrict=currentState.getFromDistrict(otherDistrictPrecinct);
             Move move = new Move(current,neighborDistrict,otherDistrictPrecinct);
             double improvement = testMove(move);
@@ -372,7 +372,7 @@ public class Algorithm {
         msg.append("'\n'");
         int cn = 1;
         for (Cluster c : currentState.getClusters().values()) {
-            msg.append("No." + cn + ": " + c.getClusterID() + " : precinct size " + c.getPrecincts().size() + ", population " + c.getDemo().getPopulation()).append("'\n'");
+            msg.append("No." + cn + ": " + c.getClusterID() + " : precinct size " + c.getPrecincts().size() + ", population " + c.getDemographic().getPopulation()).append("'\n'");
             cn++;
         }
         String temp = "";
