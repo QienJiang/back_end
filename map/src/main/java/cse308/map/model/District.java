@@ -1,13 +1,13 @@
 package cse308.map.model;
 
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.io.geojson.GeoJsonWriter;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+//import com.vividsolutions.jts.geom.Geometry;
+//import com.vividsolutions.jts.geom.GeometryFactory;
+//import com.vividsolutions.jts.io.geojson.GeoJsonWriter;
+//
+//import java.util.ArrayList;
+//import java.util.Arrays;
 
 public class District {
     /*
@@ -194,7 +194,13 @@ public class District {
         return cluster.getDemographic();
     }
 
-
+    public double getMajorMinor(){
+        double majorMinorValue = 0;
+        int totalPopulation = this.getCluster().getDemographic().getPopulation();
+        int totalMmPopulation = this.getCluster().getDemographic().getNativeAmerican();
+        majorMinorValue = (double) totalMmPopulation / totalPopulation;
+        return majorMinorValue;
+    }
 
 
 

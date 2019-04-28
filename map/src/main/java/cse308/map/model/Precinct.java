@@ -2,9 +2,13 @@ package cse308.map.model;
 
 import com.vividsolutions.jts.geom.Geometry;
 
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Transient;
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.*;
+//import javax.persistence.*;
 
 @Entity
 public class Precinct {
@@ -137,5 +141,13 @@ public class Precinct {
 
     public void setIscCompute(boolean iscCompute) {
         this.iscCompute = iscCompute;
+    }
+
+    public double getMajorMinor(){
+        double majorMinorValue = 0;
+        int totalPopulation = this.getDemographic().getPopulation();
+        int totalMmPopulation = this.getDemographic().getNativeAmerican();
+        majorMinorValue = (double) totalMmPopulation / totalPopulation;
+        return majorMinorValue;
     }
 }

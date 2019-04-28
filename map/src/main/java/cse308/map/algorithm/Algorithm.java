@@ -3,9 +3,10 @@ package cse308.map.algorithm;
 import com.corundumstudio.socketio.SocketIOClient;
 import cse308.map.model.*;
 import cse308.map.server.PrecinctService;
-import java.lang.reflect.*;
 
+import java.lang.reflect.Method;
 import java.util.*;
+//import java.lang.reflect.*;
 
 public class Algorithm {
     private PrecinctService precinctService;
@@ -184,36 +185,81 @@ public class Algorithm {
     }
 
     public void annealing(){
-        Map<String, District> districts = currentState.getDistricts();
+        District smallestDistrict = getSmallestDistrict(currentState.getDistricts());
         int equalPopulation = currentState.getPopulation() / currentState.getConfiguration().getTargetDistricteNumber();
-        while(districts.size()>0) {
-            District smallestDistrict = getSmallestDistrict(districts);
-            while(smallestDistrict.getPopulation() < equalPopulation){
-            for (Precinct precinct : smallestDistrict.getBorderPrecincts()) {
-                Move bestMove = getMove(smallestDistrict, precinct);
-                if (bestMove != null)
-                    bestMove.execute();
-            }
-        }
-//            districts.remove(smallestDistrict.getDistrictID());
-        }
+//        while(smallestDistrict.getPopulation() < equalPopulation){
+        makeMove();
+//            if(m != null){
+//                m.execute();
+//            }else{
+//                break;
+//            }
+//        }
+
+
+
+//        Map<String, District> districts = currentState.getDistricts();
+//        int equalPopulation = currentState.getPopulation() / currentState.getConfiguration().getTargetDistricteNumber();
+//        while(districts.size()>0) {
+//            District smallestDistrict = getSmallestDistrict(districts);
+//            while(smallestDistrict.getPopulation() < equalPopulation){
+//            for (Precinct precinct : smallestDistrict.getBorderPrecincts()) {
+//                Move bestMove = getMove(smallestDistrict, precinct);
+//                if (bestMove != null)
+//                    bestMove.execute();
+//            }
+//        }
+////            districts.remove(smallestDistrict.getDistrictID());
+//        }
     }
+
+
+    public boolean makeMove() {
+        District smallestDistrict = getSmallestDistrict(currentState.getDistricts());
+        int equalPopulation = currentState.getPopulation() / currentState.getConfiguration().getTargetDistricteNumber();
+        while (smallestDistrict.getPopulation() < equalPopulation) {
+            Move bestMove = null;
+            for (Precinct precinct : smallestDistrict.getBorderPrecincts()) {
+                bestMove = getMove(smallestDistrict, precinct);
+                if (bestMove != null) {
+                    bestMove.execute();
+                    return true;
+                }
+            }
+            if (bestMove == null) {
+                return makeMove_secondary();
+            }
+
+
+        }
+        return true;
+//        Move m = getMove(smallestDistrict, );
+//        if(m != null){
+//            return makeMove_secondary();
+//        }
+//        return m;
+    }
+
 
     public Move getMove(District current,Precinct precinct){
         Move bestMove=null;
         double bestImprovament=0;
-        for(Precinct otherDistrictPrecinct : precinct.getOtherDistrctPreicincts()){
-            District neighborDistrict=currentState.getFromDistrict(otherDistrictPrecinct);
-            Move move = new Move(current,neighborDistrict,otherDistrictPrecinct);
-            double improvement = testMove(move);
-
-            if(improvement > bestImprovament) {
-                bestMove = move;
-                bestImprovament = improvement;
+        for(Precinct otherDistrictPrecinct : precinct.getOtherDistrctPreicincts()) {
+            double districtMajorMinorValue = current.getMajorMinor();
+            double totalMajorMinorValue = precinct.getMajorMinor() + districtMajorMinorValue;
+            if (totalMajorMinorValue > districtMajorMinorValue && totalMajorMinorValue < currentState.getConfiguration().getMajorminor()) {
+                District neighborDistrict = currentState.getFromDistrict(otherDistrictPrecinct);
+                Move move = new Move(current, neighborDistrict, otherDistrictPrecinct);
+                double improvement = testMove(move);
+                if (improvement > bestImprovament) {
+                    bestMove = move;
+                    bestImprovament = improvement;
+                }
             }
         }
         return bestMove;
     }
+
 
     public double testMove(Move move){
         if(!move.getFrom().isContigunity()){
@@ -232,6 +278,24 @@ public class Algorithm {
         return improvement<=0? 0: improvement;
     }
 
+    public boolean makeMove_secondary(){
+        List<District> districts = getSortedDistricts();
+        districts.remove(0);//remove last round smallest district
+        while (districts.size() > 0) {
+            District startDistrict = districts.get(0);
+            for (Precinct precinct : startDistrict.getBorderPrecincts()) {
+                Move m = getMove(startDistrict, precinct);//......
+                if (m != null) {
+                    m.execute();
+                    return true;
+
+                }
+                districts.remove(0);
+            }
+        }
+        return false;
+    }
+
     public District getSmallestDistrict(Map<String,District> districts) {
         int i = Integer.MAX_VALUE;
         District smallestDistrict = null;
@@ -244,10 +308,11 @@ public class Algorithm {
         return smallestDistrict;
     }
 
-//    public List<District> getSmallestDistricts(){
+    public List<District> getSortedDistricts(){
+        List<District> list  = null;
 //        List<Entry<District,Double>> list = new LinkedList<>(currentScores.entrySet());
-//        return list;
-//    }
+        return list;
+    }
 //
 //    public double calculateObjective(){
 //        double score=0;
