@@ -188,7 +188,10 @@ public class Algorithm {
         District smallestDistrict = getSmallestDistrict(currentState.getDistricts());
         int equalPopulation = currentState.getPopulation() / currentState.getConfiguration().getTargetDistricteNumber();
 //        while(smallestDistrict.getPopulation() < equalPopulation){
-        makeMove();
+        int i=0;
+        System.out.println(i++);
+        while(makeMove()){
+            System.out.println(i++);};
 //            if(m != null){
 //                m.execute();
 //            }else{
@@ -290,8 +293,9 @@ public class Algorithm {
                     return true;
 
                 }
-                districts.remove(0);
+
             }
+            districts.remove(0);
         }
         return false;
     }
@@ -309,7 +313,11 @@ public class Algorithm {
     }
 
     public List<District> getSortedDistricts(){
-        List<District> list  = null;
+        ArrayList<District> list  = new ArrayList<>();
+        for (District e : currentState.getDistricts().values()) {
+            list.add(e);
+        }
+        Collections.sort(list);
 //        List<Entry<District,Double>> list = new LinkedList<>(currentScores.entrySet());
         return list;
     }
@@ -404,7 +412,10 @@ public class Algorithm {
     }
 
     public double rateCompactness(District d){
-        return 0;
+
+        int allPrecincts = d.getCluster().getPrecincts().size();
+        int borderPrecincts = d.getBorderPrecincts().size();
+        return borderPrecincts/(allPrecincts-borderPrecincts);
     }
 
     public double rateStatewideEfficiencyGap(District d){
@@ -441,9 +452,7 @@ public class Algorithm {
     }
 
     public double rateCompetitiveness(District d){
-        int gv=d.getGOPVote();
-        int dv=d.getDEMVote();
-        return 1.0-(Math.abs(gv-dv)/(gv+dv));
+        return rateCompactness(d);
     }
 
 
@@ -451,8 +460,8 @@ public class Algorithm {
         sendMessage("Algorithm Start...");
         init();
         graphPartition();
-//        state.initDistrict();
-//        annealing();
+        currentState.initDistrict();
+        annealing();
 
         msg.append("'\n'");
         int cn = 1;

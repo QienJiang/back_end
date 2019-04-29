@@ -9,7 +9,7 @@ import java.util.Set;
 //import java.util.ArrayList;
 //import java.util.Arrays;
 
-public class District {
+public class District implements Comparable<District>{
     /*
     private Cluster cluster;
     private int DistrictID;
@@ -32,11 +32,11 @@ public class District {
     private double compactness;
 
 
-    public double calCompactness(District district){
-        int allPrecincts = district.getCluster().getPrecincts().size();
-        int borderPrecincts = district.getCluster().getPrecincts().size();
-        return borderPrecincts/(allPrecincts-borderPrecincts);
-    }
+//    public double calCompactness(){
+//        int allPrecincts = d.getCluster().getPrecincts().size();
+//        int borderPrecincts = d.getBorderPrecincts().size();
+//        return borderPrecincts/(allPrecincts-borderPrecincts);
+//    }
 
 
 
@@ -236,5 +236,15 @@ public class District {
 
     public int getDEMVote() {
         return cluster.getDemographic().getDemocraticVote();
+    }
+
+    @Override
+    public int compareTo(District o) {
+        if(cluster.getDemographic().getPopulation() == o.getCluster().getDemographic().getPopulation()){
+            return  0;
+        }else if(cluster.getDemographic().getPopulation() > o.getCluster().getDemographic().getPopulation()){
+            return 1;
+        }
+        return -1;
     }
 }

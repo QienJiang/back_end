@@ -15,6 +15,11 @@ public class Configuration {
         this.majorminor = majorminor;
     }
 
+    public Configuration(int desireNum, int numOfRun) {
+        this.targetDistricteNumber = desireNum;
+        this.numOfRun = numOfRun;
+    }
+
     public int getTargetDistricteNumber() {
         return targetDistricteNumber;
     }
