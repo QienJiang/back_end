@@ -1,5 +1,7 @@
 package cse308.map.model;
 
+import com.vividsolutions.jts.geom.Geometry;
+
 import java.util.Objects;
 
 public class Move {
@@ -19,7 +21,11 @@ public class Move {
 
     public void execute(){
         from.removePrecinct(precinct);
+        Geometry newDistrict = from.getCluster().getShape().symDifference(precinct.getShape());
+        from.getCluster().setShape(newDistrict);
         to.addPrecinct(precinct);
+        newDistrict = to.getCluster().getShape().union(precinct.getShape());
+        from.getCluster().setShape(newDistrict);
     }
 
     public void undo(){
