@@ -9,6 +9,10 @@ public class Configuration {
     private MajorMinor comunityOfinterest;
     private HashMap<Measure, Double> weights=new HashMap<>();
 
+    public Configuration(){
+
+    }
+    
     public Configuration(int desireNum, int numOfRun, double majorminor,String comunityOfinterest,
                          double POPULATION_EQUALITY,
                          double EFFICIENCY_GAP,
