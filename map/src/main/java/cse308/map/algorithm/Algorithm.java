@@ -169,7 +169,7 @@ public class Algorithm {
     }
 
     private double testMove(Move move) {
-        if (!move.getFrom().isContigunity()) {
+        if (!move.getFrom().isContiguity(move,move.getFrom())) {
             return 0;
         }
         double initial_score = move.getTo().getCurrentScore() + move.getFrom().getCurrentScore();

@@ -1,5 +1,8 @@
 package cse308.map.model;
 
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
+
 import java.util.HashSet;
 import java.util.Set;
 //import com.vividsolutions.jts.geom.Geometry;
@@ -30,6 +33,7 @@ public class District implements Comparable<District>{
     private String districtID;
     private Cluster cluster;
     private double compactness;
+    private Geometry shape;
 
 
 //    public double calCompactness(){
@@ -39,10 +43,26 @@ public class District implements Comparable<District>{
 //    }
 
 
+    public double getCompactness() {
+        return compactness;
+    }
+
+    public void setCompactness(double compactness) {
+        this.compactness = compactness;
+    }
+
+    public Geometry getShape() {
+        return shape;
+    }
+
+    public void setShape(Geometry shape) {
+        this.shape = shape;
+    }
 
     public District(Cluster c) {
         cluster=c;
         districtID=cluster.getClusterID();
+        shape = new GeometryFactory().createGeometry(cluster.getShape());
     }
 
 
@@ -221,7 +241,16 @@ public class District implements Comparable<District>{
         return borderPrecincts;
     }
 
-    public boolean isContigunity(){
+    public boolean isContiguity(Move move, District from){
+        from.getCluster().getPrecincts().remove(move.getPrecinct());
+        Geometry shape = null;
+        for(Precinct precinct : from.getCluster().getPrecincts()){
+            shape = shape.union(precinct.getShape());
+        }
+        if (shape.getGeometryType().equals("MultiPolygon")){
+            return false;
+        }
+        from.getCluster().getPrecincts().add(move.getPrecinct());
         return true;
     }
 
