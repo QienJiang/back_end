@@ -14,6 +14,7 @@ public class Algorithm {
     private State currentState;
     StringBuilder msg = new StringBuilder();
     String[] colors = {"#8B4513", "#8B0000", "#006400", "#00008B", "#FF00FF", "#2F4F4F", "#FF8C00", "#6B5B95", "#FFA07A", "#00FF7F"};
+    ArrayList<String> coloring=new ArrayList<>();
     private SocketIOClient client;
     private HashMap<Measure,Double> weights;
     private HashMap<District,Double> currentScores;
@@ -53,23 +54,14 @@ public class Algorithm {
         }
         sendMessage("Initializing State...");
         currentState.initState();
+        for(Cluster c:currentState.getClusters().values()){
+            c.setColor(randomColor());
+        }
     }
 
 
     private void graphPartition() {
         sendMessage("Phase 1 Graph partition...");
-//        while (currentState.getClusters().size() > currentState.getConfiguration().getTargetDistricteNumber()) {
-//            Cluster c1 = currentState.getSmallestCluster();
-//            while (currentState.getTargetPopulation() > c1.getDemo().getPopulation() && currentState.getClusters().size() > currentState.getConfiguration().getTargetDistricteNumber()) {
-//                ClusterEdge desireClusterEdge = c1.getBestClusterEdge();
-//                if (desireClusterEdge != null) {
-//                    Cluster c2 = desireClusterEdge.getNeighborCluster(c1);
-//                    disconnectNeighborEdge(desireClusterEdge, c1, c2);
-//                    currentState.removeCluster(c2);
-//                    combine(c1, c2);
-//                }
-//            }
-//        }
         int i=0;
         while(currentState.getClusters().size() > currentState.getConfiguration().getTargetDistricteNumber()){
             Set<String> mergedCluster = new HashSet<>();
@@ -94,74 +86,20 @@ public class Algorithm {
                     }
                 }
             }
-//            int counter=0;
-//            String temp = "";
-//            for (Cluster c : currentState.getClusters().values()) {
-//                c.setColor(colors[counter%10]);
-//                counter++;
-//                for (Precinct ps : c.getPrecincts()) {
-//                    temp += ps.getId() + ":" + c.getColor() + ",";
-//
-//                }
-//            }
-//            client.sendEvent("updateColor", temp);
-//            temp = "";
-//            try {
-//                Thread.sleep(1000);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
+            StringBuilder temp = new StringBuilder();
+            for (Cluster c : currentState.getClusters().values()) {
+                for (Precinct ps : c.getPrecincts()) {
+                    temp.append(ps.getId()).append(":").append(c.getColor()).append(",");
+                }
+            }
+            client.sendEvent("updateColor", temp.toString());
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
-//        int i=0;
-//        while (currentState.getClusters().size() > currentState.getConfiguration().getTargetDistricteNumber()) {
-//            System.out.println("sssssssssssssssssssssssssssssssssssssssssss "+currentState.getClusters().size()+", "+i++);
-//
-////            Map<String,Cluster> currentClusters=currentState.getClusters();
-//            Map<String,Cluster> mergeSet=new HashMap<String,Cluster>();
-//
-//            int v=0;
-//            while(currentState.getClusters().size()!=mergeSet.size()){
-////                HashMap<String,Cluster> mergeSet=new HashMap<String, Cluster>();
-//                List<String> keyArray=new ArrayList<String>(currentState.getClusters().keySet());
-//                Random r=new Random();
-//                Cluster c1=currentState.getClusters().get(keyArray.get(r.nextInt(keyArray.size())));
-//                System.out.println("sssssssssssssssss "+c1.getClusterID()+ ", "+currentState.getClusters().size()+", "+currentState.getClusters().size()+", "+v++);
-//                if (currentState.getTargetPopulation() > c1.getDemo().getPopulation()
-//                        && currentState.getClusters().size() > currentState.getConfiguration().getTargetDistricteNumber()
-//                        && !checkIfCombined(c1,mergeSet)) {
-//                    ClusterEdge desireClusterEdge = c1.getBestClusterEdge();
-//                    if(desireClusterEdge!=null){
-//                        System.out.println("c1: "+c1.getClusterID()+", "+desireClusterEdge.getJoinability());
-//                        Cluster c2=desireClusterEdge.getNeighborCluster(c1);
-//                        if(c2!=null){
-//                        System.out.println("c2: "+c2.getClusterID());
-//                        }else{
-//
-//                        }
-//                        disconnectNeighborEdge(desireClusterEdge,c1,c2);
-//                        combine(c1,c2);
-//                        currentState.removeCluster(c2);
-////                        else{System.out.println("wrong");}
-//
-////                        currentClusters.remove(c2.getClusterID());
-//                    }
-//                    mergeSet.put(c1.getClusterID(),c1);
-//                }
-////                currentClusters.remove(c1.getClusterID());
-//
-//            }
-////            currentClusters=mergeSet;
-//            currentState.setClusters(mergeSet);
-//
-//
-//        }
     }
-//    public boolean checkIfCombined(Cluster currentClsuter,Map<String,Cluster> stateCluster){
-//            if(stateCluster.containsKey(currentClsuter.getClusterID())){
-//                return true;
-//            }
-//        return false;
-//    }
 
 
     private void disconnectNeighborEdge(ClusterEdge desireClusterEdge, Cluster c1, Cluster c2) {
@@ -174,14 +112,12 @@ public class Algorithm {
         msg.append(c1).append(" merge into ").append(c2).append("'\n'");
         for (ClusterEdge edge : c1.getAllEdges()) { //add edges(c5) from c2 to c1
             edge.changeNeighbor(edge.getNeighborCluster(c1), c2);
-//            System.out.println("c1: "+edge.getC1()+" c2: "+edge.getC2());
             c2.addEdge(edge);
         }
         c2.combineCluster(c1);//combine demo data
         for (ClusterEdge edge : c2.getAllEdges()) {//re-compute c1 join
             edge.computeJoin();
         }
-      //  System.exit(0);
     }
 
     public void annealing(){
@@ -455,14 +391,30 @@ public class Algorithm {
         return rateCompactness(d);
     }
 
+    public String randomColor(){
+        Random random = new Random();
+
+        // create a big random number - maximum is ffffff (hex) = 16777215 (dez)
+        int nextInt = random.nextInt(0xffffff + 1);
+
+        // format it as hexadecimal string (with hashtag and leading zeros)
+        String colorCode = String.format("#%06x", nextInt);
+        while(coloring.contains(colorCode)){
+            nextInt = random.nextInt(0xffffff + 1);
+
+            // format it as hexadecimal string (with hashtag and leading zeros)
+            colorCode = String.format("#%06x", nextInt);
+        }
+        coloring.add(colorCode);
+        return colorCode;
+    }
 
     public void run() {
         sendMessage("Algorithm Start...");
         init();
         graphPartition();
-        currentState.initDistrict();
-        annealing();
-
+//        currentState.initDistrict();
+//        annealing();
         msg.append("'\n'");
         int cn = 1;
         for (Cluster c : currentState.getClusters().values()) {
@@ -475,7 +427,7 @@ public class Algorithm {
         StringBuilder districtJson = new StringBuilder();
         districtJson.append("{\"type\":\"FeatureCollection\", \"features\": [");
         for (Cluster c : currentState.getClusters().values()) {
-            c.setColor(colors[counter]);
+//            c.setColor(randomColor());
             districtJson.append(c.toGeoJsonFormat()).append("},\n");
             counter++;
             for (Precinct ps : c.getPrecincts()) {

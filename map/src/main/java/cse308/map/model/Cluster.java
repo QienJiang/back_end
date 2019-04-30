@@ -132,9 +132,7 @@ public class Cluster {
     }
 
     public ArrayList<ClusterEdge> getBestClusterEdge() {
-        double maxjoin = 0;
         ArrayList<ClusterEdge> sortedEdges=new ArrayList<>();
-        ClusterEdge desireClusterEdge = null;
         for (ClusterEdge e : edges) {
             sortedEdges.add(e);
         }
@@ -146,6 +144,7 @@ public class Cluster {
         if (!countyID.equals(c.getCountyID())) {
             if (demographic.getPopulation()< c.getDemographic().getPopulation()) {
                 countyID = c.getCountyID();
+                color=c.getColor();
             }
         }
         shape = shape.union(c.shape);
@@ -197,11 +196,6 @@ public class Cluster {
 
     }
 
-    public void updataInfo(Cluster c1, Cluster c2) {
-        //demo??
-        //edge
-        //precincts.......
-    }
 
     public Geometry getShape() {
         return shape;
