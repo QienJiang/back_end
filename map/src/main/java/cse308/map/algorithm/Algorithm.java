@@ -447,6 +447,18 @@ public class Algorithm {
         sendMessage("Algorithm finished!");
     }
 
+    public void batchRun(){
+        Iterator<Map.Entry<Integer,State>> batchRunStates =  states.entrySet().iterator();
+
+        while(batchRunStates.hasNext()){
+            Map.Entry<Integer, State> stateEntry =  batchRunStates.next();
+            currentState = stateEntry.getValue();
+            run();
+            sendMessage("batch run: " + stateEntry.getKey() + " finished!");
+        }
+        sendMessage("all batch run finished!");
+    }
+
     private void sendMessage(String msg) {
         client.sendEvent("message", msg);
     }
