@@ -36,7 +36,6 @@ public class Precinct {
         return otherDistrictPrecincts;
     }
 
-
     public boolean isNeighbor(Precinct nei) {
         for (PrecinctEdge e : precinctEdges) {
             if (e.getNeighborPrecinct(this) == nei) {

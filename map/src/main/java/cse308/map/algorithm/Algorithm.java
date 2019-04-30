@@ -59,8 +59,7 @@ public class Algorithm {
             c.setColor(randomColor());
         }
     }
-
-
+    
     private void graphPartition() {
         sendMessage("Phase 1 Graph partition...");
         while (currentState.getClusters().size() > currentState.getConfiguration().getTargetDistricteNumber()) {
