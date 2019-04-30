@@ -9,12 +9,12 @@ public class Configuration {
     private MajorMinor comunityOfinterest;
     private HashMap<Measure, Double> weights=new HashMap<>();
 
-
     public Configuration(int desireNum, int numOfRun, double majorminor) {
         this.targetDistricteNumber = desireNum;
         this.numOfRun = numOfRun;
         this.majorminor = majorminor;
     }
+
     public Configuration(int desireNum, int numOfRun, double majorminor,String comunityOfinterest,
                          double POPULATION_EQUALITY,
                          double EFFICIENCY_GAP,
@@ -31,7 +31,6 @@ public class Configuration {
         weights.put(Measure.PARTISAN_FAIRNESS, PARTISAN_FAIRNESS);
         weights.put(Measure.COMPETITIVENESS, COMPETITIVENESS);
     }
-
 
     public int getTargetDistricteNumber() {
         return targetDistricteNumber;
