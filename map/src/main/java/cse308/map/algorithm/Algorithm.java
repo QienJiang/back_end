@@ -1,6 +1,7 @@
 package cse308.map.algorithm;
 
 import com.corundumstudio.socketio.SocketIOClient;
+import com.vividsolutions.jts.geom.Geometry;
 import cse308.map.model.*;
 import cse308.map.server.PrecinctService;
 
@@ -169,7 +170,7 @@ public class Algorithm {
     }
 
     private double testMove(Move move) {
-        if (!move.getFrom().isContiguity(move,move.getFrom())) {
+        if (!isContiguity(move)) {
             return 0;
         }
         double initial_score = move.getTo().getCurrentScore() + move.getFrom().getCurrentScore();
@@ -307,6 +308,13 @@ public class Algorithm {
     private double calPolsbyPopperCompactness(District d){
         return (4*Math.PI*d.getShape().getArea())/ Math.pow(d.getShape().getLength(),2);
         //4pi*area of geometry / parameter^2
+    }
+
+    private boolean isContiguity(Move move){
+        Geometry fromDistrict = move.getFrom().getShape();
+        Geometry precinctShape = move.getPrecinct().getShape();
+        Geometry symDifference = fromDistrict.symDifference(precinctShape);
+        return !symDifference.getGeometryType().equals("MultiPolygon");
     }
 
     public double rateStatewideEfficiencyGap(District d) {

@@ -241,20 +241,6 @@ public class District implements Comparable<District>{
         return borderPrecincts;
     }
 
-    public boolean isContiguity(Move move, District from){
-        from.getCluster().getPrecincts().remove(move.getPrecinct());
-        Geometry shape = null;
-        for(Precinct precinct : from.getCluster().getPrecincts()){
-            shape = shape.union(precinct.getShape());
-        }
-        if (shape.getGeometryType().equals("MultiPolygon")){
-            return false;
-        }
-        from.getCluster().getPrecincts().add(move.getPrecinct());
-        return true;
-    }
-
-
     public int getPopulation() {
         return cluster.getDemographic().getPopulation();
     }
