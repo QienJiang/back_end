@@ -3,16 +3,16 @@ package cse308.map.model;
 import java.util.HashMap;
 
 public class Configuration {
-    private int targetDistricteNumber;
+    private int targetDistrictNumber;
     private int numOfRun;
-    private double majorminor;
+    private double majorMinor;
     private MajorMinor comunityOfinterest;
     private HashMap<Measure, Double> weights=new HashMap<>();
 
     public Configuration(int desireNum, int numOfRun, double majorminor) {
-        this.targetDistricteNumber = desireNum;
+        this.targetDistrictNumber = desireNum;
         this.numOfRun = numOfRun;
-        this.majorminor = majorminor;
+        this.majorMinor = majorminor;
     }
 
     public Configuration(int desireNum, int numOfRun, double majorminor,String comunityOfinterest,
@@ -21,9 +21,9 @@ public class Configuration {
                          double COMPACTNESS,
                          double PARTISAN_FAIRNESS,
                          double COMPETITIVENESS) {
-        this.targetDistricteNumber = desireNum;
+        this.targetDistrictNumber = desireNum;
         this.numOfRun = numOfRun;
-        this.majorminor = majorminor;
+        this.majorMinor = majorminor;
         this.comunityOfinterest=MajorMinor.valueOf(comunityOfinterest);
         weights.put(Measure.COMPACTNESS, COMPACTNESS);
         weights.put(Measure.POPULATION_EQUALITY, POPULATION_EQUALITY);
@@ -32,12 +32,12 @@ public class Configuration {
         weights.put(Measure.COMPETITIVENESS, COMPETITIVENESS);
     }
 
-    public int getTargetDistricteNumber() {
-        return targetDistricteNumber;
+    public int getTargetDistrictNumber() {
+        return targetDistrictNumber;
     }
 
-    public void setTargetDistricteNumber(int desireNum) {
-        this.targetDistricteNumber = desireNum;
+    public void setTargetDistrictNumber(int desireNum) {
+        this.targetDistrictNumber = desireNum;
     }
 
     public int getNumOfRun() {
@@ -48,9 +48,9 @@ public class Configuration {
         this.numOfRun = numOfRun;
     }
 
-    public double getMajorMinorWeight() { return majorminor; }
+    public double getMajorMinorWeight() { return majorMinor; }
 
-    public void setMajorminor(double majorminor) { this.majorminor = majorminor; }
+    public void setMajorminor(double majorminor) { this.majorMinor = majorminor; }
 
     public void setWeights(HashMap<Measure, Double> weights) {
         this.weights = weights;

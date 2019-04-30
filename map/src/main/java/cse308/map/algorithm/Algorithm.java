@@ -62,7 +62,7 @@ public class Algorithm {
     
     private void graphPartition() {
         sendMessage("Phase 1 Graph partition...");
-        while (currentState.getClusters().size() > currentState.getConfiguration().getTargetDistricteNumber()) {
+        while (currentState.getClusters().size() > currentState.getConfiguration().getTargetDistrictNumber()) {
             Set<String> mergedCluster = new HashSet<>();
             Iterator<Map.Entry<String, Cluster>> clusterIterator = currentState.getClusters().entrySet().iterator();
             while (clusterIterator.hasNext()) {
@@ -89,7 +89,7 @@ public class Algorithm {
     private boolean isValidCombine(Cluster currentCluster, Set<String> mergedCluster) {
         return !mergedCluster.contains(currentCluster.getClusterID())//if the cluster already combine
                 && currentState.getTargetPopulation() > currentCluster.getDemographic().getPopulation()
-                && currentState.getClusters().size() > currentState.getConfiguration().getTargetDistricteNumber();
+                && currentState.getClusters().size() > currentState.getConfiguration().getTargetDistrictNumber();
     }
 
     private void updateColor() {
@@ -118,6 +118,7 @@ public class Algorithm {
         for (ClusterEdge edge : neighborCluster.getAllEdges()) {//re-compute currentCluster join
             edge.computeJoin(currentState.getComunityOfinterest(), currentState.getConfiguration().getMajorMinorWeight());
         }
+
     }
 
     private void sendMove(Move move) {
@@ -133,7 +134,7 @@ public class Algorithm {
 
     private Move makeMove() {
         District smallestDistrict = getSmallestDistrict(currentState.getDistricts());
-        int equalPopulation = currentState.getPopulation() / currentState.getConfiguration().getTargetDistricteNumber();
+        int equalPopulation = currentState.getPopulation() / currentState.getConfiguration().getTargetDistrictNumber();
         if (smallestDistrict.getPopulation() < equalPopulation) {
             Move bestMove;
             for (Precinct precinct : smallestDistrict.getBorderPrecincts()) {
@@ -295,7 +296,6 @@ public class Algorithm {
         }
         return 1.0 - ((inefficient_v * 1.0) / tv);
     }
-
 
     private double rateCompactness(District d) {
         double allPrecincts = d.getCluster().getPrecincts().size();
