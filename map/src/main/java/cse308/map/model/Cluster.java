@@ -102,22 +102,19 @@ public class Cluster {
         }
     }
 
-    public void removeDuplicateEdge(Cluster c2) {
-        Set<ClusterEdge> remove = new HashSet<>();
-        for (ClusterEdge e1 : c2.getAllEdges()) {
-            Cluster c2Neighbor = e1.getNeighborCluster(c2);
-            for (ClusterEdge e2 : edges) {
+    public void removeDuplicateEdge(Cluster neighborCluster) {
+        Set<ClusterEdge> removeSet = new HashSet<>();
+        for (ClusterEdge e1 : neighborCluster.getAllEdges()) {//loop the Set<Edge> in neighborCluster
+            Cluster c2Neighbor = e1.getNeighborCluster(neighborCluster);///get c2 neighbor
+            for (ClusterEdge e2 : edges) {//loop the Set<Edge> in current cluster
                 Cluster c1Neighbor = e2.getNeighborCluster(this);//get c1 neighbor
-                if (c1Neighbor != null) {
-                    if (c2Neighbor == c1Neighbor) {//get c2 neighbor
+                if (c1Neighbor != null&&c2Neighbor == c1Neighbor) {// check if they have same neighbor
                         c1Neighbor.removeEdge(e2);
-                        remove.add(e2);
-                    }
+                        removeSet.add(e2);
                 }
             }
         }
-
-        edges.removeAll(remove);
+        edges.removeAll(removeSet);
 
     }
 

@@ -55,7 +55,7 @@ public class State {
     }
 
     public MajorMinor getComunityOfinterest(){
-        return configuration.getComunityOfinterest();
+        return configuration.getCommunityOfInterest();
     }
 
     public District getFromDistrict(Precinct precinct){
@@ -89,13 +89,13 @@ public class State {
             for (String name : neighbors) {
                 Precinct neighbor = precincts.get(name);
                 if (!p.isNeighbor(neighbor)) {
-                    PrecinctEdge precinctEdge = new PrecinctEdge(p, neighbor,configuration.getComunityOfinterest(),configuration.getMajorMinorWeight());
+                    PrecinctEdge precinctEdge = new PrecinctEdge(p, neighbor,configuration.getCommunityOfInterest(),configuration.getMajorMinorWeight());
                     p.addEdge(precinctEdge);
                     neighbor.addEdge(precinctEdge);
                     Cluster c2 = clusters.get(neighbor.getId());
                     c2.setCountyID(neighbor.getCounty());
                     c2.setDemographic(neighbor.getDemographic());
-                    ClusterEdge clusterEdge = new ClusterEdge(c1, c2,configuration.getComunityOfinterest(),configuration.getMajorMinorWeight());
+                    ClusterEdge clusterEdge = new ClusterEdge(c1, c2,configuration.getCommunityOfInterest(),configuration.getMajorMinorWeight());
                     c1.addEdge(clusterEdge);
                     c2.addEdge(clusterEdge);
                 }

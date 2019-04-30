@@ -31,6 +31,7 @@ public class Algorithm {
 
     //pass the precinctService to the algorithm object because we can't autowired precinctService for each object it is not working.
     public Algorithm(String stateName, Configuration configuration, PrecinctService precinctService, SocketIOClient client) {
+        configuration.initWeights();
         if (configuration.getNumOfRun() == 1) {
             this.currentState = new State(configuration);
         } else {
@@ -109,16 +110,14 @@ public class Algorithm {
     }
 
     private void combine(Cluster currentCluster, Cluster neighborCluster) {
-        msg.append(currentCluster).append(" merge into ").append(neighborCluster).append("'\n'");
         for (ClusterEdge edge : currentCluster.getAllEdges()) { //add edges(c5) from neighborCluster to currentCluster
             edge.changeNeighbor(edge.getNeighborCluster(currentCluster), neighborCluster);
             neighborCluster.addEdge(edge);
         }
         neighborCluster.combineCluster(currentCluster);//combine demo data
-        for (ClusterEdge edge : neighborCluster.getAllEdges()) {//re-compute currentCluster join
+        for (ClusterEdge edge : neighborCluster.getAllEdges()) {//re-compute currentCluster edges join
             edge.computeJoin(currentState.getComunityOfinterest(), currentState.getConfiguration().getMajorMinorWeight());
         }
-
     }
 
     private void sendMove(Move move) {

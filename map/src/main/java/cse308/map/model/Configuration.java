@@ -6,29 +6,34 @@ public class Configuration {
     private int targetDistrictNumber;
     private int numOfRun;
     private double majorMinor;
-    private MajorMinor comunityOfinterest;
+    private String interestCommunity;
+    private MajorMinor communityOfInterest;
+    private double equality;
+    private double efficiencyGpa;
+    private double compactness;
+    private double fairness;
+    private double competitiveness;
     private HashMap<Measure, Double> weights=new HashMap<>();
 
     public Configuration(){
 
     }
-    
-    public Configuration(int desireNum, int numOfRun, double majorminor,String comunityOfinterest,
-                         double POPULATION_EQUALITY,
-                         double EFFICIENCY_GAP,
-                         double COMPACTNESS,
-                         double PARTISAN_FAIRNESS,
-                         double COMPETITIVENESS) {
-        this.targetDistrictNumber = desireNum;
-        this.numOfRun = numOfRun;
-        this.majorMinor = majorminor;
-        this.comunityOfinterest=MajorMinor.valueOf(comunityOfinterest);
-        weights.put(Measure.COMPACTNESS, COMPACTNESS);
-        weights.put(Measure.POPULATION_EQUALITY, POPULATION_EQUALITY);
-        weights.put(Measure.EFFICIENCY_GAP, EFFICIENCY_GAP);
-        weights.put(Measure.PARTISAN_FAIRNESS, PARTISAN_FAIRNESS);
-        weights.put(Measure.COMPETITIVENESS, COMPETITIVENESS);
+
+    public void setCommunityOfInterest(MajorMinor communityOfInterest) {
+        this.communityOfInterest = communityOfInterest;
     }
+
+    public void initWeights(){
+        this.communityOfInterest= MajorMinor.valueOf(interestCommunity);
+        weights.put(Measure.COMPACTNESS, compactness/10);
+        weights.put(Measure.POPULATION_EQUALITY, equality/10);
+        weights.put(Measure.EFFICIENCY_GAP, efficiencyGpa/10);
+        weights.put(Measure.PARTISAN_FAIRNESS, fairness/10);
+        weights.put(Measure.COMPETITIVENESS, competitiveness/10);
+        majorMinor/=10;
+    }
+
+
 
     public int getTargetDistrictNumber() {
         return targetDistrictNumber;
@@ -58,11 +63,84 @@ public class Configuration {
         return weights;
     }
 
-    public MajorMinor getComunityOfinterest() {
-        return comunityOfinterest;
+    public MajorMinor getCommunityOfInterest() {
+        return communityOfInterest;
     }
 
     public void setComunityOfinterest(MajorMinor comunityOfinterest) {
-        this.comunityOfinterest = comunityOfinterest;
+        this.communityOfInterest = comunityOfinterest;
+    }
+
+    public double getEquality() {
+        return equality;
+    }
+
+    public void setEquality(double equality) {
+        this.equality = equality;
+    }
+
+    public double getEfficiencyGpa() {
+        return efficiencyGpa;
+    }
+
+    public void setEfficiencyGpa(double efficiencyGpa) {
+        this.efficiencyGpa = efficiencyGpa;
+    }
+
+    public double getCompactness() {
+        return compactness;
+    }
+
+    public void setCompactness(double compactness) {
+        this.compactness = compactness;
+    }
+
+    public double getFairness() {
+        return fairness;
+    }
+
+    public void setFairness(double fairness) {
+        this.fairness = fairness;
+    }
+
+    public double getCompetitiveness() {
+        return competitiveness;
+    }
+
+    public void setCompetitiveness(double competitiveness) {
+        this.competitiveness = competitiveness;
+    }
+
+    public double getMajorMinor() {
+        return majorMinor;
+    }
+
+    public void setMajorMinor(double majorMinor) {
+        this.majorMinor = majorMinor;
+    }
+
+    public String getInterestCommunity() {
+        return interestCommunity;
+    }
+
+    public void setInterestCommunity(String interestCommunity) {
+        this.interestCommunity = interestCommunity;
+    }
+
+    @Override
+    public String toString() {
+        return "Configuration{" +
+                "targetDistrictNumber=" + targetDistrictNumber +
+                ", numOfRun=" + numOfRun +
+                ", majorMinor=" + majorMinor +
+                ", interestCommunity='" + interestCommunity + '\'' +
+                ", communityOfInterest=" + communityOfInterest +
+                ", equality=" + equality +
+                ", efficiencyGpa=" + efficiencyGpa +
+                ", compactness=" + compactness +
+                ", fairness=" + fairness +
+                ", competitiveness=" + competitiveness +
+                ", weights=" + weights +
+                '}';
     }
 }
