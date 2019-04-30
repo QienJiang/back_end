@@ -304,6 +304,11 @@ public class Algorithm {
         return borderPrecincts / (allPrecincts - borderPrecincts);
     }
 
+    private double calPolsbyPopperCompactness(District d){
+        return (4*Math.PI*d.getShape().getArea())/ Math.pow(d.getShape().getLength(),2);
+        //4pi*area of geometry / parameter^2
+    }
+
     public double rateStatewideEfficiencyGap(District d) {
         int iv_g = 0;
         int iv_d = 0;
