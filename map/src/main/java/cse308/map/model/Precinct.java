@@ -142,10 +142,10 @@ public class Precinct {
         this.iscCompute = iscCompute;
     }
 
-    public double getMajorMinor(){
+    public double getMajorMinor(MajorMinor communityOfInterest){
         double majorMinorValue = 0;
         int totalPopulation = this.getDemographic().getPopulation();
-        int totalMmPopulation = this.getDemographic().getNativeAmerican();
+        int totalMmPopulation = this.getDemographic().getMajorMinorPop(communityOfInterest);
         majorMinorValue = (double) totalMmPopulation / totalPopulation;
         return majorMinorValue;
     }

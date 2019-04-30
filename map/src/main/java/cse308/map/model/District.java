@@ -91,10 +91,10 @@ public class District implements Comparable<District>{
         return cluster.getDemographic();
     }
 
-    public double getMajorMinor(){
+    public double getMajorMinor(MajorMinor communityOfInterest){
         double majorMinorValue = 0;
         int totalPopulation = this.getCluster().getDemographic().getPopulation();
-        int totalMmPopulation = this.getCluster().getDemographic().getNativeAmerican();
+        int totalMmPopulation = this.getCluster().getDemographic().getMajorMinorPop(communityOfInterest);
         majorMinorValue = (double) totalMmPopulation / totalPopulation;
         return majorMinorValue;
     }

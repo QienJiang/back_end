@@ -153,9 +153,10 @@ public class Algorithm {
         Move bestMove = null;
         double bestImprovement = 0;
         for (Precinct otherDistrictPrecinct : precinct.getOtherDistrctPreicincts()) {
-            double districtMajorMinorValue = current.getMajorMinor();
-            double totalMajorMinorValue = precinct.getMajorMinor() + districtMajorMinorValue;
-            if (totalMajorMinorValue > districtMajorMinorValue && totalMajorMinorValue < currentState.getConfiguration().getMajorMinorWeight()) {
+            double districtMajorMinorValue = current.getMajorMinor(currentState.getComunityOfinterest());
+            double totalMajorMinorValue = precinct.getMajorMinor(currentState.getComunityOfinterest()) + districtMajorMinorValue;
+            if (totalMajorMinorValue > districtMajorMinorValue
+                    && totalMajorMinorValue < currentState.getConfiguration().getMajorMinorWeight()) {
                 District neighborDistrict = currentState.getFromDistrict(otherDistrictPrecinct);
                 Move move = new Move(current, neighborDistrict, otherDistrictPrecinct);
                 double improvement = testMove(move);
