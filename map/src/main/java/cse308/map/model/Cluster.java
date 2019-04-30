@@ -1,11 +1,9 @@
 package cse308.map.model;
 
 import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryCollection;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.io.geojson.GeoJsonWriter;
 
-import javax.validation.constraints.Null;
 import java.util.*;
 
 public class Cluster {
@@ -20,7 +18,6 @@ public class Cluster {
     private String color;
     private double CurrentScore;
 
-
     public void assignedColor(String[] color) {
         ArrayList<String> arrayList = new ArrayList<String>(Arrays.asList(color));
         if (this.color == null) {
@@ -33,9 +30,6 @@ public class Cluster {
             this.color = arrayList.get(0);
         }
 
-    }
-
-    public Cluster() {
     }
 
     public void setEdges(Set<ClusterEdge> edges) {
@@ -66,8 +60,6 @@ public class Cluster {
     public void setColor(String color) {
         this.color = color;
     }
-
-//    }
 
     public Set<ClusterEdge> getEdges() {
         return edges;
@@ -118,7 +110,6 @@ public class Cluster {
                 Cluster c1Neighbor = e2.getNeighborCluster(this);//get c1 neighbor
                 if (c1Neighbor != null) {
                     if (c2Neighbor == c1Neighbor) {//get c2 neighbor
-//                        System.out.println("c4: " + c4.getClusterID());
                         c1Neighbor.removeEdge(e2);
                         remove.add(e2);
                     }
@@ -127,7 +118,6 @@ public class Cluster {
         }
 
         edges.removeAll(remove);
-
 
     }
 
@@ -172,10 +162,6 @@ public class Cluster {
         }
     }
 
-    public void combineCluster(Cluster c1, Cluster c2) {
-
-    }
-
     public Demographic getDemographic() {
         return demographic;
     }
@@ -187,15 +173,6 @@ public class Cluster {
     public Set<ClusterEdge> getAllEdges() {
         return edges;
     }
-
-    public void adAll(PrecinctEdge e) {
-
-    }
-
-    public void retainAll(PrecinctEdge e) {
-
-    }
-
 
     public Geometry getShape() {
         return shape;
@@ -221,7 +198,6 @@ public class Cluster {
                 append("\"COLOR\":\"").append(color).append("\"}");
         return s.toString();
     }
-
 
     public double getCurrentScore() {
         return CurrentScore;
