@@ -51,7 +51,11 @@ public class SocketService {
     public void onEvent(SocketIOClient client, AckRequest request, @RequestBody Configuration data) {
         System.out.println(data.getNumOfRun());
         Algorithm algorithm = new Algorithm("pa", new Configuration(10, 1,0.5,"NATIVEAMERICAN",0.2,0.2,0.2,0.2,0.2), precinctService, client);
-        algorithm.run();
+        if(data.getNumOfRun() == 1) {
+            algorithm.run();
+        }else{
+            algorithm.batchRun();
+        }
         System.out.println("finished");
     }
 
