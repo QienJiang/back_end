@@ -72,11 +72,11 @@ public class Algorithm {
                 ArrayList<ClusterEdge> bestClusterEdges = currentCluster.getBestClusterEdges();
                 for (ClusterEdge edge : bestClusterEdges) {
                     if (isValidCombine(currentCluster, mergedCluster)) {
-                        Cluster c2 = edge.getNeighborCluster(currentCluster);
-                        if (!mergedCluster.contains(c2.getClusterID())) {
-                            disconnectNeighborEdge(edge, currentCluster, c2);
-                            combine(currentCluster, c2);
-                            mergedCluster.add(c2.getClusterID());
+                        Cluster neighborCluster = edge.getNeighborCluster(currentCluster);
+                        if (!mergedCluster.contains(neighborCluster.getClusterID())) {
+                            disconnectNeighborEdge(edge, currentCluster, neighborCluster);
+                            combine(currentCluster, neighborCluster);
+                            mergedCluster.add(neighborCluster.getClusterID());
                             clusterIterator.remove();
                             break;
                         }
@@ -103,20 +103,20 @@ public class Algorithm {
         client.sendEvent("updateColor", temp.toString());
     }
 
-    private void disconnectNeighborEdge(ClusterEdge desireClusterEdge, Cluster c1, Cluster c2) {
-        c2.removeEdge(desireClusterEdge);
-        c1.removeEdge(desireClusterEdge);
-        c1.removeDuplicateEdge(c2);//remove c4
+    private void disconnectNeighborEdge(ClusterEdge desireClusterEdge, Cluster currentCluster, Cluster neighborCluster) {
+        neighborCluster.removeEdge(desireClusterEdge);
+        currentCluster.removeEdge(desireClusterEdge);
+        currentCluster.removeDuplicateEdge(neighborCluster);//remove c4
     }
 
-    private void combine(Cluster c1, Cluster c2) {
-        msg.append(c1).append(" merge into ").append(c2).append("'\n'");
-        for (ClusterEdge edge : c1.getAllEdges()) { //add edges(c5) from c2 to c1
-            edge.changeNeighbor(edge.getNeighborCluster(c1), c2);
-            c2.addEdge(edge);
+    private void combine(Cluster currentCluster, Cluster neighborCluster) {
+        msg.append(currentCluster).append(" merge into ").append(neighborCluster).append("'\n'");
+        for (ClusterEdge edge : currentCluster.getAllEdges()) { //add edges(c5) from neighborCluster to currentCluster
+            edge.changeNeighbor(edge.getNeighborCluster(currentCluster), neighborCluster);
+            neighborCluster.addEdge(edge);
         }
-        c2.combineCluster(c1);//combine demo data
-        for (ClusterEdge edge : c2.getAllEdges()) {//re-compute c1 join
+        neighborCluster.combineCluster(currentCluster);//combine demo data
+        for (ClusterEdge edge : neighborCluster.getAllEdges()) {//re-compute currentCluster join
             edge.computeJoin(currentState.getComunityOfinterest(), currentState.getConfiguration().getMajorMinorWeight());
         }
     }
@@ -127,7 +127,6 @@ public class Algorithm {
 
     private void annealing() {
         Move move;
-
         while ((move = makeMove()) != null) {
             sendMove(move);
         }
