@@ -23,7 +23,7 @@ public class UserController {
     private UserService userService;
 
     @PostMapping(value = "/signin")//check the user exist in the database or not
-    public ResponseEntity<?> signIn(@Valid @RequestBody User user) {
+    public ResponseEntity<?> signIn(@RequestBody User user) {
         Boolean status = userService.isValidUser(user);//check if the user exist
         if (status) {
             Optional<User> opt = userService.findById(user.getEmail());
@@ -33,7 +33,6 @@ public class UserController {
             System.out.println("user does not exist.");
             return new ResponseEntity("No such user ", HttpStatus.NOT_FOUND);
         }
-
     }
 
     @PostMapping(value = "/signup")//save the state to the database
