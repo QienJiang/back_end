@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -47,7 +48,8 @@ public class SocketService {
     }
 
     @OnEvent(value = "runAlgorithm")
-    public void onEvent(SocketIOClient client, AckRequest request, MessageInfo data) {
+    public void onEvent(SocketIOClient client, AckRequest request, @RequestBody Configuration data) {
+        System.out.println(data.getNumOfRun());
         Algorithm algorithm = new Algorithm("pa", new Configuration(10, 1,0.5,"NATIVEAMERICAN",0.2,0.2,0.2,0.2,0.2), precinctService, client);
         algorithm.run();
         System.out.println("finished");
