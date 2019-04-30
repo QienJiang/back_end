@@ -21,23 +21,10 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-//
-//    @GetMapping("/signin")//select the state with the specify id from the database
-//    public ResponseEntity<?> getUserInfo(@RequestBody User user){
-//        System.out.println("xxxxxx");
-//        System.out.println(user.getEmail());
-//        User newUser = userService.saveOrUpdateUser(user);
-//        if(!newUser.isPresent()){
-//            return new ResponseEntity("No such element ",HttpStatus.NOT_FOUND);
-//        }else
-//            return new ResponseEntity<User>(opt.get(), HttpStatus.OK);
-//    }
 
     @PostMapping(value = "/signin")//check the user exist in the database or not
     public ResponseEntity<?> signIn(@Valid @RequestBody User user) {
-
         Boolean status = userService.isValidUser(user);//check if the user exist
-
         if (status) {
             Optional<User> opt = userService.findById(user.getEmail());
             System.out.println("sign in");
@@ -51,13 +38,13 @@ public class UserController {
 
     @PostMapping(value = "/signup")//save the state to the database
     public ResponseEntity<?> signUp(@Valid @RequestBody User user) {
-        //BindResult is an interface that gets the result of the validation
-        User newUser = userService.registerUser(user);//save the model into database
-        System.out.println("register completed. ");
-        return new ResponseEntity<User>(newUser, HttpStatus.OK);
-
-
+        if(userService.findById(user.getEmail()).isPresent()){
+            System.out.println("user already exist");
+            return new ResponseEntity("user already exist ", HttpStatus.CONFLICT);//409
+        }else {
+            User newUser = userService.registerUser(user);//save the model into database
+            System.out.println("register completed. ");
+            return new ResponseEntity<User>(newUser, HttpStatus.OK);
+        }
     }
-
-
 }
