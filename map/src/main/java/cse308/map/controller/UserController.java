@@ -34,16 +34,7 @@ public class UserController {
 //    }
 
     @PostMapping(value = "/signin")//check the user exist in the database or not
-    public ResponseEntity<?> signIn(@Valid @RequestBody User user, BindingResult result) {
-        //BindResult is an interface that gets the result of the validation
-
-        if (result.hasErrors()) {
-            Map<String, String> errorMap = new HashMap<>();
-            for (FieldError error : result.getFieldErrors()) {
-                errorMap.put(error.getField(), error.getDefaultMessage());
-            }
-            return new ResponseEntity<Map<String, String>>(errorMap, HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<?> signIn(@Valid @RequestBody User user) {
 
         Boolean status = userService.isValidUser(user);//check if the user exist
 
@@ -61,7 +52,7 @@ public class UserController {
     @PostMapping(value = "/signup")//save the state to the database
     public ResponseEntity<?> signUp(@Valid @RequestBody User user) {
         //BindResult is an interface that gets the result of the validation
-        User newUser = userService.saveOrUpdateUser(user);//save the model into database
+        User newUser = userService.registerUser(user);//save the model into database
         System.out.println("register completed. ");
         return new ResponseEntity<User>(newUser, HttpStatus.OK);
 

@@ -5,6 +5,7 @@ import cse308.map.model.User;
 import cse308.map.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Optional;
 
@@ -14,11 +15,10 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public User saveOrUpdateUser(User user){
-
-        if(user.getPassword()==null||user.getEmail()==""){
-            user.setPassword("TO_DO");
-        }
+    public User registerUser(User user){
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String hashedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(hashedPassword);
         return userRepository.save(user);
     }
 
@@ -38,8 +38,11 @@ public class UserService {
         if (!opt.isPresent()) {//check if the account exist
             return false;
         } else {
-            if (opt.get().getPassword().equals( user.getPassword()))//check if the password is corrected.
-            return true;
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            String hashedPassword = passwordEncoder.encode(user.getPassword());
+            if (passwordEncoder.matches(user.getPassword(),opt.get().getPassword())) {//check if the password is corrected.
+                return true;
+            }
             else
             return false;
         }
