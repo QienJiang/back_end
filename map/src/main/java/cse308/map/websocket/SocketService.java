@@ -50,7 +50,7 @@ public class SocketService {
 
     @OnEvent(value = "runAlgorithm")
     public void onEvent(SocketIOClient client, AckRequest request, MessageInfo data) {
-        Algorithm algorithm = new Algorithm("pa", new Configuration(10, 1), precinctService, client);
+        Algorithm algorithm = new Algorithm("pa", new Configuration(10, 1,0.1), precinctService, client);
         algorithm.run();
         // algorithmController.runAlgorithm(new Configuration(10,"42"),client);
 

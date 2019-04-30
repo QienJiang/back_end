@@ -22,11 +22,11 @@ public class Demographic {
 
     public void combineDemo(Demographic demo) {
         population += demo.getPopulation();
-        this.democraticVote += demo.getDemocraticVote();
-        this.republicanVote += demo.getRepublicanVote();
-        this.nativeAmerican += demo.getNativeAmerican();
-        this.africanAmerican += demo.getAfricanAmerican();
-        this.asian += demo.getAsian();
+        democraticVote += demo.getDemocraticVote();
+        republicanVote += demo.getRepublicanVote();
+        nativeAmerican += demo.getNativeAmerican();
+        africanAmerican += demo.getAfricanAmerican();
+        asian += demo.getAsian();
     }
 
     public int getPopulation() {

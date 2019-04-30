@@ -3,6 +3,7 @@ package cse308.map.algorithm;
 import com.corundumstudio.socketio.SocketIOClient;
 import cse308.map.model.*;
 import cse308.map.server.PrecinctService;
+
 import java.lang.reflect.Method;
 import java.util.*;
 
@@ -17,14 +18,15 @@ public class Algorithm {
         measures.put(Measure.PARTISAN_FAIRNESS, "ratePartisanFairness");
         measures.put(Measure.COMPETITIVENESS, "rateCompetitiveness");
     }
+
     private StringBuilder msg = new StringBuilder();
     private ArrayList<String> coloring = new ArrayList<>();
     private PrecinctService precinctService;
     private Map<Integer, State> states = new HashMap<>();
     private State currentState;
     private SocketIOClient client;
-    private HashMap<Measure, Double> weights;
-    private HashMap<District, Double> currentScores;
+    private HashMap<Measure, Double> weights = new HashMap<>();
+    private HashMap<District, Double> currentScores = new HashMap<>();
 
     //pass the precinctService to the algorithm object because we can't autowired precinctService for each object it is not working.
     public Algorithm(String stateName, Configuration configuration, PrecinctService precinctService, SocketIOClient client) {
@@ -117,25 +119,32 @@ public class Algorithm {
         }
     }
 
-    private void annealing() {
-        while (makeMove());
+    private void sendMove(Move move) {
+        client.sendEvent("updateColor", move.getPrecinct().getId() + ":" + move.getTo().getCluster().getColor() + ",");
     }
 
-    private boolean makeMove() {
+    private void annealing() {
+        Move move;
+        while ((move = makeMove()) != null) {
+            sendMove(move);
+        }
+    }
+
+    private Move makeMove() {
         District smallestDistrict = getSmallestDistrict(currentState.getDistricts());
         int equalPopulation = currentState.getPopulation() / currentState.getConfiguration().getTargetDistricteNumber();
-        if(smallestDistrict.getPopulation() < equalPopulation) {
+        if (smallestDistrict.getPopulation() < equalPopulation) {
             Move bestMove;
             for (Precinct precinct : smallestDistrict.getBorderPrecincts()) {
                 bestMove = getMove(smallestDistrict, precinct);
                 if (bestMove != null) {
                     bestMove.execute();
-                    return true;
+                    return bestMove;
                 }
             }
             return makeMove_secondary();
         }
-        return true;
+        return null;
     }
 
     private Move getMove(District current, Precinct precinct) {
@@ -168,10 +177,11 @@ public class Algorithm {
         double final_score = to_score + from_score;
         double improvement = final_score - initial_score;
         move.undo();
+
         return improvement <= 0 ? 0 : improvement;
     }
 
-    private boolean makeMove_secondary() {
+    private Move makeMove_secondary() {
         List<District> districts = getSortedDistricts();
         districts.remove(0);//remove last round smallest district
         while (districts.size() > 0) {
@@ -180,12 +190,12 @@ public class Algorithm {
                 Move m = getMove(startDistrict, precinct);//......
                 if (m != null) {
                     m.execute();
-                    return true;
+                    return m;
                 }
             }
             districts.remove(0);
         }
-        return false;
+        return null;
     }
 
     private District getSmallestDistrict(Map<String, District> districts) {
@@ -201,17 +211,19 @@ public class Algorithm {
     }
 
     private List<District> getSortedDistricts() {
-        ArrayList<District> list = new ArrayList<>();
-        for (District e : currentState.getDistricts().values()) {
-            list.add(e);
-        }
+        ArrayList<District> list = new ArrayList<>(currentState.getDistricts().values());
         Collections.sort(list);
         return list;
     }
 
     public void setWeights(HashMap<Measure, Double> w) {
         weights = w;
-        currentScores = new HashMap<District, Double>();
+        weights.put(Measure.COMPACTNESS, 0.2);
+        weights.put(Measure.POPULATION_EQUALITY, 0.3);
+        weights.put(Measure.EFFICIENCY_GAP, 0.2);
+        weights.put(Measure.PARTISAN_FAIRNESS, 0.2);
+        weights.put(Measure.COMPETITIVENESS, 0.1);
+        currentScores = new HashMap<>();
         for (District d : currentState.getDistricts().values()) {
             currentScores.put(d, rateDistrict(d));
         }

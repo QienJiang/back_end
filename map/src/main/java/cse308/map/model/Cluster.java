@@ -144,12 +144,15 @@ public class Cluster {
         if (!countyID.equals(c.getCountyID())) {
             if (demographic.getPopulation()< c.getDemographic().getPopulation()) {
                 countyID = c.getCountyID();
-                color=c.getColor();
             }
         }
+        color=c.getColor();
         shape = shape.union(c.shape);
         demographic.combineDemo(c.getDemographic());
         precincts.addAll(c.getPrecincts());
+        for (Precinct p:precincts){
+            p.setParentCluster(clusterID);
+        }
     }
 
     public void setClusterID(String clusterID) {
