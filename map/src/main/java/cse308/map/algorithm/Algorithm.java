@@ -231,7 +231,7 @@ public class Algorithm {
         for (Measure m : weights.keySet()) {
             if (weights.get(m) != 0) {
                 try {
-                    Method rate = this.getClass().getMethod(measures.get(m), Algorithm.class);
+                    Method rate = this.getClass().getDeclaredMethod(measures.get(m), District.class);
                     double rating = ((Double) rate.invoke(this, d));
                     rating = 1 - Math.pow((1 - rating), 2);
                     score += weights.get(m) * rating;
