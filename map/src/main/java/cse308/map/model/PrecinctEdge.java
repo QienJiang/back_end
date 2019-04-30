@@ -17,10 +17,10 @@ public class PrecinctEdge {
         return null;
     }
 
-    public PrecinctEdge(Precinct p1, Precinct p2) {
+    public PrecinctEdge(Precinct p1, Precinct p2,MajorMinor majorMinor,double commnunityWeight) {
         this.p1 = p1;
         this.p2 = p2;
-        computeJoin();
+        computeJoin(majorMinor,commnunityWeight);
     }
 
     public double getCompactness() {
@@ -71,12 +71,12 @@ public class PrecinctEdge {
         this.joinability = joinability;
     }
 
-    public void computeJoin() {
+    public void computeJoin(MajorMinor comunityOfInterest,double communityWeight) {
         int totalPopulation = p1.getDemographic().getPopulation() + p2.getDemographic().getPopulation();
-        int totalMmPopulation=p1.getDemographic().getNativeAmerican()+p2.getDemographic().getNativeAmerican();
+        int totalMmPopulation=p1.getDemographic().getMajorMinorPop(comunityOfInterest)+p2.getDemographic().getMajorMinorPop(comunityOfInterest);
         double majorMinorValue=(double) totalMmPopulation/totalPopulation;
         int countyValue = p1.getId().equals(p2.getId()) ? 1 : 0;
-        this.joinability = majorMinorValue * 0.5 + countyValue * 0.5;
+        this.joinability = majorMinorValue * communityWeight + countyValue-communityWeight;
         setJoinability(joinability);
     }
 

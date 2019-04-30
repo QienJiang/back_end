@@ -39,6 +39,7 @@ public class Algorithm {
         }
         this.precinctService = precinctService;
         this.client = client;
+        setWeights(configuration.getWeights());
     }
 
     private void init() {
@@ -67,7 +68,7 @@ public class Algorithm {
             while (clusterIterator.hasNext()) {
                 Map.Entry<String, Cluster> clusterEntry = clusterIterator.next();
                 Cluster currentCluster = clusterEntry.getValue();
-                ArrayList<ClusterEdge> bestClusterEdges = currentCluster.getBestClusterEdge();
+                ArrayList<ClusterEdge> bestClusterEdges = currentCluster.getBestClusterEdges();
                 for (ClusterEdge edge : bestClusterEdges) {
                     if (isValidCombine(currentCluster, mergedCluster)) {
                         Cluster c2 = edge.getNeighborCluster(currentCluster);
@@ -115,7 +116,7 @@ public class Algorithm {
         }
         c2.combineCluster(c1);//combine demo data
         for (ClusterEdge edge : c2.getAllEdges()) {//re-compute c1 join
-            edge.computeJoin();
+            edge.computeJoin(currentState.getComunityOfinterest(), currentState.getConfiguration().getMajorMinorWeight());
         }
     }
 
@@ -125,6 +126,7 @@ public class Algorithm {
 
     private void annealing() {
         Move move;
+
         while ((move = makeMove()) != null) {
             sendMove(move);
         }
@@ -153,7 +155,7 @@ public class Algorithm {
         for (Precinct otherDistrictPrecinct : precinct.getOtherDistrctPreicincts()) {
             double districtMajorMinorValue = current.getMajorMinor();
             double totalMajorMinorValue = precinct.getMajorMinor() + districtMajorMinorValue;
-            if (totalMajorMinorValue > districtMajorMinorValue && totalMajorMinorValue < currentState.getConfiguration().getMajorminor()) {
+            if (totalMajorMinorValue > districtMajorMinorValue && totalMajorMinorValue < currentState.getConfiguration().getMajorMinorWeight()) {
                 District neighborDistrict = currentState.getFromDistrict(otherDistrictPrecinct);
                 Move move = new Move(current, neighborDistrict, otherDistrictPrecinct);
                 double improvement = testMove(move);
@@ -177,7 +179,6 @@ public class Algorithm {
         double final_score = to_score + from_score;
         double improvement = final_score - initial_score;
         move.undo();
-
         return improvement <= 0 ? 0 : improvement;
     }
 
@@ -218,11 +219,6 @@ public class Algorithm {
 
     public void setWeights(HashMap<Measure, Double> w) {
         weights = w;
-        weights.put(Measure.COMPACTNESS, 0.2);
-        weights.put(Measure.POPULATION_EQUALITY, 0.3);
-        weights.put(Measure.EFFICIENCY_GAP, 0.2);
-        weights.put(Measure.PARTISAN_FAIRNESS, 0.2);
-        weights.put(Measure.COMPETITIVENESS, 0.1);
         currentScores = new HashMap<>();
         for (District d : currentState.getDistricts().values()) {
             currentScores.put(d, rateDistrict(d));
@@ -234,7 +230,7 @@ public class Algorithm {
         for (Measure m : weights.keySet()) {
             if (weights.get(m) != 0) {
                 try {
-                    Method rate = this.getClass().getMethod(measures.get(m), District.class);
+                    Method rate = this.getClass().getMethod(measures.get(m), Algorithm.class);
                     double rating = ((Double) rate.invoke(this, d));
                     rating = 1 - Math.pow((1 - rating), 2);
                     score += weights.get(m) * rating;
@@ -374,7 +370,7 @@ public class Algorithm {
         msg.append("'\n'");
         int districtNum = 1;
         for (District district : currentState.getDistricts().values()) {
-            msg.append("No.").append(districtNum).append(": ").append(district.getdistrictID()).append(" : precinct size ").append(", population ").append(district.getCluster().getDemographic().getPopulation()).append("'\n'");
+            msg.append("No.").append(districtNum).append(": ").append(district.getdistrictID()).append(" : precinct size ").append(district.getCluster().getPrecincts().size()).append(", population ").append(district.getCluster().getDemographic().getPopulation()).append("'\n'");
             districtNum++;
         }
         StringBuilder districtColor = new StringBuilder();

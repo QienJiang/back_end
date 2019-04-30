@@ -2,6 +2,7 @@ package cse308.map.model;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import java.util.ArrayList;
 
 @Embeddable
 public class Demographic {
@@ -27,6 +28,14 @@ public class Demographic {
         nativeAmerican += demo.getNativeAmerican();
         africanAmerican += demo.getAfricanAmerican();
         asian += demo.getAsian();
+    }
+
+    public int getMajorMinorPop(MajorMinor majorMinor){
+        int[] majorMinorPops=new int[5];
+        majorMinorPops[MajorMinor.NATIVEAMERICAN.ordinal()]=nativeAmerican;
+        majorMinorPops[MajorMinor.AFRICANAMERICAN.ordinal()]=africanAmerican;
+        majorMinorPops[MajorMinor.ASIAN.ordinal()]=asian;
+        return majorMinorPops[majorMinor.ordinal()];
     }
 
     public int getPopulation() {

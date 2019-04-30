@@ -131,11 +131,8 @@ public class Cluster {
 
     }
 
-    public ArrayList<ClusterEdge> getBestClusterEdge() {
-        ArrayList<ClusterEdge> sortedEdges=new ArrayList<>();
-        for (ClusterEdge e : edges) {
-            sortedEdges.add(e);
-        }
+    public ArrayList<ClusterEdge> getBestClusterEdges() {
+        ArrayList<ClusterEdge> sortedEdges = new ArrayList<>(edges);
         Collections.sort(sortedEdges);
         return sortedEdges;
     }

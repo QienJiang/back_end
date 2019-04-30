@@ -63,18 +63,18 @@ public class ClusterEdge implements Comparable<ClusterEdge>{
         }
     }
 
-    public ClusterEdge(Cluster c1, Cluster c2) {
+    public ClusterEdge(Cluster c1, Cluster c2, MajorMinor majorMinor,double commnunityWeight) {
         this.c1 = c1;
         this.c2 = c2;
-        computeJoin();
+        computeJoin(majorMinor,commnunityWeight);
     }
 
-    public void computeJoin() {
+    public void computeJoin(MajorMinor comunityOfInterest,double communityWeight) {
         int totalPopulation = c1.getDemographic().getPopulation() + c2.getDemographic().getPopulation();
         int countyValue = c1.getCountyID().equals(c2.getCountyID()) ? 1 : 0;
-        int totalMmPopulation = c1.getDemographic().getNativeAmerican()+c2.getDemographic().getNativeAmerican();
+        int totalMmPopulation = c1.getDemographic().getMajorMinorPop(comunityOfInterest)+c2.getDemographic().getMajorMinorPop(comunityOfInterest);
         double majorMinorValue = (double) totalMmPopulation / totalPopulation;
-        joinability = majorMinorValue * 0.5 + countyValue * 0.5;
+        joinability = majorMinorValue * communityWeight + countyValue * 1-communityWeight;
         setJoinability(joinability);
     }
 
