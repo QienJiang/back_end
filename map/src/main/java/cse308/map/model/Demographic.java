@@ -10,12 +10,18 @@ public class Demographic {
     private int democraticVote;
     @Column(name = "republicanvote")
     private int republicanVote;
-    @Column(name = "nativeamerican")
-    private int nativeAmerican;
+    @Column(name = "white")
+    private int white;
     @Column(name = "africanamerican")
     private int africanAmerican;
+    @Column(name = "asian")
     private int asian;
-
+    @Column(name = "other")
+    private int other;
+    @Column(name = "hawaiian")
+    private int hawaiian;
+    @Column(name = "hispanic")
+    private int hispanic;
     public Demographic(){
 
     }
@@ -24,25 +30,34 @@ public class Demographic {
         population += demo.getPopulation();
         democraticVote += demo.getDemocraticVote();
         republicanVote += demo.getRepublicanVote();
-        nativeAmerican += demo.getNativeAmerican();
+        white += demo.getWHITE();
         africanAmerican += demo.getAfricanAmerican();
         asian += demo.getAsian();
+        other += demo.getOther();
+        hawaiian += demo.getHawaiian();
+        hispanic += demo.getHispanic();
     }
 
     public void removeDemo(Demographic demo){
         population -= demo.getPopulation();
         democraticVote -= demo.getDemocraticVote();
         republicanVote -= demo.getRepublicanVote();
-        nativeAmerican -= demo.getNativeAmerican();
+        white -= demo.getWHITE();
         africanAmerican -= demo.getAfricanAmerican();
         asian -= demo.getAsian();
+        other -= demo.getOther();
+        hawaiian -= demo.getHawaiian();
+        hispanic -= demo.getHispanic();
     }
 
     public int getMajorMinorPop(MajorMinor majorMinor){
-        int[] majorMinorPops=new int[5];
-        majorMinorPops[MajorMinor.NATIVEAMERICAN.ordinal()]=nativeAmerican;
-        majorMinorPops[MajorMinor.AFRICANAMERICAN.ordinal()]=africanAmerican;
-        majorMinorPops[MajorMinor.ASIAN.ordinal()]=asian;
+        int[] majorMinorPops=new int[MajorMinor.values().length];
+        majorMinorPops[MajorMinor.WHITE.ordinal()] = white;
+        majorMinorPops[MajorMinor.AFRICANAMERICAN.ordinal()] = africanAmerican;
+        majorMinorPops[MajorMinor.ASIAN.ordinal()] = asian;
+        majorMinorPops[MajorMinor.OTHER.ordinal()] = other;
+        majorMinorPops[MajorMinor.HAWAIIAN.ordinal()] = hawaiian;
+        majorMinorPops[MajorMinor.HISPANIC.ordinal()] = hispanic;
         return majorMinorPops[majorMinor.ordinal()];
     }
 
@@ -70,12 +85,12 @@ public class Demographic {
         this.republicanVote = republicanVote;
     }
 
-    public int getNativeAmerican() {
-        return nativeAmerican;
+    public int getWHITE() {
+        return white;
     }
 
-    public void setNativeAmerican(int nativeAmerican) {
-        this.nativeAmerican = nativeAmerican;
+    public void setWHITE(int white) {
+        this.white = white;
     }
 
     public int getAfricanAmerican() {
@@ -93,4 +108,20 @@ public class Demographic {
     public void setAsian(int asian) {
         this.asian = asian;
     }
+
+    public int getWhite() { return white; }
+
+    public void setWhite(int white) { this.white = white; }
+
+    public int getOther() { return other; }
+
+    public void setOther(int other) { this.other = other; }
+
+    public int getHawaiian() { return hawaiian; }
+
+    public void setHawaiian(int hawaiian) { this.hawaiian = hawaiian; }
+
+    public int getHispanic() { return hispanic; }
+
+    public void setHispanic(int hispanic) { this.hispanic = hispanic; }
 }

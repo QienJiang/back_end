@@ -4,6 +4,7 @@ public enum MajorMinor {
     AFRICANAMERICAN,
     ASIAN,
     HISPANIC,
-    LATINO,
-    NATIVEAMERICAN
+    OTHER,
+    WHITE,
+    HAWAIIAN
 }

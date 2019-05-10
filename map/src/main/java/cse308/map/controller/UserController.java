@@ -5,13 +5,9 @@ import cse308.map.server.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -31,7 +27,7 @@ public class UserController {
             return new ResponseEntity<User>(opt.get(), HttpStatus.OK);
         } else {
             System.out.println("user does not exist.");
-            return new ResponseEntity("No such user ", HttpStatus.NOT_FOUND);
+            return new ResponseEntity("No such user ", HttpStatus.UNAUTHORIZED);//401
         }
     }
 

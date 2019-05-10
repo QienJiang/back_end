@@ -126,7 +126,9 @@ public class Algorithm {
 
     private void annealing() {
         Move move;
+        System.out.println("-12-3-1-23-1-23-1-2");
         while ((move = makeMove()) != null) {
+            System.out.println("123123123222-----------");
             sendMove(move);
         }
     }
