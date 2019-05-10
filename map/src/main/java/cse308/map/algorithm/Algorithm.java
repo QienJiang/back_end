@@ -46,7 +46,7 @@ public class Algorithm {
 
     private void init() {
         sendMessage("fetching precinct'state data...");
-        Iterable<Precinct> allPrecincts = precinctService.getAllPrecincts();
+        Iterable<Precinct> allPrecincts = precinctService.getAllPrecincts("42");
         for (Precinct p : allPrecincts) {
             currentState.addPrecinct(p);
         }
