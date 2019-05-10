@@ -312,6 +312,15 @@ public class Algorithm {
         //4pi*area of geometry / parameter^2
     }
 
+    private double calSchwartzbergCompactness(District d){
+        double radius = Math.sqrt(d.getShape().getArea()/Math.PI);
+        double perimeter = 2 * Math.PI * radius;
+        return 1/(d.getShape().getLength()/perimeter);
+        //r = sqrt(A/PI)
+        //C = 2*PI*r
+        //1/(P/C)
+    }
+
     private boolean isContiguity(Move move){
         Geometry fromDistrict = move.getFrom().getShape();
         Geometry precinctShape = move.getPrecinct().getShape();
