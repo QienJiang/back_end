@@ -140,6 +140,7 @@ public class Algorithm {
             Move bestMove;
             for (Precinct precinct : smallestDistrict.getBorderPrecincts()) {
                 bestMove = getMove(smallestDistrict, precinct);
+                System.out.println("Bestmove:"+bestMove);
                 if (bestMove != null) {
                     bestMove.execute();
                     return bestMove;
@@ -156,11 +157,12 @@ public class Algorithm {
         for (Precinct otherDistrictPrecinct : precinct.getOtherDistrctPreicincts()) {
             double districtMajorMinorValue = current.getMajorMinor(currentState.getComunityOfinterest());
             double totalMajorMinorValue = precinct.getMajorMinor(currentState.getComunityOfinterest()) + districtMajorMinorValue;
-            if (totalMajorMinorValue > districtMajorMinorValue
-                    && totalMajorMinorValue < currentState.getConfiguration().getMajorMinorWeight()) {
+            if (totalMajorMinorValue > currentState.getConfiguration().getMinMajorMinorPercent()
+                    && totalMajorMinorValue < currentState.getConfiguration().getMaxMajorMinorPercent()) {
                 District neighborDistrict = currentState.getFromDistrict(otherDistrictPrecinct);
                 Move move = new Move(current, neighborDistrict, otherDistrictPrecinct);
                 double improvement = testMove(move);
+                System.out.println("improvement:"+improvement);
                 if (improvement > bestImprovement) {
                     bestMove = move;
                     bestImprovement = improvement;

@@ -6,6 +6,9 @@ public class Configuration {
     private int targetDistrictNumber;
     private int numOfRun;
     private double majorMinor;
+    private double maxMajorMinorPercent;
+    private double minMajorMinorPercent;
+    private int desiredNumMajorMinorDistrict;
     private String interestCommunity;
     private MajorMinor communityOfInterest;
     private double equality;
@@ -31,6 +34,8 @@ public class Configuration {
         weights.put(Measure.PARTISAN_FAIRNESS, fairness/10);
         weights.put(Measure.COMPETITIVENESS, competitiveness/10);
         majorMinor/=10;
+        maxMajorMinorPercent /=10;
+        minMajorMinorPercent /=10;
     }
 
 
@@ -125,6 +130,30 @@ public class Configuration {
 
     public void setInterestCommunity(String interestCommunity) {
         this.interestCommunity = interestCommunity;
+    }
+
+    public double getMaxMajorMinorPercent() {
+        return maxMajorMinorPercent;
+    }
+
+    public void setMaxMajorMinorPercent(double maxMajorMinorPercent) {
+        this.maxMajorMinorPercent = maxMajorMinorPercent;
+    }
+
+    public double getMinMajorMinorPercent() {
+        return minMajorMinorPercent;
+    }
+
+    public void setMinMajorMinorPercent(double minMajorMinorPercent) {
+        this.minMajorMinorPercent = minMajorMinorPercent;
+    }
+
+    public int getDesiredNumMajorMinorDistrict() {
+        return desiredNumMajorMinorDistrict;
+    }
+
+    public void setDesiredNumMajorMinorDistrict(int desiredNumMajorMinorDistrict) {
+        this.desiredNumMajorMinorDistrict = desiredNumMajorMinorDistrict;
     }
 
     @Override
