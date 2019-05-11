@@ -203,4 +203,14 @@ public class Cluster {
     public void setCurrentScore(double CurrentScore) {
         this.CurrentScore = CurrentScore;
     }
+
+    public Precinct getFromClusterPrecinct(){
+        Iterator<Precinct> iterator = precincts.iterator();
+        Precinct temp=null;
+        while (iterator.hasNext()){
+            temp = iterator.next();
+            break;
+        }
+        return temp;
+    }
 }

@@ -6,7 +6,9 @@ import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Transient;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 //import javax.persistence.*;
 
@@ -149,4 +151,19 @@ public class Precinct {
         majorMinorValue = (double) totalMmPopulation / totalPopulation;
         return majorMinorValue;
     }
+
+    public List<Precinct> getSameClusterNeighbor(Move move){
+        List<Precinct> neighbor = new ArrayList<>();
+
+        for(PrecinctEdge precinctEdge : move.getPrecinct().getPrecinctEdges()){
+
+            Precinct neig= precinctEdge.getNeighbor(move.getPrecinct());
+            if(neig.getParentCluster().equals(move.getFrom().getCluster().getClusterID())){
+                neighbor.add(neig);
+            }
+        }
+
+        return neighbor;
+    }
+
 }

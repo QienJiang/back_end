@@ -359,25 +359,29 @@ public class Algorithm {
         //1/(P/C)
     }
 
-    private boolean isContiguity(Move move){
-//        move.execute();
-        Geometry fromDistrict = move.getFrom().getShape();
-        // Geometry toDistrict = move.getTo().getShape();
-        Geometry precinctShape = move.getPrecinct().getShape();
-        if(precinctShape.getGeometryType().equals("MultiPolygon")){
-            return false;
-        }
+    public boolean searchByDepth(Move move) {
 
-        Geometry symDifference = fromDistrict.symDifference(precinctShape);
-        // Geometry symDifferenceTo = toDistrict.symDifference(precinctShape);
-        return !(symDifference.getGeometryType().equals("MultiPolygon"));
-//        System.out.println("Contigunity "+move.getFrom().getDistrictID()+", "+symDifference.getGeometryType());
-//        if(fromDistrict.getGeometryType().equals("MultiPolygon")){
-//            move.undo();
-//            return false;
-//        }
-//        move.undo();
-//        return true;
+        move.execute();
+        List<Precinct> visitedNodes = new LinkedList<>();
+        List<Precinct> unvisitedNodes = new LinkedList<>();
+        unvisitedNodes.add(move.getFrom().getCluster().getFromClusterPrecinct());
+        while(!unvisitedNodes.isEmpty()) {
+            Precinct currNode = unvisitedNodes.remove(0);
+            List<Precinct> newNodes = currNode.getSameClusterNeighbor(move);
+            unvisitedNodes.addAll(0, newNodes);
+            visitedNodes.add(currNode);
+        }
+        if(visitedNodes.size() == move.getFrom().getCluster().getPrecincts().size()) {
+            move.undo();
+            return true;
+        }
+        move.undo();
+        return false;
+    }
+
+    private boolean isContiguity(Move move){
+        return searchByDepth(move);
+
     }
 
     public double rateStatewideEfficiencyGap(District d) {
