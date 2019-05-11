@@ -126,11 +126,31 @@ public class Algorithm {
 
     private void annealing() {
         Move move;
-        System.out.println("-12-3-1-23-1-23-1-2");
-        while ((move = makeMove()) != null) {
-            System.out.println("123123123222-----------");
+//        System.out.println("-12-3-1-23-1-23-1-2");
+        int counter=0;
+        int tempc=0;
+        ArrayList<Move> moves=new ArrayList<>();
+        while ((move = makeMove()) != null&&counter<600) {
             sendMove(move);
+
+            System.out.println(counter++);
+//            if(counter<20){
+//                moves.add(move);
+//                counter++;
+//            }
+//            else {
+//                for(Move i:moves)
+//                    sendMove(i);
+//                System.out.println("send"+tempc);
+//                tempc++;
+//                moves=new ArrayList<>();
+//                counter=0;
+//            }
         }
+//        for(Move i:moves)
+//            sendMove(i);
+//        moves=new ArrayList<>();
+//        counter=0;
     }
 
     private Move makeMove() {
@@ -140,8 +160,26 @@ public class Algorithm {
             Move bestMove;
             for (Precinct precinct : smallestDistrict.getBorderPrecincts()) {
                 bestMove = getMove(smallestDistrict, precinct);
-                System.out.println("Bestmove:"+bestMove);
+//                System.out.println("Bestmove:"+bestMove);
                 if (bestMove != null) {
+//                    if(bestMove.getPrecinct().getShape().getGeometryType().equals("MultiPolygon")){
+//                        Set<PrecinctEdge> neighborEdge = bestMove.getPrecinct().getPrecinctEdges();
+//                        ArrayList<Precinct> neighbors = new ArrayList<>();
+//                        for(PrecinctEdge e : neighborEdge){
+//                            Precinct nb = e.getNeighbor(bestMove.getPrecinct());
+//                            if(bestMove.getPrecinct().getShape().contains(nb.getShape())){
+//                                neighbors.add(nb);
+//                            }
+//                        }
+//                        for(int i=0;i<neighbors.size();i++){
+////                            District from = currentState.getDistricts().get(neighbors.get(i).getParentCluster());
+//                            Move move = new Move(bestMove.getTo(),bestMove.getFrom(),neighbors.get(i));
+//                            move.execute();
+//                        }
+//
+//
+//
+//                    }
                     bestMove.execute();
                     return bestMove;
                 }
@@ -322,10 +360,24 @@ public class Algorithm {
     }
 
     private boolean isContiguity(Move move){
+//        move.execute();
         Geometry fromDistrict = move.getFrom().getShape();
+        // Geometry toDistrict = move.getTo().getShape();
         Geometry precinctShape = move.getPrecinct().getShape();
+        if(precinctShape.getGeometryType().equals("MultiPolygon")){
+            return false;
+        }
+
         Geometry symDifference = fromDistrict.symDifference(precinctShape);
-        return !symDifference.getGeometryType().equals("MultiPolygon");
+        // Geometry symDifferenceTo = toDistrict.symDifference(precinctShape);
+        return !(symDifference.getGeometryType().equals("MultiPolygon"));
+//        System.out.println("Contigunity "+move.getFrom().getDistrictID()+", "+symDifference.getGeometryType());
+//        if(fromDistrict.getGeometryType().equals("MultiPolygon")){
+//            move.undo();
+//            return false;
+//        }
+//        move.undo();
+//        return true;
     }
 
     public double rateStatewideEfficiencyGap(District d) {
