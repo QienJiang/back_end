@@ -152,13 +152,13 @@ public class Precinct {
         return majorMinorValue;
     }
 
-    public List<Precinct> getSameClusterNeighbor(Move move){
+    public List<Precinct> getSameClusterNeighbor(Precinct precinct){
         List<Precinct> neighbor = new ArrayList<>();
 
-        for(PrecinctEdge precinctEdge : move.getPrecinct().getPrecinctEdges()){
+        for(PrecinctEdge precinctEdge : precinct.getPrecinctEdges()){
 
-            Precinct neig= precinctEdge.getNeighbor(move.getPrecinct());
-            if(neig.getParentCluster().equals(move.getFrom().getCluster().getClusterID())){
+            Precinct neig= precinctEdge.getNeighbor(precinct);
+            if(neig.getParentCluster().equals(precinct.getParentCluster())){
                 neighbor.add(neig);
             }
         }

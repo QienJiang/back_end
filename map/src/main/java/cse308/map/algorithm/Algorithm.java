@@ -367,7 +367,7 @@ public class Algorithm {
         unvisitedNodes.add(move.getFrom().getCluster().getFromClusterPrecinct());
         while(!unvisitedNodes.isEmpty()) {
             Precinct currNode = unvisitedNodes.remove(0);
-            List<Precinct> newNodes = currNode.getSameClusterNeighbor(move);
+            List<Precinct> newNodes = currNode.getSameClusterNeighbor(currNode);
             unvisitedNodes.addAll(0, newNodes);
             visitedNodes.add(currNode);
         }
