@@ -374,7 +374,7 @@ public class Algorithm {
             List<Precinct> newNodes = currNode.getSameClusterNeighbor(currNode).stream()
                     .filter(node -> !visitedNodes.contains(node))
                     .collect(Collectors.toList());;
-            unvisitedNodes.addAll(newNodes);
+            unvisitedNodes.addAll(0,newNodes);
             visitedNodes.add(currNode);
             for(Precinct precinct: unvisitedNodes){
                 System.out.println("parentclusterID "+precinct.getParentCluster());
