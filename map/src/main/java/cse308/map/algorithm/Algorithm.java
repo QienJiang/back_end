@@ -1,7 +1,6 @@
 package cse308.map.algorithm;
 
 import com.corundumstudio.socketio.SocketIOClient;
-import com.vividsolutions.jts.geom.Geometry;
 import cse308.map.model.*;
 import cse308.map.server.PrecinctService;
 
@@ -29,6 +28,7 @@ public class Algorithm {
     private SocketIOClient client;
     private HashMap<Measure, Double> weights = new HashMap<>();
     private HashMap<District, Double> currentScores = new HashMap<>();
+    private Map<String, District> mmDistricts = new HashMap<>();
 
     //pass the precinctService to the algorithm object because we can't autowired precinctService for each object it is not working.
     public Algorithm(String stateName, Configuration configuration, PrecinctService precinctService, SocketIOClient client) {
@@ -192,21 +192,68 @@ public class Algorithm {
         return null;
     }
 
+    private void checkMmDistricts(){
+        int desiredNumMm = currentState.getConfiguration().getDesiredNumMajorMinorDistrict();
+        if(mmDistricts.size() < desiredNumMm){
+
+        }
+
+    }
+
+
+    private void setMmDistricts(){
+        int desiredNumMm = currentState.getConfiguration().getDesiredNumMajorMinorDistrict();
+        for(District d: currentState.getDistricts().values()){
+            double districtMajorMinorValue = d.getMajorMinor(currentState.getComunityOfinterest());
+            if (districtMajorMinorValue >= currentState.getConfiguration().getMinMajorMinorPercent()
+                    && districtMajorMinorValue <= currentState.getConfiguration().getMaxMajorMinorPercent()) {
+                if(mmDistricts.size()< desiredNumMm){
+                    mmDistricts.put(d.getdistrictID(),d);
+                }
+            }
+        }
+    }
+
+
     private Move getMove(District current, Precinct precinct) {
         Move bestMove = null;
         double bestImprovement = 0;
+        int desiredNumMM = currentState.getConfiguration().getDesiredNumMajorMinorDistrict();
         for (Precinct otherDistrictPrecinct : precinct.getOtherDistrctPreicincts()) {
             double districtMajorMinorValue = current.getMajorMinor(currentState.getComunityOfinterest());
             double totalMajorMinorValue = precinct.getMajorMinor(currentState.getComunityOfinterest()) + districtMajorMinorValue;
-            if (totalMajorMinorValue > currentState.getConfiguration().getMinMajorMinorPercent()
-                    && totalMajorMinorValue < currentState.getConfiguration().getMaxMajorMinorPercent()) {
-                District neighborDistrict = currentState.getFromDistrict(otherDistrictPrecinct);
-                Move move = new Move(current, neighborDistrict, otherDistrictPrecinct);
-                double improvement = testMove(move);
+            if(mmDistricts.size() <= desiredNumMM){
+                if (totalMajorMinorValue >= currentState.getConfiguration().getMinMajorMinorPercent()
+                        && totalMajorMinorValue <= currentState.getConfiguration().getMaxMajorMinorPercent()) {
+                    District neighborDistrict = currentState.getFromDistrict(otherDistrictPrecinct);
+                    Move move = new Move(current, neighborDistrict, otherDistrictPrecinct);
+                    double improvement = testMove(move);
 //                System.out.println("improvement:"+improvement);
-                if (improvement > bestImprovement) {
-                    bestMove = move;
-                    bestImprovement = improvement;
+                    if (improvement > bestImprovement) {
+                        bestMove = move;
+                        bestImprovement = improvement;
+                    }
+                }
+            }else{
+                if(mmDistricts.containsKey(otherDistrictPrecinct.getParentCluster())){
+                    if (totalMajorMinorValue >= currentState.getConfiguration().getMinMajorMinorPercent()
+                            && totalMajorMinorValue <= currentState.getConfiguration().getMaxMajorMinorPercent()) {
+                        District neighborDistrict = currentState.getFromDistrict(otherDistrictPrecinct);
+                        Move move = new Move(current, neighborDistrict, otherDistrictPrecinct);
+                        double improvement = testMove(move);
+                        if (improvement > bestImprovement) {
+                            bestMove = move;
+                            bestImprovement = improvement;
+                        }
+                    }
+                }else{
+                    District neighborDistrict = currentState.getFromDistrict(otherDistrictPrecinct);
+                    Move move = new Move(current, neighborDistrict, otherDistrictPrecinct);
+                    double improvement = testMove(move);
+                    if (improvement > bestImprovement) {
+                        bestMove = move;
+                        bestImprovement = improvement;
+                    }
                 }
             }
         }
@@ -242,6 +289,7 @@ public class Algorithm {
             District startDistrict = districts.get(0);
             for (Precinct precinct : startDistrict.getBorderPrecincts()) {
                 Move m = getMove(startDistrict, precinct);//......
+                setMmDistricts();
                 if (m != null&&testMove(m)!=0) {
                     m.execute();
                     return m;
@@ -372,7 +420,7 @@ public class Algorithm {
 
     public boolean searchByDepth(Move move) {
         Cluster c = move.getFrom().getCluster();
-        move.execute();
+//        move.execute();
         List<Precinct> visitedNodes = new LinkedList<>();
         List<Precinct> unvisitedNodes = new LinkedList<>();
         unvisitedNodes.add(c.getFromClusterPrecinct());
@@ -390,10 +438,10 @@ public class Algorithm {
         }
 //        System.out.println("out while");
         if(visitedNodes.size() == move.getFrom().getCluster().getPrecincts().size()) {
-            move.undo();
+//            move.undo();
             return true;
         }
-        move.undo();
+//        move.undo();
         return false;
     }
 
@@ -441,7 +489,10 @@ public class Algorithm {
     }
 
     public double rateCompetitiveness(District d) {
-        return rateCompactness(d);
+        int gv = d.getGOPVote();
+        int dv = d.getDEMVote();
+        return 1.0 - (Math.abs(gv-dv)/(gv + dv));
+//        return rateCompactness(d);
     }
 
     private String randomColor() {
@@ -468,8 +519,14 @@ public class Algorithm {
             System.out.print(d.getShape().getGeometryType()+ ", ");
         }
         updateDistrictBoundary();
+        setMmDistricts();
+        System.out.println("----:"+mmDistricts.size());
         annealing();
         updateDistrictBoundary();
+        System.out.println(mmDistricts.size());
+        for(District d :mmDistricts.values()){
+            System.out.println(d.getMajorMinor(currentState.getComunityOfinterest()));
+        }
         sendMessage("Algorithm finished!");
     }
 

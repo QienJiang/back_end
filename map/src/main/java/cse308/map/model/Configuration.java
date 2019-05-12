@@ -34,8 +34,8 @@ public class Configuration {
         weights.put(Measure.PARTISAN_FAIRNESS, fairness/10);
         weights.put(Measure.COMPETITIVENESS, competitiveness/10);
         majorMinor/=10;
-        maxMajorMinorPercent /=10;
-        minMajorMinorPercent /=10;
+        maxMajorMinorPercent /=100;
+        minMajorMinorPercent /=100;
     }
 
 
