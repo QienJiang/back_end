@@ -218,8 +218,10 @@ public class Algorithm {
         double initial_score = move.getTo().getCurrentScore() + move.getFrom().getCurrentScore();
         move.execute();
         if(move.getFrom().getShape().getGeometryType().equals("Multipolygon")){
-            move.undo();
-            return 0;
+            if(!searchByDepth(move)) {
+                move.undo();
+                return 0;
+            }
         }
         double to_score = rateDistrict(move.getTo());
         double from_score = rateDistrict(move.getFrom());
@@ -366,28 +368,21 @@ public class Algorithm {
 
     public boolean searchByDepth(Move move) {
         Cluster c = move.getFrom().getCluster();
-        System.out.println("clusterID "+move.getPrecinct().getParentCluster());
-        System.out.println("clusterID "+c.getClusterID());
         move.execute();
         List<Precinct> visitedNodes = new LinkedList<>();
         List<Precinct> unvisitedNodes = new LinkedList<>();
         unvisitedNodes.add(c.getFromClusterPrecinct());
-
         while(!unvisitedNodes.isEmpty()) {
             Precinct currNode = unvisitedNodes.remove(0);
+            if(visitedNodes.contains(currNode)){
+                continue;
+            }
             List<Precinct> newNodes = currNode.getSameClusterNeighbor(currNode).stream()
                     .filter(node -> !visitedNodes.contains(node))
                     .collect(Collectors.toList());;
             unvisitedNodes.addAll(0,newNodes);
             visitedNodes.add(currNode);
-            for(Precinct precinct: unvisitedNodes){
-                System.out.println("parentclusterID "+precinct.getParentCluster());
-                if(!precinct.getParentCluster().equals(c.getClusterID())){
-                    System.exit(0);
-                    break;
-                }
-            }
-
+//            unvisitedNodes.removeIf(visitedNodes::contains);
         }
         System.out.println("out while");
         if(visitedNodes.size() == move.getFrom().getCluster().getPrecincts().size()) {
@@ -399,12 +394,12 @@ public class Algorithm {
     }
 
     private boolean isContiguity(Move move){
-        Geometry fromDistrict = move.getFrom().getShape();
-        // Geometry toDistrict = move.getTo().getShape();
-        Geometry precinctShape = move.getPrecinct().getShape();
-        Geometry symDifference = fromDistrict.symDifference(precinctShape);
-        return !symDifference.getGeometryType().equals("MultiPolygon");
-//        return searchByDepth(move);
+//        Geometry fromDistrict = move.getFrom().getShape();
+//        // Geometry toDistrict = move.getTo().getShape();
+//        Geometry precinctShape = move.getPrecinct().getShape();
+//        Geometry symDifference = fromDistrict.symDifference(precinctShape);
+//        return !symDifference.getGeometryType().equals("MultiPolygon");
+        return searchByDepth(move);
 
     }
 
