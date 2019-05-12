@@ -47,7 +47,7 @@ public class Algorithm {
 
     private void init() {
         sendMessage("fetching precinct'state data...");
-        Iterable<Precinct> allPrecincts = precinctService.getAllPrecincts("42");
+        Iterable<Precinct> allPrecincts = precinctService.getAllPrecincts("35");
         for (Precinct p : allPrecincts) {
             currentState.addPrecinct(p);
         }
@@ -133,7 +133,9 @@ public class Algorithm {
         ArrayList<Move> moves=new ArrayList<>();
         while ((move = makeMove()) != null&&counter<600) {
             sendMove(move);
-
+            for(District d:currentState.getDistricts().values()){
+                System.out.print(d.getShape().getGeometryType()+ ", ");
+            }
             System.out.println(counter++);
 //            if(counter<20){
 //                moves.add(move);
@@ -157,7 +159,7 @@ public class Algorithm {
     private Move makeMove() {
         District smallestDistrict = getSmallestDistrict(currentState.getDistricts());
         int equalPopulation = currentState.getPopulation() / currentState.getConfiguration().getTargetDistrictNumber();
-        if (smallestDistrict.getPopulation() < equalPopulation) {
+        if (smallestDistrict.getPopulation()>0&&smallestDistrict.getPopulation() < equalPopulation) {
             Move bestMove;
             for (Precinct precinct : smallestDistrict.getBorderPrecincts()) {
                 bestMove = getMove(smallestDistrict, precinct);
@@ -201,7 +203,7 @@ public class Algorithm {
                 District neighborDistrict = currentState.getFromDistrict(otherDistrictPrecinct);
                 Move move = new Move(current, neighborDistrict, otherDistrictPrecinct);
                 double improvement = testMove(move);
-                System.out.println("improvement:"+improvement);
+//                System.out.println("improvement:"+improvement);
                 if (improvement > bestImprovement) {
                     bestMove = move;
                     bestImprovement = improvement;
@@ -217,12 +219,14 @@ public class Algorithm {
 //        }
         double initial_score = move.getTo().getCurrentScore() + move.getFrom().getCurrentScore();
         move.execute();
-        if(move.getFrom().getShape().getGeometryType().equals("Multipolygon")){
+//        if(move.getFrom().getShape().getGeometryType().equals("MultiPolygon")){
+//            move.undo();
+//            return 0;
             if(!searchByDepth(move)) {
                 move.undo();
                 return 0;
             }
-        }
+//        }
         double to_score = rateDistrict(move.getTo());
         double from_score = rateDistrict(move.getFrom());
         double final_score = to_score + from_score;
@@ -384,7 +388,7 @@ public class Algorithm {
             visitedNodes.add(currNode);
 //            unvisitedNodes.removeIf(visitedNodes::contains);
         }
-        System.out.println("out while");
+//        System.out.println("out while");
         if(visitedNodes.size() == move.getFrom().getCluster().getPrecincts().size()) {
             move.undo();
             return true;
@@ -460,18 +464,26 @@ public class Algorithm {
         init();
         graphPartition();
         currentState.initDistrict();
+        for(District d:currentState.getDistricts().values()){
+            System.out.print(d.getShape().getGeometryType()+ ", ");
+        }
+        updateDistrictBoundary();
         annealing();
         updateDistrictBoundary();
         sendMessage("Algorithm finished!");
     }
 
     private void updateDistrictBoundary() {
-        msg.append("'\n'");
+        StringBuilder info=new StringBuilder();
+        info.append("'\n'");
         int districtNum = 1;
         for (District district : currentState.getDistricts().values()) {
-            msg.append("No.").append(districtNum).append(": ").append(district.getdistrictID()).append(" : precinct size ").append(district.getCluster().getPrecincts().size()).append(", population ").append(district.getCluster().getDemographic().getPopulation()).append("'\n'");
+            info.append("No.").append(districtNum).append(": ").append(district.getdistrictID()).append(" : precinct size ").append(district.getCluster().getPrecincts().size()).append(", population ").append(district.getCluster().getDemographic().getPopulation()).append("'\n'");
+//            System.out.println(msg);
             districtNum++;
         }
+        sendMessage(info.toString());
+        msg.append("'\n'");
         StringBuilder districtColor = new StringBuilder();
         sendMessage("Assigning Colors...");
         StringBuilder districtJson = new StringBuilder();
