@@ -6,10 +6,7 @@ import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Transient;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 //import javax.persistence.*;
 
 @Entity
@@ -153,10 +150,8 @@ public class Precinct {
     }
 
     public List<Precinct> getSameClusterNeighbor(Precinct precinct){
-        List<Precinct> neighbor = new ArrayList<>();
-
+        List<Precinct> neighbor = new LinkedList<>();
         for(PrecinctEdge precinctEdge : precinct.getPrecinctEdges()){
-
             Precinct neig= precinctEdge.getNeighbor(precinct);
             if(neig.getParentCluster().equals(precinct.getParentCluster())){
                 neighbor.add(neig);

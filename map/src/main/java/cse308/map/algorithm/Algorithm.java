@@ -7,6 +7,7 @@ import cse308.map.server.PrecinctService;
 
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Algorithm {
     private static final HashMap<Measure, String> measures;
@@ -360,17 +361,31 @@ public class Algorithm {
     }
 
     public boolean searchByDepth(Move move) {
-
+        Cluster c = move.getFrom().getCluster();
+        System.out.println("clusterID "+move.getPrecinct().getParentCluster());
+        System.out.println("clusterID "+c.getClusterID());
         move.execute();
         List<Precinct> visitedNodes = new LinkedList<>();
         List<Precinct> unvisitedNodes = new LinkedList<>();
-        unvisitedNodes.add(move.getFrom().getCluster().getFromClusterPrecinct());
+        unvisitedNodes.add(c.getFromClusterPrecinct());
+
         while(!unvisitedNodes.isEmpty()) {
             Precinct currNode = unvisitedNodes.remove(0);
-            List<Precinct> newNodes = currNode.getSameClusterNeighbor(currNode);
-            unvisitedNodes.addAll(0, newNodes);
+            List<Precinct> newNodes = currNode.getSameClusterNeighbor(currNode).stream()
+                    .filter(node -> !visitedNodes.contains(node))
+                    .collect(Collectors.toList());;
+            unvisitedNodes.addAll(newNodes);
             visitedNodes.add(currNode);
+            for(Precinct precinct: unvisitedNodes){
+                System.out.println("parentclusterID "+precinct.getParentCluster());
+                if(!precinct.getParentCluster().equals(c.getClusterID())){
+                    System.exit(0);
+                    break;
+                }
+            }
+
         }
+        System.out.println("out while");
         if(visitedNodes.size() == move.getFrom().getCluster().getPrecincts().size()) {
             move.undo();
             return true;
