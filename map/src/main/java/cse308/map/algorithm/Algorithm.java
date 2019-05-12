@@ -212,11 +212,15 @@ public class Algorithm {
     }
 
     private double testMove(Move move) {
-        if (!isContiguity(move)) {
-            return 0;
-        }
+//        if (!isContiguity(move)) {
+//            return 0;
+//        }
         double initial_score = move.getTo().getCurrentScore() + move.getFrom().getCurrentScore();
         move.execute();
+        if(move.getFrom().getShape().getGeometryType().equals("Multipolygon")){
+            move.undo();
+            return 0;
+        }
         double to_score = rateDistrict(move.getTo());
         double from_score = rateDistrict(move.getFrom());
         double final_score = to_score + from_score;
@@ -232,7 +236,7 @@ public class Algorithm {
             District startDistrict = districts.get(0);
             for (Precinct precinct : startDistrict.getBorderPrecincts()) {
                 Move m = getMove(startDistrict, precinct);//......
-                if (m != null) {
+                if (m != null&&testMove(m)!=0) {
                     m.execute();
                     return m;
                 }
@@ -395,7 +399,12 @@ public class Algorithm {
     }
 
     private boolean isContiguity(Move move){
-        return searchByDepth(move);
+        Geometry fromDistrict = move.getFrom().getShape();
+        // Geometry toDistrict = move.getTo().getShape();
+        Geometry precinctShape = move.getPrecinct().getShape();
+        Geometry symDifference = fromDistrict.symDifference(precinctShape);
+        return !symDifference.getGeometryType().equals("MultiPolygon");
+//        return searchByDepth(move);
 
     }
 

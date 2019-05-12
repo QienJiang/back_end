@@ -9,7 +9,6 @@ public class District implements Comparable<District>{
     private String districtID;
     private Cluster cluster;
     private double compactness;
-    private Geometry shape;
 
     public double getCompactness() {
         return compactness;
@@ -20,17 +19,16 @@ public class District implements Comparable<District>{
     }
 
     public Geometry getShape() {
-        return shape;
+        return cluster.getShape();
     }
 
     public void setShape(Geometry shape) {
-        this.shape = shape;
+        cluster.setShape(shape);
     }
 
     public District(Cluster c) {
         cluster=c;
         districtID=cluster.getClusterID();
-        shape = new GeometryFactory().createGeometry(cluster.getShape());
     }
 
     public Cluster getCluster() {
