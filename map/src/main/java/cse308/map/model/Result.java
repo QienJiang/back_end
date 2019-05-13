@@ -1,13 +1,15 @@
 package cse308.map.model;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javax.persistence.*;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.*;
 
 @Entity
-public class Result {
+public class Result extends ObjectMapper {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
@@ -19,12 +21,16 @@ public class Result {
 
     @Convert(converter = HashMapConverter.class)
     private Map<String, Object> customerAttributes;
+    @Transient
+    private ObjectMapper objectMapper = new ObjectMapper();
 
 
     public void serializeCustomerAttributes() throws JsonProcessingException {
         this.stateJSON = objectMapper.writeValueAsString(customerAttributes);
     }
-
+    public void deserializeCustomerAttributes() throws IOException {
+        this.customerAttributes = objectMapper.readValue(stateJSON, HashMap.class);
+    }
 
     public String getStateJSON() {
         return stateJSON;
