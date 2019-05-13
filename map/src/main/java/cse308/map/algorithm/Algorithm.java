@@ -539,7 +539,7 @@ public class Algorithm {
         for(District d :mmDistricts.values()){
             System.out.println(d.getMajorMinor(currentState.getComunityOfinterest()));
         }
-        //saveToDatabase();
+        resultService.saveState(new Result("333@gmail.com",this.currentState));
         sendMessage("Algorithm finished!");
     }
 

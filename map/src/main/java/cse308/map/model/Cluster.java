@@ -11,8 +11,8 @@ public class Cluster implements Serializable {
 
     private String clusterID;
     private Geometry shape;
-    private Set<ClusterEdge> edges = new HashSet<>();
-    private Set<Precinct> precincts;
+    private transient Set<ClusterEdge> edges = new HashSet<>();
+    private transient Set<Precinct> precincts;
     private Demographic demographic;
     private boolean isAssigned;
     private String countyID;

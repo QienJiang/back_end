@@ -16,9 +16,9 @@ public class State implements Serializable {
     private String rvote;
     private String dvote;
     @Transient
-    private Map<String, Precinct> precincts = new HashMap<>();
+    private transient Map<String, Precinct> precincts = new HashMap<>();
     @Transient
-    private Map<String, Cluster> clusters = new HashMap<>();
+    private transient Map<String, Cluster> clusters = new HashMap<>();
 
     public Map<String, District> getDistricts() {
         return districts;
