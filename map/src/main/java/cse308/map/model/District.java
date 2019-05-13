@@ -2,10 +2,12 @@ package cse308.map.model;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
+
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-public class District implements Comparable<District>{
+public class District implements Comparable<District>,Serializable {
     private String districtID;
     private Cluster cluster;
     private double compactness;

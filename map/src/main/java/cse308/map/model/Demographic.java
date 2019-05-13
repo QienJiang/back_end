@@ -2,9 +2,10 @@ package cse308.map.model;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import java.io.Serializable;
 
 @Embeddable
-public class Demographic {
+public class Demographic implements Serializable {
     private int population;
     @Column(name = "democraticvote")
     private int democraticVote;

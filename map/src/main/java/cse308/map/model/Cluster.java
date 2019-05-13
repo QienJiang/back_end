@@ -4,9 +4,10 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.io.geojson.GeoJsonWriter;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class Cluster {
+public class Cluster implements Serializable {
 
     private String clusterID;
     private Geometry shape;

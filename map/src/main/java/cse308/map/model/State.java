@@ -2,11 +2,12 @@ package cse308.map.model;
 
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.*;
 
 @Entity
 @Table(name = "State")
-public class State {
+public class State implements Serializable {
 
     @Id
     private String id;

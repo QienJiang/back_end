@@ -6,11 +6,12 @@ import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Transient;
+import java.io.Serializable;
 import java.util.*;
 //import javax.persistence.*;
 
 @Entity
-public class Precinct {
+public class Precinct implements Serializable {
     @Id
     private String id;
     private Geometry shape;
@@ -25,6 +26,9 @@ public class Precinct {
     private Set<PrecinctEdge> precinctEdges = new HashSet<>();
     @Transient
     private boolean iscCompute = false;
+
+    @Transient
+    private int combineNum; //for annealing
 
     public Set<Precinct> getOtherDistrctPreicincts(){
         Set<Precinct> otherDistrictPrecincts=new HashSet<Precinct>();
@@ -161,4 +165,11 @@ public class Precinct {
         return neighbor;
     }
 
+    public int getCombineNum() {
+        return combineNum;
+    }
+
+    public void setCombineNum(int combineNum) {
+        this.combineNum = combineNum;
+    }
 }

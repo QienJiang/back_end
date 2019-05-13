@@ -5,10 +5,11 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "Account")
-public class User {
+public class User implements Serializable {
 
     @Id
     private String email;

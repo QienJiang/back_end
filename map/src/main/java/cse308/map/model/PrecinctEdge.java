@@ -1,6 +1,8 @@
 package cse308.map.model;
 
-public class PrecinctEdge {
+import java.io.Serializable;
+
+public class PrecinctEdge implements Serializable {
     private double compactness;
     private Precinct p1;
     private Precinct p2;

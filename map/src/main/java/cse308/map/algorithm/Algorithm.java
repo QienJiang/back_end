@@ -47,7 +47,9 @@ public class Algorithm {
 
     private void init() {
         sendMessage("fetching precinct'state data...");
+//        Iterable<Precinct> allPrecincts = precinctService.getAllPrecincts("35");
         Iterable<Precinct> allPrecincts = precinctService.getAllPrecincts("35");
+
         for (Precinct p : allPrecincts) {
             currentState.addPrecinct(p);
         }
@@ -133,6 +135,7 @@ public class Algorithm {
         ArrayList<Move> moves=new ArrayList<>();
         while ((move = makeMove()) != null&&counter<600) {
             sendMove(move);
+            move.getPrecinct().setCombineNum(move.getPrecinct().getCombineNum()+1);
             for(District d:currentState.getDistricts().values()){
                 System.out.print(d.getShape().getGeometryType()+ ", ");
             }
@@ -264,6 +267,9 @@ public class Algorithm {
 //        if (!isContiguity(move)) {
 //            return 0;
 //        }
+        if(move.getPrecinct().getCombineNum()>3){
+            return 0;
+        }
         double initial_score = move.getTo().getCurrentScore() + move.getFrom().getCurrentScore();
         move.execute();
 //        if(move.getFrom().getShape().getGeometryType().equals("MultiPolygon")){

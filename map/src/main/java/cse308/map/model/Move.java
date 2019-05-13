@@ -1,6 +1,8 @@
 package cse308.map.model;
 
-public class Move {
+import java.io.Serializable;
+
+public class Move implements Serializable {
 
     private District to;
     private District from;

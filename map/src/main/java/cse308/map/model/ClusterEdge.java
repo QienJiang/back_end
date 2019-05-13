@@ -1,6 +1,8 @@
 package cse308.map.model;
 
-public class ClusterEdge implements Comparable<ClusterEdge>{
+import java.io.Serializable;
+
+public class ClusterEdge implements Comparable<ClusterEdge>,Serializable {
     private double compactness;
     private Cluster c1;
     private Cluster c2;
