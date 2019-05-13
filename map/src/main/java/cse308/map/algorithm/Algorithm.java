@@ -212,12 +212,14 @@ public class Algorithm {
 
     private void setMmDistricts(){
         int desiredNumMm = currentState.getConfiguration().getDesiredNumMajorMinorDistrict();
-        for(District d: currentState.getDistricts().values()){
-            double districtMajorMinorValue = d.getMajorMinor(currentState.getComunityOfinterest());
-            if (districtMajorMinorValue >= currentState.getConfiguration().getMinMajorMinorPercent()
-                    && districtMajorMinorValue <= currentState.getConfiguration().getMaxMajorMinorPercent()) {
-                if(mmDistricts.size()< desiredNumMm){
-                    mmDistricts.put(d.getdistrictID(),d);
+        if(desiredNumMm != 0){
+            for(District d: currentState.getDistricts().values()){
+                double districtMajorMinorValue = d.getMajorMinor(currentState.getComunityOfinterest());
+                if (districtMajorMinorValue >= currentState.getConfiguration().getMinMajorMinorPercent()
+                        && districtMajorMinorValue <= currentState.getConfiguration().getMaxMajorMinorPercent()) {
+                    if(mmDistricts.size()< desiredNumMm){
+                        mmDistricts.put(d.getdistrictID(),d);
+                    }
                 }
             }
         }
@@ -231,7 +233,7 @@ public class Algorithm {
         for (Precinct otherDistrictPrecinct : precinct.getOtherDistrctPreicincts()) {
             double districtMajorMinorValue = current.getMajorMinor(currentState.getComunityOfinterest());
             double totalMajorMinorValue = precinct.getMajorMinor(currentState.getComunityOfinterest()) + districtMajorMinorValue;
-            if(mmDistricts.size() <= desiredNumMM){
+            if(desiredNumMM != 0 && mmDistricts.size() <= desiredNumMM){
                 if (totalMajorMinorValue >= currentState.getConfiguration().getMinMajorMinorPercent()
                         && totalMajorMinorValue <= currentState.getConfiguration().getMaxMajorMinorPercent()) {
                     District neighborDistrict = currentState.getFromDistrict(otherDistrictPrecinct);
@@ -244,7 +246,7 @@ public class Algorithm {
                     }
                 }
             }else{
-                if(mmDistricts.containsKey(otherDistrictPrecinct.getParentCluster())){
+                if(desiredNumMM != 0 && mmDistricts.containsKey(otherDistrictPrecinct.getParentCluster())){
                     if (totalMajorMinorValue >= currentState.getConfiguration().getMinMajorMinorPercent()
                             && totalMajorMinorValue <= currentState.getConfiguration().getMaxMajorMinorPercent()) {
                         District neighborDistrict = currentState.getFromDistrict(otherDistrictPrecinct);
