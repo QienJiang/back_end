@@ -1,6 +1,8 @@
 package cse308.map.model;
 
-public enum AlgoType {
+import java.io.Serializable;
+
+public enum AlgoType implements Serializable {
     GraphParttiiton,
     SimuAnneal
 }

@@ -1,8 +1,9 @@
 package cse308.map.model;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
-public class Configuration {
+public class Configuration implements Serializable {
     private int targetDistrictNumber;
     private int numOfRun;
     private double majorMinor;

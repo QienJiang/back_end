@@ -8,6 +8,8 @@ import com.corundumstudio.socketio.annotation.OnDisconnect;
 import com.corundumstudio.socketio.annotation.OnEvent;
 import cse308.map.algorithm.Algorithm;
 import cse308.map.model.Configuration;
+import cse308.map.model.Result;
+import cse308.map.model.State;
 import cse308.map.server.PrecinctService;
 import cse308.map.server.ResultService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 @Service
 public class SocketService {
@@ -60,6 +59,10 @@ public class SocketService {
             algorithm.batchRun();
         }
         System.out.println("finished");
+//       Optional<Result> a = resultService.findById(1);
+//       Result r = a.get();
+//       State s = (State)r.getStateJSON();
+//       System.out.println(s.getId()+ s.getName());
     }
 
     public void sendMessageToAllClient(String eventType, String message) {

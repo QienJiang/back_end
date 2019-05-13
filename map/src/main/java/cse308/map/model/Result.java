@@ -10,40 +10,28 @@ import java.io.Serializable;
 import java.util.*;
 
 @Entity
-public class Result extends ObjectMapper {
+public class Result {
     @Id
     @GeneratedValue
     private Long id;
     private String email;
-
-
     @Lob
-    private String stateJSON;
+    private Serializable stateJSON;
 
-    @JsonIgnore
-    @Convert(converter = HashMapConverter.class)
-    private Map<String, Object> customerAttributes;
-    @Transient
-    private ObjectMapper objectMapper = new ObjectMapper();
+    public Result(){
 
-
-    public void serializeCustomerAttributes() throws JsonProcessingException {
-        this.stateJSON = objectMapper.writeValueAsString(customerAttributes);
     }
-    public void deserializeCustomerAttributes() throws IOException {
-        this.customerAttributes = objectMapper.readValue(stateJSON, HashMap.class);
+    public Result(String email,Serializable s){
+        this.email = email;
+        this.stateJSON = s;
+    }
+    public Long getId() {
+        return id;
     }
 
-    public String getStateJSON() {
-        return stateJSON;
+    public void setId(Long id) {
+        this.id = id;
     }
-
-    public void setStateJSON(String stateJSON) {
-        this.stateJSON = stateJSON;
-    }
-
-
-
 
     public String getEmail() {
         return email;
@@ -53,21 +41,11 @@ public class Result extends ObjectMapper {
         this.email = email;
     }
 
-
-    public Long getId() {
-        return id;
+    public Serializable getStateJSON() {
+        return stateJSON;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-
-    public Map<String, Object> getCustomerAttributes() {
-        return customerAttributes;
-    }
-
-    public void setCustomerAttributes(Map<String, Object> customerAttributes) {
-        this.customerAttributes = customerAttributes;
+    public void setStateJSON(Serializable stateJSON) {
+        this.stateJSON = stateJSON;
     }
 }

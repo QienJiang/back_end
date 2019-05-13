@@ -539,22 +539,22 @@ public class Algorithm {
         for(District d :mmDistricts.values()){
             System.out.println(d.getMajorMinor(currentState.getComunityOfinterest()));
         }
-        saveToDatabase();
+        //saveToDatabase();
         sendMessage("Algorithm finished!");
     }
 
-    private void saveToDatabase() {
-        Result result=new Result();
-            HashMap<String,Object> attributes=new HashMap<>();
-            attributes.put("nm",currentState);
-            result.setCustomerAttributes(attributes);
-        try {
-            result.serializeCustomerAttributes();
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        resultService.saveState(result);
-    }
+//    private void saveToDatabase() {
+//        Result result=new Result();
+//            HashMap<String,Object> attributes=new HashMap<>();
+//            attributes.put("nm",currentState);
+//            result.setCustomerAttributes(attributes);
+//        try {
+//            result.serializeCustomerAttributes();
+//        } catch (JsonProcessingException e) {
+//            e.printStackTrace();
+//        }
+//        resultService.saveState(result);
+//    }
 
     private void updateDistrictBoundary() {
         StringBuilder info=new StringBuilder();

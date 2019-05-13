@@ -1,6 +1,8 @@
 package cse308.map.model;
 
-public enum Measure {
+import java.io.Serializable;
+
+public enum Measure  implements Serializable {
     POPULATION_EQUALITY,
     EFFICIENCY_GAP,
     COMPACTNESS,

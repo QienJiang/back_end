@@ -1,6 +1,8 @@
 package cse308.map.model;
 
-public enum Party {
+import java.io.Serializable;
+
+public enum Party  implements Serializable {
     DEMOCRATIC,
     REPUBLICAN
 }

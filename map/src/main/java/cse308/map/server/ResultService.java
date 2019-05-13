@@ -6,14 +6,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import cse308.map.model.Result;
 import java.io.Serializable;
+import java.util.Optional;
 
 @Service
-public class ResultService extends Result{
+public class ResultService{
     @Autowired
     private ResultRepository resultRepository;
 
-    public Iterable<Result> findById(String stateId){
-        return  resultRepository.findAll();
+    public Optional<Result> findById(long stateId){
+        return  resultRepository.findById(stateId);
     }
 
     public void saveState(Result state){

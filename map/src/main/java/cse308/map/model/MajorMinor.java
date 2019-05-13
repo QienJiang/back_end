@@ -1,6 +1,8 @@
 package cse308.map.model;
 
-public enum MajorMinor {
+import java.io.Serializable;
+
+public enum MajorMinor implements Serializable {
     AFRICANAMERICAN,
     ASIAN,
     HISPANIC,
