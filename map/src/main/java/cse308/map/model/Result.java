@@ -3,7 +3,6 @@ package cse308.map.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import javax.persistence.*;
 import java.io.IOException;
@@ -21,7 +20,8 @@ public class Result extends ObjectMapper {
     @Lob
     private String stateJSON;
 
-    @JsonSerialize
+    @JsonIgnore
+    @Convert(converter = HashMapConverter.class)
     private Map<String, Object> customerAttributes;
     @Transient
     private ObjectMapper objectMapper = new ObjectMapper();
