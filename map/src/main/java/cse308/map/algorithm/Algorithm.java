@@ -1,12 +1,9 @@
 package cse308.map.algorithm;
 
 import com.corundumstudio.socketio.SocketIOClient;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import cse308.map.model.*;
-import cse308.map.repository.ResultRepository;
 import cse308.map.server.PrecinctService;
 import cse308.map.server.ResultService;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.lang.reflect.Method;
 import java.util.*;
@@ -48,7 +45,7 @@ public class Algorithm {
         this.precinctService = precinctService;
         this.resultService=resultService;
         this.client = client;
-        setWeights(configuration.getWeights());
+//        setWeights(configuration.getWeights());
     }
 
     private void init() {
@@ -334,7 +331,7 @@ public class Algorithm {
 
     public void setWeights(HashMap<Measure, Double> w) {
         weights = w;
-        currentScores = new HashMap<>();
+        currentScores = new HashMap<District,Double>();
         for (District d : currentState.getDistricts().values()) {
             currentScores.put(d, rateDistrict(d));
         }
@@ -359,12 +356,13 @@ public class Algorithm {
         return score;
     }
 
-    public double calculateObjectiveFunction() {
+    public void calculateObjectiveFunction() {
         double score = 0;
         for (District d : currentState.getDistricts().values()) {
             score += currentScores.get(d);
         }
-        return score;
+        currentState.setObjectiveFunValue(score);
+//        return score;
     }
 
     public double ratePopequality(District d) {
@@ -534,13 +532,18 @@ public class Algorithm {
         }
         updateDistrictBoundary();
         setMmDistricts();
+        setWeights(currentState.getConfiguration().getWeights());
         System.out.println("----:"+mmDistricts.size());
         annealing();
+        calculateObjectiveFunction();
+        calculateNumRepublican();
         updateDistrictBoundary();
+        currentState.setNumMMDistrict(mmDistricts.size());
         System.out.println(mmDistricts.size());
         for(District d :mmDistricts.values()){
-            System.out.println(d.getMajorMinor(currentState.getComunityOfinterest()));
+            System.out.println("MM:"+d.getMajorMinor(currentState.getComunityOfinterest()));
         }
+        System.out.println(currentState.getSummary());
         resultService.saveState(new Result("333@gmail.com",this.currentState));
         sendMessage("Algorithm finished!");
     }
@@ -558,6 +561,17 @@ public class Algorithm {
 //        resultService.saveState(result);
 //    }
 
+    private void calculateNumRepublican(){
+        int counter = 0;
+        for(District d : currentState.getDistricts().values()){
+            d.setParty();
+            if(d.getP() == Party.REPUBLICAN){
+                counter++;
+            }
+        }
+        currentState.setNumRepublican(counter);
+        currentState.setNumDemocratic(currentState.getDistricts().size()-counter);
+    }
     private void updateDistrictBoundary() {
         StringBuilder info=new StringBuilder();
         info.append("'\n'");

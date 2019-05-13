@@ -1,7 +1,6 @@
 package cse308.map.model;
 
 import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -11,6 +10,7 @@ public class District implements Comparable<District>,Serializable {
     private String districtID;
     private Cluster cluster;
     private double compactness;
+    private Party p;
 
     public double getCompactness() {
         return compactness;
@@ -61,13 +61,11 @@ public class District implements Comparable<District>,Serializable {
         cluster.setCurrentScore(score);
     }
 
-    public void setdistrictID(String districtID) {
-        this.districtID = districtID;
-    }
+//    public void setdistrictID(String districtID) {
+//        this.districtID = districtID;
+//    }
 
-    public String getdistrictID() {
-        return districtID;
-    }
+    public String getdistrictID() { return districtID; }
 
     public void addPrecinct(Precinct p) {
         cluster.addPrecinct(p);
@@ -113,6 +111,18 @@ public class District implements Comparable<District>,Serializable {
                 }
         }
         return borderPrecincts;
+    }
+
+    public Party getP() {
+        return p;
+    }
+
+    public void setParty() {
+        if(this.getGOPVote()>= this.getDEMVote()){
+            p = Party.REPUBLICAN;
+        }else{
+            p = Party.DEMOCRATIC;
+        }
     }
 
     public int getPopulation() {

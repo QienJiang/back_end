@@ -16,17 +16,19 @@ public class State implements Serializable {
     private String rvote;
     private String dvote;
     @Transient
+    private int numMMDistrict;
+    @Transient
+    private int numRepublican;
+    @Transient
+    private int numDemocratic;
+    @Transient
+    private Party party;
+    @Transient
+    private double objectiveFunValue;
+    @Transient
     private transient Map<String, Precinct> precincts = new HashMap<>();
     @Transient
     private transient Map<String, Cluster> clusters = new HashMap<>();
-
-    public Map<String, District> getDistricts() {
-        return districts;
-    }
-
-    public void setDistricts(Map<String, District> districts) {
-        this.districts = districts;
-    }
 
     @Transient
     private Map<String, District> districts = new HashMap<>();
@@ -176,6 +178,54 @@ public class State implements Serializable {
         for(Cluster c:clusters.values()){
             districts.put(c.getClusterID(),new District(c));
         }
+    }
+
+    public Map<String, District> getDistricts() {
+        return districts;
+    }
+
+    public void setDistricts(Map<String, District> districts) {
+        this.districts = districts;
+    }
+
+    public double getObjectiveFunValue() { return objectiveFunValue; }
+
+    public void setObjectiveFunValue(double objectiveFunValue) { this.objectiveFunValue = objectiveFunValue; }
+
+    public Party getParty() { return party; }
+
+    public void setParty() {
+        if(numRepublican>=numDemocratic){
+            party = Party.REPUBLICAN;
+        }else{
+            party = Party.DEMOCRATIC;
+        }
+    }
+
+    public int getNumRepublican() { return numRepublican; }
+
+    public void setNumRepublican(int numRepublican) { this.numRepublican = numRepublican; }
+
+    public int getNumDemocratic() { return numDemocratic; }
+
+    public void setNumDemocratic(int numDemocratic) { this.numDemocratic = numDemocratic; }
+
+    public int getNumMMDistrict() { return numMMDistrict; }
+
+    public void setNumMMDistrict(int numMMDistrict) { this.numMMDistrict = numMMDistrict; }
+
+    public String getSummary(){
+        String sum = "";
+        this.setParty();
+        sum += "State: "+this.getId()+", Population: "+ this.getPopulation() + ", ObjectiveFunctionValue: "+ this.getObjectiveFunValue()
+                + ", Num Of MajorMinor District: "+this.getNumMMDistrict()+ ", Num Of Republican: "+ this.getNumRepublican()+
+                ", Num Of Democratic: " +this.getNumDemocratic()+ ", Winner: "+this.getParty()+ "\n";
+        for(District d : this.getDistricts().values()){
+            d.setParty();
+            sum += "  District : " + d.getDistrictID() + " Population: "+d.getPopulation() + " MajorMinorValue: "+d.getMajorMinor(this.getComunityOfinterest())
+                    +" PoliticalParty: "+d.getP()+"\n";
+         }
+        return sum;
     }
 
 }
