@@ -1,8 +1,12 @@
 package cse308.map.algorithm;
 
 import com.corundumstudio.socketio.SocketIOClient;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import cse308.map.model.*;
+import cse308.map.repository.ResultRepository;
 import cse308.map.server.PrecinctService;
+import cse308.map.server.ResultService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.lang.reflect.Method;
 import java.util.*;
@@ -23,6 +27,7 @@ public class Algorithm {
     private StringBuilder msg = new StringBuilder();
     private ArrayList<String> coloring = new ArrayList<>();
     private PrecinctService precinctService;
+    private ResultService resultService;
     private Map<Integer, State> states = new HashMap<>();
     private State currentState;
     private SocketIOClient client;
@@ -31,7 +36,7 @@ public class Algorithm {
     private Map<String, District> mmDistricts = new HashMap<>();
 
     //pass the precinctService to the algorithm object because we can't autowired precinctService for each object it is not working.
-    public Algorithm(String stateName, Configuration configuration, PrecinctService precinctService, SocketIOClient client) {
+    public Algorithm(String stateName, Configuration configuration, PrecinctService precinctService, ResultService resultService, SocketIOClient client) {
         configuration.initWeights();
         if (configuration.getNumOfRun() == 1) {
             this.currentState = new State(configuration);
@@ -41,6 +46,7 @@ public class Algorithm {
             }
         }
         this.precinctService = precinctService;
+        this.resultService=resultService;
         this.client = client;
         setWeights(configuration.getWeights());
     }
@@ -533,7 +539,21 @@ public class Algorithm {
         for(District d :mmDistricts.values()){
             System.out.println(d.getMajorMinor(currentState.getComunityOfinterest()));
         }
+        saveToDatabase();
         sendMessage("Algorithm finished!");
+    }
+
+    private void saveToDatabase() {
+        Result result=new Result();
+            HashMap<String,Object> attributes=new HashMap<>();
+            attributes.put("nm",currentState);
+            result.setCustomerAttributes(attributes);
+        try {
+            result.serializeCustomerAttributes();
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        resultService.saveState(result);
     }
 
     private void updateDistrictBoundary() {

@@ -9,6 +9,7 @@ import com.corundumstudio.socketio.annotation.OnEvent;
 import cse308.map.algorithm.Algorithm;
 import cse308.map.model.Configuration;
 import cse308.map.server.PrecinctService;
+import cse308.map.server.ResultService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
@@ -31,6 +32,8 @@ public class SocketService {
     private SocketIOServer server;
     @Autowired
     private PrecinctService precinctService;
+    @Autowired
+    private ResultService resultService;
     private static Map<String, SocketIOClient> clientsMap = new HashMap<String, SocketIOClient>();
 
     @OnConnect
@@ -50,7 +53,7 @@ public class SocketService {
     @OnEvent(value = "runAlgorithm")
     public void onEvent(SocketIOClient client, AckRequest request, @RequestBody Configuration data) {
         System.out.println(data);
-        Algorithm algorithm = new Algorithm("pa", data, precinctService, client);
+        Algorithm algorithm = new Algorithm("pa", data, precinctService,resultService, client);
         if(data.getNumOfRun() == 1) {
             algorithm.run();
         }else{

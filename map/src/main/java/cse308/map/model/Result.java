@@ -1,7 +1,9 @@
 package cse308.map.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import javax.persistence.*;
 import java.io.IOException;
@@ -11,7 +13,7 @@ import java.util.*;
 @Entity
 public class Result extends ObjectMapper {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue
     private Long id;
     private String email;
 
@@ -19,7 +21,7 @@ public class Result extends ObjectMapper {
     @Lob
     private String stateJSON;
 
-    @Convert(converter = HashMapConverter.class)
+    @JsonSerialize
     private Map<String, Object> customerAttributes;
     @Transient
     private ObjectMapper objectMapper = new ObjectMapper();
@@ -61,4 +63,11 @@ public class Result extends ObjectMapper {
     }
 
 
+    public Map<String, Object> getCustomerAttributes() {
+        return customerAttributes;
+    }
+
+    public void setCustomerAttributes(Map<String, Object> customerAttributes) {
+        this.customerAttributes = customerAttributes;
+    }
 }
