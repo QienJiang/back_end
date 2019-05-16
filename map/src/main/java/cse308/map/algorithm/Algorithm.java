@@ -8,7 +8,6 @@ import cse308.map.server.ResultService;
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.Method;
-import java.security.Identity;
 import java.text.DecimalFormat;
 import java.util.*;
 import java.util.logging.FileHandler;
@@ -267,7 +266,7 @@ public class Algorithm implements Runnable{
                     }
                 }
             }else{
-                if(desiredNumMM != 0 && mmDistricts.containsKey(precinct.getParentCluster())){
+                if(desiredNumMM != 0 && mmDistricts.containsKey(current.getdistrictID())){
                     if (totalMajorMinorValue >= currentState.getConfiguration().getMinMajorMinorPercent()
                             && totalMajorMinorValue <= currentState.getConfiguration().getMaxMajorMinorPercent()) {
                         District neighborDistrict = currentState.getFromDistrict(precinct);
