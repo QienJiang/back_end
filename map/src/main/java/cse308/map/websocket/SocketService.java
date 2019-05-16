@@ -27,6 +27,7 @@ public class SocketService {
     private static String[] states = {"New York", "California", "Pennsylvania"};
     private static String[] colors = {"red", "purple", "yellow", "orange", "blue"};
     private static Random r = new Random();
+    private Algorithm currentAlgorithm = null;
     @Autowired
     private SocketIOServer server;
     @Autowired
@@ -52,18 +53,37 @@ public class SocketService {
     @OnEvent(value = "runAlgorithm")
     public void onEvent(SocketIOClient client, AckRequest request, @RequestBody Configuration data) {
         System.out.println(data);
-        Algorithm algorithm = new Algorithm("pa", data, precinctService,resultService, client);
-        if(data.getNumOfRun() == 1) {
-            algorithm.run();
-        }else{
-            algorithm.batchRun();
-        }
-        System.out.println("finished");
+        currentAlgorithm = new Algorithm("pa", data, precinctService,resultService, client);
+//        if(data.getNumOfRun() == 1) {
+//            algorithm.run();
+//        }else{
+//            algorithm.batchRun();
+//        }
+        Thread task = new Thread(currentAlgorithm);
+        task.start();
+        //System.out.println("finished");
 //       Optional<Result> a = resultService.findById(1);
 //       Result r = a.get();
 //       State s = (State)r.getStateJSON();
 //       System.out.println(s.getId()+ s.getName());
     }
+
+    @OnEvent(value = "resume")
+    public void onResume() {
+        System.out.println("xxxx");
+        currentAlgorithm.resume();
+    }
+
+    @OnEvent(value = "pause")
+    public void onPause() {
+        currentAlgorithm.pause();
+    }
+
+    @OnEvent(value = "stop")
+    public void onStop() {
+        currentAlgorithm.stop();
+    }
+
 
     public void sendMessageToAllClient(String eventType, String message) {
         Collection<SocketIOClient> clients = server.getAllClients();

@@ -9,7 +9,9 @@ import java.lang.reflect.Method;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class Algorithm {
+public class Algorithm implements Runnable{
+    private volatile boolean running = true;
+    private final Object pauseLock = new Object();
     private static final HashMap<Measure, String> measures;
 
     static {
@@ -90,6 +92,7 @@ public class Algorithm {
                 }
             }
             updateColor();
+            pause();
         }
     }
 
@@ -537,6 +540,8 @@ public class Algorithm {
         setMmDistricts();
         setWeights(currentState.getConfiguration().getWeights());
         System.out.println("----:"+mmDistricts.size());
+        client.sendEvent("Phase two");
+        pause();
         annealing();
         calculateObjectiveFunction();
         calculateNumRepublican();
@@ -618,5 +623,28 @@ public class Algorithm {
 
     private void sendDistrictBoundary(String msg) {
         client.sendEvent("updateDistrictBoundary", msg);
+    }
+    public void stop() {
+        running = false;
+        // you might also want to interrupt() the Thread that is
+        // running this Runnable, too, or perhaps call:
+        resume();
+        // to unblock
+    }
+
+    public void pause() {
+       synchronized (pauseLock){
+           try {
+               pauseLock.wait();
+           } catch (InterruptedException e) {
+               e.printStackTrace();
+           }
+       }
+    }
+
+    public void resume() {
+        synchronized (pauseLock) {
+            pauseLock.notifyAll(); // Unblocks thread
+        }
     }
 }
