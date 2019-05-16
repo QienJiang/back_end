@@ -139,11 +139,11 @@ public class Algorithm implements Runnable{
         int counter=0;
         int tempc=0;
         ArrayList<Move> moves=new ArrayList<>();
-        while ((move = makeMove()) != null&&counter<300) {
+        while ((move = makeMove()) != null) {
             sendMove(move);
             move.getFrom().setCurrentScore(rateDistrict(move.getFrom()));
             move.getTo().setCurrentScore(rateDistrict(move.getTo()));
-//            move.getPrecinct().setCombineNum(move.getPrecinct().getCombineNum()+1);
+            move.getPrecinct().setCombineNum(move.getPrecinct().getCombineNum()+1);
             for(District d:currentState.getDistricts().values()){
                 System.out.print(d.getShape().getGeometryType()+ ", ");
 
@@ -230,6 +230,8 @@ public class Algorithm implements Runnable{
 
 
     private Move getMove(District current, Precinct precinct) {
+        System.out.println("get move");
+
         Move bestMove = null;
         double bestImprovement = 0;
         int desiredNumMM = currentState.getConfiguration().getDesiredNumMajorMinorDistrict();
@@ -246,6 +248,7 @@ public class Algorithm implements Runnable{
                     if (improvement > bestImprovement) {
                         bestMove = move;
                         bestImprovement = improvement;
+                        return bestMove;
                     }
                 }
             }else{
@@ -258,6 +261,7 @@ public class Algorithm implements Runnable{
                         if (improvement > bestImprovement) {
                             bestMove = move;
                             bestImprovement = improvement;
+                            return bestMove;
                         }
                     }
                 }else{
@@ -267,6 +271,7 @@ public class Algorithm implements Runnable{
                     if (improvement > bestImprovement) {
                         bestMove = move;
                         bestImprovement = improvement;
+                        return bestMove;
                     }
                 }
             }
@@ -278,19 +283,19 @@ public class Algorithm implements Runnable{
 //        if (!isContiguity(move)) {
 //            return 0;
 //        }
-//        if(move.getPrecinct().getCombineNum()>1){
-//            return 0;
-//        }
+        if(move.getPrecinct().getCombineNum()>1){
+            return 0;
+        }
         double initial_score = move.getTo().getCurrentScore() + move.getFrom().getCurrentScore();
         move.execute();
-        if(move.getFrom().getShape().getGeometryType().equals("MultiPolygon")){
-            move.undo();
-            return 0;
-//            if(!searchByDepth(move)) {
-//                move.undo();
-//                return 0;
-//            }
-        }
+//        if(move.getFrom().getShape().getGeometryType().equals("MultiPolygon")){
+//            move.undo();
+//            return 0;
+            if(!searchByDepth(move)) {
+                move.undo();
+                return 0;
+            }
+//        }
         double to_score = rateDistrict(move.getTo());
         double from_score = rateDistrict(move.getFrom());
         double final_score = to_score + from_score;
@@ -300,9 +305,12 @@ public class Algorithm implements Runnable{
     }
 
     private Move makeMove_secondary() {
+        System.out.println("secondery");
         List<District> districts = getSortedDistricts();
         districts.remove(0);//remove last round smallest district
-        while (districts.size() > 0) {
+        int c=1;
+        while (c > 0) {
+            c--;
             District startDistrict = districts.get(0);
             for (Precinct precinct : startDistrict.getBorderPrecincts()) {
                 Move m = getMove(startDistrict, precinct);//......
