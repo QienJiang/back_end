@@ -288,9 +288,7 @@ public class Algorithm implements Runnable{
     }
 
     private double testMove(Move move) {
-//        if (!isContiguity(move)) {
-//            return 0;
-//        }
+
         if(move.getPrecinct().getCombineNum()>1){
             return 0;
         }
