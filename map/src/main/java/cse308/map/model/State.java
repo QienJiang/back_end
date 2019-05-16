@@ -228,4 +228,17 @@ public class State implements Serializable {
         return sum;
     }
 
+    public String generateGeoJson(){
+
+        StringBuilder districtJson = new StringBuilder();
+        districtJson.append("{\"type\":\"FeatureCollection\", \"features\": [");
+        for (Cluster c : clusters.values()) {
+            districtJson.append(c.toGeoJsonFormat()).append("},\n");
+
+        }
+        districtJson.deleteCharAt(districtJson.length() - 2).append("]}");
+
+        return districtJson.toString();
+    }
+
 }

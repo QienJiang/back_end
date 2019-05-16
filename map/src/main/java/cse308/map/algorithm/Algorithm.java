@@ -673,5 +673,12 @@ public class Algorithm implements Runnable{
         Result result = new Result(currentState.getConfiguration().getEmail(), (Serializable) states);
         resultService.saveState(result);
     }
+
+    public void loadMap(Long id){
+        Optional<Result> result = resultService.findById(id);
+        State state = (State)result.get().getStateJSON();
+       sendDistrictBoundary(state.generateGeoJson());
+
+    }
     
 }

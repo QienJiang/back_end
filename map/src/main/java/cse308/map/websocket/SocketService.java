@@ -72,6 +72,11 @@ public class SocketService {
         currentAlgorithm.saveMap();
     }
 
+    @OnEvent(value = "loadMap")
+    public void onLoadMap(Long id) {
+        currentAlgorithm.loadMap(id);
+    }
+
 
 
 
