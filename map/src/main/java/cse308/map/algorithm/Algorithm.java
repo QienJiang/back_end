@@ -136,11 +136,14 @@ public class Algorithm {
         int counter=0;
         int tempc=0;
         ArrayList<Move> moves=new ArrayList<>();
-        while ((move = makeMove()) != null&&counter<600) {
+        while ((move = makeMove()) != null&&counter<300) {
             sendMove(move);
-            move.getPrecinct().setCombineNum(move.getPrecinct().getCombineNum()+1);
+            move.getFrom().setCurrentScore(rateDistrict(move.getFrom()));
+            move.getTo().setCurrentScore(rateDistrict(move.getTo()));
+//            move.getPrecinct().setCombineNum(move.getPrecinct().getCombineNum()+1);
             for(District d:currentState.getDistricts().values()){
                 System.out.print(d.getShape().getGeometryType()+ ", ");
+
             }
             System.out.println(counter++);
 //            if(counter<20){
@@ -272,19 +275,19 @@ public class Algorithm {
 //        if (!isContiguity(move)) {
 //            return 0;
 //        }
-        if(move.getPrecinct().getCombineNum()>3){
-            return 0;
-        }
+//        if(move.getPrecinct().getCombineNum()>1){
+//            return 0;
+//        }
         double initial_score = move.getTo().getCurrentScore() + move.getFrom().getCurrentScore();
         move.execute();
-//        if(move.getFrom().getShape().getGeometryType().equals("MultiPolygon")){
-//            move.undo();
-//            return 0;
-            if(!searchByDepth(move)) {
-                move.undo();
-                return 0;
-            }
-//        }
+        if(move.getFrom().getShape().getGeometryType().equals("MultiPolygon")){
+            move.undo();
+            return 0;
+//            if(!searchByDepth(move)) {
+//                move.undo();
+//                return 0;
+//            }
+        }
         double to_score = rateDistrict(move.getTo());
         double from_score = rateDistrict(move.getFrom());
         double final_score = to_score + from_score;
@@ -301,7 +304,7 @@ public class Algorithm {
             for (Precinct precinct : startDistrict.getBorderPrecincts()) {
                 Move m = getMove(startDistrict, precinct);//......
                 setMmDistricts();
-                if (m != null&&testMove(m)!=0) {
+                if (m != null) {
                     m.execute();
                     return m;
                 }
@@ -544,7 +547,7 @@ public class Algorithm {
             System.out.println("MM:"+d.getMajorMinor(currentState.getComunityOfinterest()));
         }
         System.out.println(currentState.getSummary());
-        resultService.saveState(new Result("333@gmail.com",this.currentState));
+//        resultService.saveState(new Result("333@gmail.com",this.currentState));
         sendMessage("Algorithm finished!");
     }
 

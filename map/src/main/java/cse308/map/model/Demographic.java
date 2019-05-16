@@ -27,6 +27,20 @@ public class Demographic implements Serializable {
 
     }
 
+    public Demographic(Demographic demographic) {
+
+        this.population= demographic.getPopulation();
+        this.africanAmerican = demographic.getAfricanAmerican();
+        this.asian = demographic.getAsian();
+        this.hispanic = demographic.getHispanic();
+        this.hawaiian = demographic.getHawaiian();
+        this.white = demographic.getWhite();
+        this.other = demographic.getOther();
+        this.democraticVote = demographic.getDemocraticVote();
+        this.republicanVote = demographic.getRepublicanVote();
+
+    }
+
     public void combineDemo(Demographic demo) {
         population += demo.getPopulation();
         democraticVote += demo.getDemocraticVote();

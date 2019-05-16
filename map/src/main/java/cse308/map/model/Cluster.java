@@ -72,6 +72,7 @@ public class Cluster implements Serializable {
         p.setParentCluster(clusterID);
         precincts = new HashSet<Precinct>();
         precincts.add(p);
+        demographic = new Demographic(p.getDemographic());
     }
 
     public String getCountyID() {

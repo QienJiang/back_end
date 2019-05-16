@@ -61,28 +61,31 @@ public class District implements Comparable<District>,Serializable {
         cluster.setCurrentScore(score);
     }
 
-//    public void setdistrictID(String districtID) {
-//        this.districtID = districtID;
-//    }
 
     public String getdistrictID() { return districtID; }
 
     public void addPrecinct(Precinct p) {
-        cluster.addPrecinct(p);
-        p.setParentCluster(districtID);
-        Geometry newDistrict = this.getCluster().getShape().union(p.getShape());
-        this.getCluster().setShape(newDistrict);
-        this.getCluster().getDemographic().combineDemo(p.getDemographic());
+//        if(!this.cluster.getPrecincts().contains(p)) {
+            this.cluster.addPrecinct(p);
+            p.setParentCluster(districtID);
+            Geometry newDistrict = this.getCluster().getShape().union(p.getShape());
+            this.getCluster().setShape(newDistrict);
+            this.getCluster().getDemographic().combineDemo(p.getDemographic());
+//        }
     }
 
     public void removePrecinct(Precinct p) {
-        if (cluster.getPrecincts().contains(p)) {
-            cluster.removePrecinct(p);
-            p.setParentCluster(null);
+//        if (this.cluster.getPrecincts().contains(p)) {
+            this.cluster.removePrecinct(p);
             Geometry newDistrict = this.getCluster().getShape().symDifference(p.getShape());
             this.getCluster().setShape(newDistrict);
             this.getCluster().getDemographic().removeDemo(p.getDemographic());
-        }
+            if(this.getCluster().getDemographic().getPopulation()<=0){
+                System.out.println("FROM:"+this.getdistrictID());
+                System.exit(0);
+            }
+        p.setParentCluster(null);
+//        }
     }
 
     public Demographic getDemo() {

@@ -88,7 +88,7 @@ public class State implements Serializable {
             String[] neighbors = p.getNeighbors().split(",");
             Cluster c1 = clusters.get(p.getId());
             c1.setCountyID(p.getCounty());
-            c1.setDemographic(p.getDemographic());
+//            c1.setDemographic(p.getDemographic());
             for (String name : neighbors) {
                 Precinct neighbor = precincts.get(name);
                 if (!p.isNeighbor(neighbor)) {
@@ -97,7 +97,7 @@ public class State implements Serializable {
                     neighbor.addEdge(precinctEdge);
                     Cluster c2 = clusters.get(neighbor.getId());
                     c2.setCountyID(neighbor.getCounty());
-                    c2.setDemographic(neighbor.getDemographic());
+//                    c2.setDemographic(neighbor.getDemographic());
                     ClusterEdge clusterEdge = new ClusterEdge(c1, c2,configuration.getCommunityOfInterest(),configuration.getMajorMinorWeight());
                     c1.addEdge(clusterEdge);
                     c2.addEdge(clusterEdge);
