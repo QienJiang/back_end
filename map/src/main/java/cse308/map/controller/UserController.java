@@ -27,7 +27,7 @@ public class UserController {
             return new ResponseEntity<User>(opt.get(), HttpStatus.OK);
         } else {
             System.out.println("user does not exist.");
-            return new ResponseEntity("No such user ", HttpStatus.UNAUTHORIZED);//401
+            return new ResponseEntity<>("No such user ", HttpStatus.UNAUTHORIZED);//401
         }
     }
 
@@ -35,7 +35,7 @@ public class UserController {
     public ResponseEntity<?> signUp(@Valid @RequestBody User user) {
         if(userService.findById(user.getEmail()).isPresent()){
             System.out.println("user already exist");
-            return new ResponseEntity("user already exist ", HttpStatus.CONFLICT);//409
+            return new ResponseEntity<>("user already exist ", HttpStatus.CONFLICT);//409
         }else {
             User newUser = userService.registerUser(user);//save the model into database
             System.out.println("register completed. ");
