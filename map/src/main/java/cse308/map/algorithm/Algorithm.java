@@ -68,7 +68,7 @@ public class Algorithm implements Runnable{
             c.setColor(randomColor());
         }
     }
-    
+
     private void graphPartition() {
         sendMessage("Phase 1 Graph partition...");
         while (currentState.getClusters().size() > currentState.getConfiguration().getTargetDistrictNumber()) {
@@ -133,6 +133,8 @@ public class Algorithm implements Runnable{
         client.sendEvent("updateColor", move.getPrecinct().getId() + ":" + move.getTo().getCluster().getColor() + ",");
     }
 
+
+
     private void annealing() {
         Move move;
 //        System.out.println("-12-3-1-23-1-23-1-2");
@@ -140,6 +142,19 @@ public class Algorithm implements Runnable{
         int tempc=0;
         ArrayList<Move> moves=new ArrayList<>();
         while ((move = makeMove()) != null) {
+//            StringBuilder moveByTimer=new StringBuilder();
+//
+//            TimerTask repeatedTask = new TimerTask() {
+//                public void run() {
+//                    System.out.println("Task performed on " + new Date());
+//                }
+//            };
+//            Timer timer = new Timer("Timer");
+//
+//            long delay = 1000L;
+//            long period = 1000L * 60L * 60L * 24L;
+//            timer.scheduleAtFixedRate(repeatedTask, delay, period);
+
             sendMove(move);
             move.getFrom().setCurrentScore(rateDistrict(move.getFrom()));
             move.getTo().setCurrentScore(rateDistrict(move.getTo()));
@@ -169,37 +184,65 @@ public class Algorithm implements Runnable{
     }
 
     private Move makeMove() {
+//        District smallestDistrict = getSmallestDistrict(currentState.getDistricts());
+//        int equalPopulation = currentState.getPopulation() / currentState.getConfiguration().getTargetDistrictNumber();
+//        if (smallestDistrict.getPopulation()>0&&smallestDistrict.getPopulation() < equalPopulation) {
+//            Move bestMove;
+//            for (Precinct precinct : smallestDistrict.getBorderPrecincts()) {
+//                bestMove = getMove(smallestDistrict, precinct);
+////                System.out.println("Bestmove:"+bestMove);
+//                if (bestMove != null) {
+////                    if(bestMove.getPrecinct().getShape().getGeometryType().equals("MultiPolygon")){
+////                        Set<PrecinctEdge> neighborEdge = bestMove.getPrecinct().getPrecinctEdges();
+////                        ArrayList<Precinct> neighbors = new ArrayList<>();
+////                        for(PrecinctEdge e : neighborEdge){
+////                            Precinct nb = e.getNeighbor(bestMove.getPrecinct());
+////                            if(bestMove.getPrecinct().getShape().contains(nb.getShape())){
+////                                neighbors.add(nb);
+////                            }
+////                        }
+////                        for(int i=0;i<neighbors.size();i++){
+//////                            District from = currentState.getDistricts().get(neighbors.get(i).getParentCluster());
+////                            Move move = new Move(bestMove.getTo(),bestMove.getFrom(),neighbors.get(i));
+////                            move.execute();
+////                        }
+////
+////
+////
+////                    }
+//                    bestMove.execute();
+//                    bestMove.getTo().getMovelist().remove(bestMove.getPrecinct());
+//
+//                    Set<Precinct> otherDistrictPrecincts=bestMove.getPrecinct().getOtherDistrctPreicincts();
+//                    if(!otherDistrictPrecincts.isEmpty())
+//                        for (Precinct otherDistrictPrecinct : otherDistrictPrecincts) {
+//                            bestMove.getTo().getMovelist().add(otherDistrictPrecinct);
+//                        }
+//                    return bestMove;
+//                }
+//            }
+//            return makeMove_secondary();
+//        }
         District smallestDistrict = getSmallestDistrict(currentState.getDistricts());
         int equalPopulation = currentState.getPopulation() / currentState.getConfiguration().getTargetDistrictNumber();
         if (smallestDistrict.getPopulation()>0&&smallestDistrict.getPopulation() < equalPopulation) {
             Move bestMove;
-            for (Precinct precinct : smallestDistrict.getBorderPrecincts()) {
-                bestMove = getMove(smallestDistrict, precinct);
-//                System.out.println("Bestmove:"+bestMove);
-                if (bestMove != null) {
-//                    if(bestMove.getPrecinct().getShape().getGeometryType().equals("MultiPolygon")){
-//                        Set<PrecinctEdge> neighborEdge = bestMove.getPrecinct().getPrecinctEdges();
-//                        ArrayList<Precinct> neighbors = new ArrayList<>();
-//                        for(PrecinctEdge e : neighborEdge){
-//                            Precinct nb = e.getNeighbor(bestMove.getPrecinct());
-//                            if(bestMove.getPrecinct().getShape().contains(nb.getShape())){
-//                                neighbors.add(nb);
-//                            }
-//                        }
-//                        for(int i=0;i<neighbors.size();i++){
-////                            District from = currentState.getDistricts().get(neighbors.get(i).getParentCluster());
-//                            Move move = new Move(bestMove.getTo(),bestMove.getFrom(),neighbors.get(i));
-//                            move.execute();
-//                        }
-//
-//
-//
-//                    }
-                    bestMove.execute();
-                    return bestMove;
-                }
+//            for(Precinct precinct:smallestDistrict.getMovelist()){
+            bestMove = getMove(smallestDistrict);
+            if(bestMove!=null){
+                bestMove.execute();
+                bestMove.getTo().getMovelist().remove(bestMove.getPrecinct());
+
+                Set<Precinct> otherDistrictPrecincts=bestMove.getPrecinct().getOtherDistrctPreicincts();
+                if(!otherDistrictPrecincts.isEmpty())
+                    for (Precinct otherDistrictPrecinct : otherDistrictPrecincts) {
+                        bestMove.getTo().getMovelist().add(otherDistrictPrecinct);
+                    }
+                return bestMove;
             }
+//            }
             return makeMove_secondary();
+
         }
         return null;
     }
@@ -229,21 +272,20 @@ public class Algorithm implements Runnable{
     }
 
 
-    private Move getMove(District current, Precinct precinct) {
-
+    private Move getMove(District current) {
+//        System.out.println("get move");
         Move bestMove = null;
         double bestImprovement = 0;
         int desiredNumMM = currentState.getConfiguration().getDesiredNumMajorMinorDistrict();
-        for (Precinct otherDistrictPrecinct : precinct.getOtherDistrctPreicincts()) {
+        for (Precinct precinct : current.getMovelist()) {
             double districtMajorMinorValue = current.getMajorMinor(currentState.getComunityOfinterest());
             double totalMajorMinorValue = precinct.getMajorMinor(currentState.getComunityOfinterest()) + districtMajorMinorValue;
             if(desiredNumMM != 0 && mmDistricts.size() <= desiredNumMM){
                 if (totalMajorMinorValue >= currentState.getConfiguration().getMinMajorMinorPercent()
                         && totalMajorMinorValue <= currentState.getConfiguration().getMaxMajorMinorPercent()) {
-                    District neighborDistrict = currentState.getFromDistrict(otherDistrictPrecinct);
-                    Move move = new Move(current, neighborDistrict, otherDistrictPrecinct);
+                    District neighborDistrict = currentState.getFromDistrict(precinct);
+                    Move move = new Move(current, neighborDistrict,precinct);
                     double improvement = testMove(move);
-//                System.out.println("improvement:"+improvement);
                     if (improvement > bestImprovement) {
                         bestMove = move;
                         bestImprovement = improvement;
@@ -251,11 +293,11 @@ public class Algorithm implements Runnable{
                     }
                 }
             }else{
-                if(desiredNumMM != 0 && mmDistricts.containsKey(otherDistrictPrecinct.getParentCluster())){
+                if(desiredNumMM != 0 && mmDistricts.containsKey(precinct.getParentCluster())){
                     if (totalMajorMinorValue >= currentState.getConfiguration().getMinMajorMinorPercent()
                             && totalMajorMinorValue <= currentState.getConfiguration().getMaxMajorMinorPercent()) {
-                        District neighborDistrict = currentState.getFromDistrict(otherDistrictPrecinct);
-                        Move move = new Move(current, neighborDistrict, otherDistrictPrecinct);
+                        District neighborDistrict = currentState.getFromDistrict(precinct);
+                        Move move = new Move(current, neighborDistrict, precinct);
                         double improvement = testMove(move);
                         if (improvement > bestImprovement) {
                             bestMove = move;
@@ -264,8 +306,8 @@ public class Algorithm implements Runnable{
                         }
                     }
                 }else{
-                    District neighborDistrict = currentState.getFromDistrict(otherDistrictPrecinct);
-                    Move move = new Move(current, neighborDistrict, otherDistrictPrecinct);
+                    District neighborDistrict = currentState.getFromDistrict(precinct);
+                    Move move = new Move(current, neighborDistrict, precinct);
                     double improvement = testMove(move);
                     if (improvement > bestImprovement) {
                         bestMove = move;
@@ -287,14 +329,14 @@ public class Algorithm implements Runnable{
         }
         double initial_score = move.getTo().getCurrentScore() + move.getFrom().getCurrentScore();
         move.execute();
-//        if(move.getFrom().getShape().getGeometryType().equals("MultiPolygon")){
-//            move.undo();
-//            return 0;
-            if(!searchByDepth(move)) {
-                move.undo();
-                return 0;
-            }
-//        }
+        if(move.getFrom().getShape().getGeometryType().equals("MultiPolygon")){
+            move.undo();
+            return 0;
+//            if(!searchByDepth(move)) {
+//                move.undo();
+//                return 0;
+//            }
+        }
         double to_score = rateDistrict(move.getTo());
         double from_score = rateDistrict(move.getFrom());
         double final_score = to_score + from_score;
@@ -304,22 +346,30 @@ public class Algorithm implements Runnable{
     }
 
     private Move makeMove_secondary() {
+//        System.out.println("secondery");
         List<District> districts = getSortedDistricts();
         districts.remove(0);//remove last round smallest district
         int c=1;
         while (c > 0) {
             c--;
             District startDistrict = districts.get(0);
-            for (Precinct precinct : startDistrict.getBorderPrecincts()) {
-                Move m = getMove(startDistrict, precinct);//......
-                setMmDistricts();
-                if (m != null) {
-                    m.execute();
-                    return m;
-                }
+//            for (Precinct precinct : startDistrict.getBorderPrecincts()) {
+            Move m = getMove(startDistrict);//......
+            setMmDistricts();
+            if (m != null) {
+                m.execute();
+                m.getTo().getMovelist().remove(m.getPrecinct());
+
+                Set<Precinct> otherDistrictPrecincts=m.getPrecinct().getOtherDistrctPreicincts();
+                if(!otherDistrictPrecincts.isEmpty())
+                    for (Precinct otherDistrictPrecinct : otherDistrictPrecincts) {
+                        m.getTo().getMovelist().add(otherDistrictPrecinct);
+                    }
+                return m;
             }
-            districts.remove(0);
         }
+        districts.remove(0);
+//        }
         return null;
     }
 
@@ -424,8 +474,8 @@ public class Algorithm implements Runnable{
 
     private double rateCompactness(District d) {
         double allPrecincts = d.getCluster().getPrecincts().size();
-        double borderPrecincts = d.getBorderPrecincts().size();
-        return borderPrecincts / (allPrecincts - borderPrecincts);
+        double borderPrecincts = d.getMovelist().size();
+        return borderPrecincts / Math.abs(allPrecincts - borderPrecincts);
     }
 
     private double calPolsbyPopperCompactness(District d){
@@ -444,7 +494,6 @@ public class Algorithm implements Runnable{
 
     public boolean searchByDepth(Move move) {
         Cluster c = move.getFrom().getCluster();
-//        move.execute();
         List<Precinct> visitedNodes = new LinkedList<>();
         List<Precinct> unvisitedNodes = new LinkedList<>();
         unvisitedNodes.add(c.getFromClusterPrecinct());
@@ -462,10 +511,8 @@ public class Algorithm implements Runnable{
         }
 //        System.out.println("out while");
         if(visitedNodes.size() == move.getFrom().getCluster().getPrecincts().size()) {
-//            move.undo();
             return true;
         }
-//        move.undo();
         return false;
     }
 
@@ -541,6 +588,7 @@ public class Algorithm implements Runnable{
         currentState.initDistrict();
         for(District d:currentState.getDistricts().values()){
             System.out.print(d.getShape().getGeometryType()+ ", ");
+            d.initMoveList();
         }
         updateDistrictBoundary();
         setMmDistricts();
@@ -639,13 +687,13 @@ public class Algorithm implements Runnable{
     }
 
     public void pause() {
-       synchronized (pauseLock){
-           try {
-               pauseLock.wait();
-           } catch (InterruptedException e) {
-               e.printStackTrace();
-           }
-       }
+        synchronized (pauseLock){
+            try {
+                pauseLock.wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void resume() {
