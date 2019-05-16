@@ -5,6 +5,7 @@ import cse308.map.model.*;
 import cse308.map.server.PrecinctService;
 import cse308.map.server.ResultService;
 
+import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -669,7 +670,8 @@ public class Algorithm implements Runnable{
     }
 
     public void saveMap(){
-       // resultService.saveState();
+        Result result = new Result(currentState.getConfiguration().getEmail(), (Serializable) states);
+        resultService.saveState(result);
     }
     
 }

@@ -18,6 +18,15 @@ public class Configuration implements Serializable {
     private double fairness;
     private double competitiveness;
     private HashMap<Measure, Double> weights=new HashMap<>();
+    private String email;
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
     public Configuration(){
 
