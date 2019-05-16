@@ -7,6 +7,7 @@ import cse308.map.server.ResultService;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -680,5 +681,27 @@ public class Algorithm implements Runnable{
        sendDistrictBoundary(state.generateGeoJson());
 
     }
-    
+    public String rateGerryMandring(){
+        DecimalFormat df = new DecimalFormat("0.00");
+        String ger = "District  Gerrymandering_Republican   Gerrymandering_Democratic   RepublicanVote  DemocraticVote\n";
+        for(District d :currentState.getDistricts().values()){
+            int rvote = d.getGOPVote();
+            int dvote = d.getDEMVote();
+            int totalRVote = Integer.parseInt(currentState.getRvote());
+            int totalDVote = Integer.parseInt(currentState.getDvote());
+            double r = rvote/totalRVote;
+            double gd = dvote/totalDVote;
+            ger += d.getdistrictID()+"  "+df.format(r)+"    "+df.format(gd)+d.getGOPVote()+d.getDEMVote()+"\n";
+        }
+        return ger;
+    }
+    public String majorMinorResult(){
+        String mm ="";
+        for(District d:mmDistricts.values()){
+            mm += "District: "+d.getdistrictID()+" majorMinor_Result: "+d.getMajorMinor(currentState.getComunityOfinterest())+"\n";
+        }
+        return mm;
+    }
+
+
 }
