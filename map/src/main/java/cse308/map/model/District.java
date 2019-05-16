@@ -10,7 +10,28 @@ public class District implements Comparable<District>,Serializable {
     private String districtID;
     private Cluster cluster;
     private double compactness;
+    private HashSet<Precinct> movelist = new HashSet<>();
     private Party p;
+
+    public HashSet<Precinct> getMovelist() {
+        return movelist;
+    }
+
+    public void setMovelist(HashSet<Precinct> movelist) {
+        this.movelist = movelist;
+    }
+
+    public void initMoveList(){
+        Set<Precinct> borderPrecincts = new HashSet<Precinct>();
+
+        for (Precinct precinct : cluster.getPrecincts()) {
+                Set<Precinct> otherDistrictPrecincts=precinct.getOtherDistrctPreicincts();
+                if(!otherDistrictPrecincts.isEmpty())
+                for (Precinct otherDistrictPrecinct : otherDistrictPrecincts) {
+                    movelist.add(otherDistrictPrecinct);
+                }
+        }
+    }
 
     public double getCompactness() {
         return compactness;
@@ -103,6 +124,9 @@ public class District implements Comparable<District>,Serializable {
     public String toString() {
         return districtID;
     }
+
+
+
 
     public Set<Precinct> getBorderPrecincts() {
 
