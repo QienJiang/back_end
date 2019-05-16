@@ -7,11 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/homepage")
@@ -34,14 +31,22 @@ public class AdminController {
     public ResponseEntity<?> deletedUsers(User user) {
         userService.isValidUser(user);
         userService.deleted(user.getEmail());
-        return new ResponseEntity("finish deleted user", HttpStatus.OK);
+        return new ResponseEntity<>("finish deleted user", HttpStatus.OK);
     }
 
     @PostMapping(value = "/update")//check the user exist in the database or not
     public ResponseEntity<?> updatedUsers(User user) {
         userService.isValidUser(user);
-        userService.deleted(user.getEmail());
-        userService.registerUser(user);
-        return new ResponseEntity("finish deleted user", HttpStatus.OK);
+        userService.updateUser(user);
+        return new ResponseEntity<>("finish update user", HttpStatus.OK);
     }
+
+    @PostMapping(value = "/register")//check the user exist in the database or not
+    public ResponseEntity<?> registerdUsers(User user) {
+        if(userService.isValidUser(user))
+            return new ResponseEntity<>("user already exist", HttpStatus.OK);
+        userService.registerUser(user);
+        return new ResponseEntity<>("register successful", HttpStatus.OK);
+    }
+
 }
