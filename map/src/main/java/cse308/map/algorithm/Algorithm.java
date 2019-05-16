@@ -230,7 +230,6 @@ public class Algorithm implements Runnable{
 
 
     private Move getMove(District current, Precinct precinct) {
-        System.out.println("get move");
 
         Move bestMove = null;
         double bestImprovement = 0;
@@ -305,7 +304,6 @@ public class Algorithm implements Runnable{
     }
 
     private Move makeMove_secondary() {
-        System.out.println("secondery");
         List<District> districts = getSortedDistricts();
         districts.remove(0);//remove last round smallest district
         int c=1;
