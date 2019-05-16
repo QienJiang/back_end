@@ -667,4 +667,9 @@ public class Algorithm implements Runnable{
             pauseLock.notifyAll(); // Unblocks thread
         }
     }
+
+    public void saveMap(){
+       // resultService.saveState();
+    }
+    
 }

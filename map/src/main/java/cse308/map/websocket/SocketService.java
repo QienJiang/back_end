@@ -67,10 +67,14 @@ public class SocketService {
 //       State s = (State)r.getStateJSON();
 //       System.out.println(s.getId()+ s.getName());
     }
+    @OnEvent(value = "saveMap")
+    public void onSaveMap() {
+        currentAlgorithm.saveMap();
+    }
+
 
     @OnEvent(value = "resume")
     public void onResume() {
-        System.out.println("xxxx");
         currentAlgorithm.resume();
     }
 
