@@ -9,6 +9,8 @@ import java.util.*;
 @Table(name = "State")
 public class State implements Serializable {
 
+    @Transient
+    private static final long serialVersionUID = 4L;
     @Id
     private String id;
     private String name;

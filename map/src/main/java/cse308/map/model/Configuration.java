@@ -1,9 +1,12 @@
 package cse308.map.model;
 
+import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.HashMap;
 
 public class Configuration implements Serializable {
+    @Transient
+    private static final long serialVersionUID = 4L;
     private int targetDistrictNumber;
     private int numOfRun;
     private double majorMinor;

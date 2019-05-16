@@ -1,8 +1,11 @@
 package cse308.map.model;
 
+import javax.persistence.Transient;
 import java.io.Serializable;
 
 public class ClusterEdge implements Comparable<ClusterEdge>,Serializable {
+    @Transient
+    private static final long serialVersionUID = 4L;
     private double compactness;
     private Cluster c1;
     private Cluster c2;

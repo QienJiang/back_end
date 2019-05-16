@@ -12,6 +12,8 @@ import java.util.*;
 
 @Entity
 public class Precinct implements Serializable {
+    @Transient
+    private static final long serialVersionUID = 4L;
     @Id
     private String id;
     private Geometry shape;

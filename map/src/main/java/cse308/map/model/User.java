@@ -4,13 +4,15 @@ package cse308.map.model;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 @Entity
 @Table(name = "Account")
 public class User implements Serializable {
-
+    @Transient
+    private static final long serialVersionUID = 4L;
     @Id
     private String email;
     @NotBlank(message = "password can't be blank")

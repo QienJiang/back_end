@@ -1,8 +1,11 @@
 package cse308.map.model;
 
+import javax.persistence.Transient;
 import java.io.Serializable;
 
 public class PrecinctEdge implements Serializable {
+    @Transient
+    private static final long serialVersionUID = 4L;
     private double compactness;
     private Precinct p1;
     private Precinct p2;

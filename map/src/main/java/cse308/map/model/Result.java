@@ -11,6 +11,9 @@ import java.util.*;
 
 @Entity
 public class Result {
+    @Transient
+    private static final long serialVersionUID = 4L;
+
     @Id
     @GeneratedValue
     private Long id;

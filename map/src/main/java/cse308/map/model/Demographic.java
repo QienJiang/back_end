@@ -2,10 +2,13 @@ package cse308.map.model;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.Transient;
 import java.io.Serializable;
 
 @Embeddable
 public class Demographic implements Serializable {
+    @Transient
+    private static final long serialVersionUID = 4L;
     private int population;
     @Column(name = "democraticvote")
     private int democraticVote;
