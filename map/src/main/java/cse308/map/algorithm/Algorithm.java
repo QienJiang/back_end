@@ -5,17 +5,22 @@ import cse308.map.model.*;
 import cse308.map.server.PrecinctService;
 import cse308.map.server.ResultService;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.Method;
+import java.security.Identity;
 import java.text.DecimalFormat;
 import java.util.*;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 import java.util.stream.Collectors;
 
 public class Algorithm implements Runnable{
     private volatile boolean running = true;
     private final Object pauseLock = new Object();
     private static final HashMap<Measure, String> measures;
-
+    private StringBuilder logFile;
     static {
         measures = new HashMap<>();
         measures.put(Measure.POPULATION_EQUALITY, "ratePopequality");
@@ -576,6 +581,19 @@ public class Algorithm implements Runnable{
         System.out.println(currentState.getSummary());
 //        resultService.saveState(new Result("333@gmail.com",this.currentState));
         sendMessage("Algorithm finished!");
+
+        Logger logger=Logger.getLogger("CSE308");
+        FileHandler fh;
+        try {
+            fh=new FileHandler("C:\\Users\\zsz\\Desktop\\GerryMandering.log");
+            logger.addHandler(fh);
+            SimpleFormatter formatter=new SimpleFormatter();
+            fh.setFormatter(formatter);
+
+            logger.info(logFile.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 //    private void saveToDatabase() {
@@ -641,6 +659,7 @@ public class Algorithm implements Runnable{
 
     private void sendMessage(String msg) {
         client.sendEvent("message", msg);
+        logFile.append(msg).append("'\n'");
     }
 
     private void sendDistrictBoundary(String msg) {
