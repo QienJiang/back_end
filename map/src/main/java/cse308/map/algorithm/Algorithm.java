@@ -20,7 +20,7 @@ public class Algorithm implements Runnable{
     private volatile boolean running = true;
     private final Object pauseLock = new Object();
     private static final HashMap<Measure, String> measures;
-    private StringBuilder logFile;
+    private StringBuilder logFile=new StringBuilder();
     static {
         measures = new HashMap<>();
         measures.put(Measure.POPULATION_EQUALITY, "ratePopequality");
