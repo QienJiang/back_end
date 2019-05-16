@@ -1,6 +1,8 @@
 package cse308.map.controller;
 
 import cse308.map.model.User;
+import cse308.map.repository.ResultRepository;
+import cse308.map.server.ResultService;
 import cse308.map.server.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -8,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -17,7 +20,8 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-
+    @Autowired
+    private ResultService resultService;
     @PostMapping(value = "/signin")//check the user exist in the database or not
     public ResponseEntity<?> signIn(@RequestBody User user) {
         Boolean status = userService.isValidUser(user);//check if the user exist
@@ -42,4 +46,11 @@ public class UserController {
             return new ResponseEntity<User>(newUser, HttpStatus.OK);
         }
     }
+
+    @PostMapping(value = "/getMap")//save the state to the database
+    public ResponseEntity<?> getMapId(@Valid @RequestBody String email) {
+       List<Long> result = resultService.findALLByEmail(email);
+            return new ResponseEntity<List<Long>>(result,HttpStatus.OK);
+    }
+
 }

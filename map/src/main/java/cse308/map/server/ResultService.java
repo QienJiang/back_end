@@ -6,6 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import cse308.map.model.Result;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -19,5 +22,18 @@ public class ResultService{
 
     public void saveState(Result state){
         resultRepository.save(state);
+    }
+
+    public List<Long> findALLByEmail(String email) {
+        Iterable<Result> temp =resultRepository.findAll();
+        ArrayList<Long> result = new ArrayList<>();
+        Iterator<Result> resultIterator = temp.iterator();
+        while (resultIterator.hasNext()){
+            Result p = resultIterator.next();
+            if(p.getEmail().equals(email)){
+                result.add(p.getId());
+            }
+        }
+        return result;
     }
 }
