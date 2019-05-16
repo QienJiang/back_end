@@ -48,9 +48,9 @@ public class UserController {
     }
 
     @PostMapping(value = "/getMap")//save the state to the database
-    public ResponseEntity<?> getMapId(@Valid @RequestBody String email) {
-       List<Long> result = resultService.findALLByEmail(email);
-            return new ResponseEntity<List<Long>>(result,HttpStatus.OK);
+    public ResponseEntity<?> getMapId(@RequestBody User user) {
+//       List<Long> result = resultService.findALLByEmail(user.getEmail());
+            return new ResponseEntity<>(resultService.findALLByEmail(user.getEmail()), HttpStatus.OK);
     }
 
 }

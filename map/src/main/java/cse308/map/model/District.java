@@ -2,15 +2,18 @@ package cse308.map.model;
 
 import com.vividsolutions.jts.geom.Geometry;
 
+import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
 public class District implements Comparable<District>,Serializable {
+    @Transient
+    private static final long serialVersionUID = 4L;
     private String districtID;
     private Cluster cluster;
     private double compactness;
-    private HashSet<Precinct> movelist = new HashSet<>();
+    private transient HashSet<Precinct> movelist = new HashSet<>();
     private Party p;
 
     public HashSet<Precinct> getMovelist() {

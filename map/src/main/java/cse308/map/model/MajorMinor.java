@@ -9,4 +9,5 @@ public enum MajorMinor implements Serializable {
     OTHER,
     WHITE,
     HAWAIIAN
+
 }

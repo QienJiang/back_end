@@ -73,8 +73,10 @@ public class SocketService {
     }
 
     @OnEvent(value = "loadMap")
-    public void onLoadMap(Long id) {
-        currentAlgorithm.loadMap(id);
+    public void onLoadMap(SocketIOClient client, String id) {
+        Optional<Result> result = resultService.findById(Long.valueOf(id));
+        State state = (State)result.get().getStateJSON();
+        client.sendEvent("updateDistrictBoundary", state.generateGeoJson());
     }
 
 

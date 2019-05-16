@@ -9,6 +9,8 @@ import java.util.*;
 @Table(name = "State")
 public class State implements Serializable {
 
+    @Transient
+    private static final long serialVersionUID = 4L;
     @Id
     private String id;
     private String name;
@@ -218,13 +220,14 @@ public class State implements Serializable {
         String sum = "";
         this.setParty();
         sum += "State: "+this.getId()+", Population: "+ this.getPopulation() + ", ObjectiveFunctionValue: "+ this.getObjectiveFunValue()
-                + ", Num Of MajorMinor District: "+this.getNumMMDistrict()+ ", Num Of Republican: "+ this.getNumRepublican()+
-                ", Num Of Democratic: " +this.getNumDemocratic()+ ", Winner: "+this.getParty()+ "\n";
-        for(District d : this.getDistricts().values()){
-            d.setParty();
-            sum += "  District : " + d.getDistrictID() + " Population: "+d.getPopulation() + " MajorMinorValue: "+d.getMajorMinor(this.getComunityOfinterest())
-                    +" PoliticalParty: "+d.getP()+"\n";
-         }
+                + ", Republican Votes: "+ this.getNumRepublican()+
+                ", Democratic Votes: " +this.getNumDemocratic()+ ", Winner: "+this.getParty()+ "\n";
+        sum += "Summary of measure:\n";
+        sum += this.getConfiguration().toString();
+//        for(District d : this.getDistricts().values()){
+//            d.setParty();
+//            sum += "  District : " + d.getDistrictID() + " Population: "+d.getPopulation() + " PoliticalParty: "+d.getP()+"\n";
+//         }
         return sum;
     }
 

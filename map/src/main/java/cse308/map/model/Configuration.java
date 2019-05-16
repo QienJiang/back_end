@@ -1,9 +1,12 @@
 package cse308.map.model;
 
+import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.HashMap;
 
 public class Configuration implements Serializable {
+    @Transient
+    private static final long serialVersionUID = 4L;
     private int targetDistrictNumber;
     private int numOfRun;
     private double majorMinor;
@@ -169,17 +172,19 @@ public class Configuration implements Serializable {
     @Override
     public String toString() {
         return "Configuration{" +
-                "targetDistrictNumber=" + targetDistrictNumber +
-                ", numOfRun=" + numOfRun +
-                ", majorMinor=" + majorMinor +
-                ", interestCommunity='" + interestCommunity + '\'' +
-                ", communityOfInterest=" + communityOfInterest +
-                ", equality=" + equality +
-                ", efficiencyGpa=" + efficiencyGpa +
-                ", compactness=" + compactness +
-                ", fairness=" + fairness +
-                ", competitiveness=" + competitiveness +
-                ", weights=" + weights +
+                "TargetDistrictNumber= " + targetDistrictNumber +
+                ", TargetMajorMinorDistrict= "+ targetDistrictNumber +
+                ", NumOfRun= " + numOfRun +
+//                ", MajorMinorWeight= " + majorMinor +
+                ", CommunityOfInterest= " + interestCommunity +
+                ", PopulationEquality= " + equality +
+                ", EfficiencyGpa= " + efficiencyGpa +
+                ", Compactness= " + compactness +
+                ", PartisanFairness= " + fairness +
+                ", Competitiveness= " + competitiveness +
+                ", MinMajorMinorPercent= "+ minMajorMinorPercent +
+                ", MaxMajorMinorPercent= "+ maxMajorMinorPercent +
+//                ", weights=" + weights +
                 '}';
     }
 }

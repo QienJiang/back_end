@@ -4,11 +4,14 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.io.geojson.GeoJsonWriter;
 
+import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.*;
 
 public class Cluster implements Serializable {
 
+    @Transient
+    private static final long serialVersionUID = 4L;
     private String clusterID;
     private Geometry shape;
     private transient Set<ClusterEdge> edges = new HashSet<>();
