@@ -29,4 +29,19 @@ public class AdminController {
         }
         return new ResponseEntity<List<User>>(userList, HttpStatus.OK);
     }
+
+    @PostMapping(value = "/delete")//check the user exist in the database or not
+    public ResponseEntity<?> deletedUsers(User user) {
+        userService.isValidUser(user);
+        userService.deleted(user.getEmail());
+        return new ResponseEntity("finish deleted user", HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/update")//check the user exist in the database or not
+    public ResponseEntity<?> updatedUsers(User user) {
+        userService.isValidUser(user);
+        userService.deleted(user.getEmail());
+        userService.registerUser(user);
+        return new ResponseEntity("finish deleted user", HttpStatus.OK);
+    }
 }
