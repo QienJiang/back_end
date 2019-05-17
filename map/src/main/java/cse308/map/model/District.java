@@ -179,4 +179,15 @@ public class District implements Comparable<District>,Serializable {
     public String toGeoJsonFormat(){
         return cluster.toGeoJsonFormat();
     }
+
+    public double rateGerrymanderingScore() {
+        int rVote = this.getGOPVote();
+        int dVote = this.getDEMVote();
+        int totalV = rVote + dVote;
+        int win_v = Math.max(rVote,dVote);
+        int lost_v = Math.min(rVote,dVote);
+        double win_wast = (win_v-lost_v)/2 -1;
+        double gerrymanderingScore = (lost_v - win_wast)/totalV;
+        return gerrymanderingScore;
+    }
 }

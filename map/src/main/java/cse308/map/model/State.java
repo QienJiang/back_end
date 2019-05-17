@@ -219,7 +219,7 @@ public class State implements Serializable {
     public String getSummary(){
         String sum = "";
         this.setParty();
-        sum += "State: "+this.getId()+", Population: "+ this.getPopulation() + ", ObjectiveFunctionValue: "+ this.getObjectiveFunValue()
+        sum += "Population: "+ this.getPopulation() + ", ObjectiveFunctionValue: "+ this.getObjectiveFunValue()
                 + ", Republican Votes: "+ this.getNumRepublican()+
                 ", Democratic Votes: " +this.getNumDemocratic()+ ", Winner: "+this.getParty()+ "\n";
         sum += "Summary of measure:\n";
