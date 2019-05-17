@@ -15,8 +15,7 @@ public class State implements Serializable {
     private String id;
     private String name;
     private int population;
-    private String rvote;
-    private String dvote;
+
     @Transient
     private int numMMDistrict;
     @Transient
@@ -109,24 +108,24 @@ public class State implements Serializable {
         population = totalPopulation;
     }
 
-    public String getRvote() {
+    public int getRvote()
+    {
+        int rvote =0;
+        for(District d: this.getDistricts().values()){
+            rvote += d.getGOPVote();
+        }
         return rvote;
     }
 
-    public void setRvote(String rvote) {
 
-        this.rvote = rvote;
-    }
-
-    public String getDvote() {
-
+    public int getDvote() {
+        int dvote = 0;
+        for(District d: this.getDistricts().values()){
+            dvote += d.getDEMVote();
+        }
         return dvote;
     }
 
-    public void setDvote(String dvote) {
-
-        this.dvote = dvote;
-    }
 
     public String getId() {
         return id;

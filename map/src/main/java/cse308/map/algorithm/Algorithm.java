@@ -646,9 +646,8 @@ public class Algorithm implements Runnable{
             for (Map.Entry<Integer, State> stateEntry : states.entrySet()) {
                 currentState = stateEntry.getValue();
                 singleRun();
-                str.append("Batch run: ").append(counter).append(summaryOfBatch());
+                str.append("Batch run: ").append(counter++).append(summaryOfBatch());
                 sendMessage("batch run: " + stateEntry.getKey() + " finished!");
-
             }
         }else {
             singleRun();
@@ -779,8 +778,8 @@ public class Algorithm implements Runnable{
         for(District d : currentState.getDistricts().values()){
             int rvote = d.getGOPVote();
             int dvote = d.getDEMVote();
-            int totalRVote = Integer.parseInt(currentState.getRvote());
-            int totalDVote = Integer.parseInt(currentState.getDvote());
+            int totalRVote = currentState.getRvote();
+            int totalDVote = currentState.getDvote();
             double r = rvote/totalRVote;
             double gd = dvote/totalDVote;
             gm += "District: "+d.getDistrictID()+" Score: "+ df.format(d.rateGerrymanderingScore())+
