@@ -82,6 +82,10 @@ public class SocketService {
         resultService.deleteState(Long.valueOf(id));
     }
 
+    @OnEvent(value = "saveLog")
+    public void onSaveLog(SocketIOClient client, String id) {
+        resultService.deleteState(Long.valueOf(id));
+    }
 
 
 
