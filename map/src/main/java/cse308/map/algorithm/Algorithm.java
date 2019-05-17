@@ -767,24 +767,26 @@ public class Algorithm implements Runnable{
 
     public String originalGerrymandering(){
         String gm = "Gerrymandering scores for the actual votes by district:\n";
-        gm += "District: 1"+" Score: 0.4066,\n  Republican Percentage: 0.2855,\n   Democratic Percentage: 0.2344\n";
-        gm += "District: 2"+" Score: 0.4867,\n  Republican Percentage: 0.2041,\n   Democratic Percentage: 0.1967\n";
-        gm += "District: 3"+" Score: 0.4789,\n  Republican Percentage: 0.2614,\n   Democratic Percentage: 0.2700\n";
-        gm += "District: 4"+" Score: 0.4040,\n  Republican Percentage: 0.0249,\n   Democratic Percentage: 0.2989\n";
+        gm += "District: 1"+" Score: 0.4066,\n  Republican Percentage: 0.2855,\n  Democratic Percentage: 0.2344\n";
+        gm += "District: 2"+" Score: 0.4867,\n  Republican Percentage: 0.2041,\n  Democratic Percentage: 0.1967\n";
+        gm += "District: 3"+" Score: 0.4789,\n  Republican Percentage: 0.2614,\n  Democratic Percentage: 0.2700\n";
+        gm += "District: 4"+" Score: 0.4040,\n  Republican Percentage: 0.0249,\n  Democratic Percentage: 0.2989\n";
         return gm;
     }
     public String gerrymanderingGenerated(){
         DecimalFormat df = new DecimalFormat("0.0000");
         String gm = "Gerrymandering scores of the newly generated districts:\n";
         for(District d : currentState.getDistricts().values()){
-            int rvote = d.getGOPVote();
-            int dvote = d.getDEMVote();
-            int totalRVote = currentState.getRvote();
-            int totalDVote = currentState.getDvote();
+            double rvote = d.getGOPVote()*1.0;
+            double dvote = d.getDEMVote()*1.0;
+            double totalRVote = currentState.getRvote()*1.0;
+            double totalDVote = currentState.getDvote()*1.0;
             double r = rvote/totalRVote;
             double gd = dvote/totalDVote;
-            gm += "District: "+d.getDistrictID()+",\n   Score: "+ df.format(d.rateGerrymanderingScore())+
-                    ",\n    Republican Percentage: "+df.format(r)+",\n  Democratic Percentage: "+df.format(gd)+"\n";
+            System.out.println("totRv:"+totalRVote+"totDv:"+totalDVote);
+            System.out.println("r:"+r+"rvote:"+rvote+"d:"+d+"dvote:"+dvote);
+            gm += "District: "+d.getDistrictID()+",\n  Score: "+ df.format(d.rateGerrymanderingScore())+
+                    ",\n  Republican Percentage: "+df.format(r)+",\n  Democratic Percentage: "+df.format(gd)+"\n";
         }
         return gm;
     }
