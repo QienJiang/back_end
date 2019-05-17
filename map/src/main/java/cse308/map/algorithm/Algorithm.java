@@ -704,7 +704,7 @@ public class Algorithm implements Runnable{
         StringBuilder districtJson = new StringBuilder();
         districtJson.append("{\"type\":\"FeatureCollection\", \"features\": [");
         for (Cluster c : currentState.getClusters().values()) {
-            if(mmDistricts.containsValue(c)){
+            if(mmDistricts.containsKey(c.getClusterID())){
                 c.setIsMajorMinorDistrict("true");
             }
             else{
