@@ -760,22 +760,22 @@ public class Algorithm implements Runnable{
     public String majorMinorResult(){
         String mm ="";
         for(District d:mmDistricts.values()){
-            mm += "District: "+d.getdistrictID()+" majorMinor_Result: "+d.getMajorMinor(currentState.getComunityOfinterest())+ "population of this race: "+d.getCluster().getDemographic().getMajorMinorPop(currentState.getComunityOfinterest())+"\\n";
+            mm += "District: "+d.getdistrictID()+" majorMinor_Result: "+d.getMajorMinor(currentState.getComunityOfinterest())+ "population of this race: "+d.getCluster().getDemographic().getMajorMinorPop(currentState.getComunityOfinterest())+"\n";
         }
         return mm;
     }
 
     public String originalGerrymandering(){
-        String gm = "Gerrymandering scores for the actual votes by district:\\n";
-        gm += "District: 1"+" Score: 0.4066, Republican Percentage: 0.2855, Democratic Percentage: 0.2344\\n";
-        gm += "District: 2"+" Score: 0.4867, Republican Percentage: 0.2041, Democratic Percentage: 0.1967\\n";
-        gm += "District: 3"+" Score: 0.4789, Republican Percentage: 0.2614, Democratic Percentage: 0.2700\\n";
-        gm += "District: 4"+" Score: 0.4040, Republican Percentage: 0.0249, Democratic Percentage: 0.2989\\n";
+        String gm = "Gerrymandering scores for the actual votes by district:\n";
+        gm += "District: 1"+" Score: 0.4066, Republican Percentage: 0.2855, Democratic Percentage: 0.2344\n";
+        gm += "District: 2"+" Score: 0.4867, Republican Percentage: 0.2041, Democratic Percentage: 0.1967\n";
+        gm += "District: 3"+" Score: 0.4789, Republican Percentage: 0.2614, Democratic Percentage: 0.2700\n";
+        gm += "District: 4"+" Score: 0.4040, Republican Percentage: 0.0249, Democratic Percentage: 0.2989\n";
         return gm;
     }
     public String gerrymanderingGenerated(){
         DecimalFormat df = new DecimalFormat("0.00");
-        String gm = "Gerrymandering scores of the newly generated districts:\\n";
+        String gm = "Gerrymandering scores of the newly generated districts:\n";
         for(District d : currentState.getDistricts().values()){
             int rvote = d.getGOPVote();
             int dvote = d.getDEMVote();
@@ -784,24 +784,24 @@ public class Algorithm implements Runnable{
             double r = rvote/totalRVote;
             double gd = dvote/totalDVote;
             gm += "District: "+d.getDistrictID()+" Score: "+ df.format(d.rateGerrymanderingScore())+
-                    ", Republican Percentage: "+df.format(r)+", Democratic Percentage: "+df.format(gd)+"\\n";
+                    ", Republican Percentage: "+df.format(r)+", Democratic Percentage: "+df.format(gd)+"\n";
         }
         return gm;
     }
     
     public String getTotalSummarySingleRun(){
         String total = "";
-        total += originalGerrymandering()+"\\n";
-        total += gerrymanderingGenerated()+"\\n";
-        total += majorMinorResult()+"\\n";
+        total += originalGerrymandering()+"\n";
+        total += gerrymanderingGenerated()+"\n";
+        total += majorMinorResult()+"\n";
         total += currentState.getSummary();
         return total;
     }
 
     public String summaryOfBatch(){
         String total = "";
-        total += gerrymanderingGenerated()+"\\n";
-        total += majorMinorResult()+"\\n";
+        total += gerrymanderingGenerated()+"\n";
+        total += majorMinorResult()+"\n";
         total += currentState.getSummary();
         return total;
     }
