@@ -107,6 +107,7 @@ public class Algorithm implements Runnable{
                 }
             }
             updateColor();
+            if(!isBatch)
             pause();
         }
     }
