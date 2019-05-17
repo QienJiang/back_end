@@ -180,8 +180,8 @@ public class Configuration implements Serializable {
     @Override
     public String toString() {
         if(changeMeasures.equals("")){
-            return "Configuration{" +
-                    "TargetDistrictNumber= " + targetDistrictNumber +
+            return "Configuration: " +
+                    "\n TargetDistrictNumber= " + targetDistrictNumber +
                     ",\n TargetMajorMinorDistrict= "+ targetDistrictNumber +
                     ",\n NumOfRun= " + numOfRun +
                     ",\n CompactnessMethod= " + compactnessMethod +
@@ -193,13 +193,11 @@ public class Configuration implements Serializable {
                     ",\n PartisanFairness= " + fairness +
                     ",\n Competitiveness= " + competitiveness +
                     ", MinMajorMinorPercent= "+ minMajorMinorPercent +
-                    ", MaxMajorMinorPercent= "+ maxMajorMinorPercent +
-//                ", weights=" + weights +
-                    '}';
+                    ", MaxMajorMinorPercent= "+ maxMajorMinorPercent;
         }
 
-        return "Configuration{" +
-                "TargetDistrictNumber= " + targetDistrictNumber +
+        return "Configuration:" +
+                "\n TargetDistrictNumber= " + targetDistrictNumber +
                 ",\n TargetMajorMinorDistrict= "+ targetDistrictNumber +
                 ",\n NumOfRun= " + numOfRun +
                 ",\n ChangedMeasure= " + changeMeasures +
@@ -212,9 +210,7 @@ public class Configuration implements Serializable {
                 ",\n PartisanFairness= " + fairness +
                 ",\n Competitiveness= " + competitiveness +
                 ", MinMajorMinorPercent= "+ minMajorMinorPercent +
-                ", MaxMajorMinorPercent= "+ maxMajorMinorPercent +
-//                ", weights=" + weights +
-                '}';
+                ", MaxMajorMinorPercent= "+ maxMajorMinorPercent;
     }
 
     public String getChangeMeasures() {

@@ -435,6 +435,7 @@ public class Algorithm implements Runnable{
         double score = 0;
         for (District d : currentState.getDistricts().values()) {
             score += currentScores.get(d);
+
         }
         currentState.setObjectiveFunValue(score);
 //        return score;
@@ -653,7 +654,7 @@ public class Algorithm implements Runnable{
 //                currentState.getConfiguration().getWeights().put(change,currentState.getConfiguration().getWeights().get(change)+1);
                 singleRun();
                 Result result = resultService.saveState(new Result(currentState.getConfiguration().getEmail(),currentState,summaryOfBatch()));
-                str.append("Batch run: ").append(result.getId()).append("\n").append(summaryOfBatch());
+                str.append("Batch run: ").append(result.getId()).append("\n").append(summaryOfBatch()).append("\n").append("\n");
                 sendMessage("batch run: " + (stateEntry.getKey()+1) + " finished!");
             }
         }else {
