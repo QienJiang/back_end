@@ -648,7 +648,7 @@ public class Algorithm implements Runnable{
                 currentState = stateEntry.getValue();
                 singleRun();
                 str.append("Batch run: ").append(counter++).append("\n").append(summaryOfBatch());
-                sendMessage("batch run: " + stateEntry.getKey() + " finished!");
+                sendMessage("batch run: " + (stateEntry.getKey()+1) + " finished!");
             }
         }else {
             singleRun();
