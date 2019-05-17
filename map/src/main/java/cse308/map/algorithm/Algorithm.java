@@ -20,7 +20,7 @@ public class Algorithm implements Runnable{
     private static final HashMap<Measure, String> measures;
     private StringBuilder logFile=new StringBuilder();
     private boolean isBatch = false;
-
+    String[] colorList={"#e6194b", "#3cb44b", "#ffe119", "#4363d8", "#f58231", "#911eb4", "#46f0f0", "#f032e6", "#bcf60c", "#fabebe", "#008080", "#e6beff", "#9a6324", "#fffac8", "#800000", "#aaffc3", "#808000", "#ffd8b1", "#000075", "#808080", "#ffffff", "#000000"};
     public boolean isBatch() {
         return isBatch;
     }
@@ -600,9 +600,12 @@ public class Algorithm implements Runnable{
         init();
         graphPartition();
         currentState.initDistrict();
+        int counter=0;
         for(District d:currentState.getDistricts().values()){
             System.out.print(d.getShape().getGeometryType()+ ", ");
+            d.getCluster().setColor(colorList[counter%20]);
             d.initMoveList();
+            counter++;
         }
         updateDistrictBoundary();
         setMmDistricts();
