@@ -19,6 +19,16 @@ public class Algorithm implements Runnable{
     private final Object pauseLock = new Object();
     private static final HashMap<Measure, String> measures;
     private StringBuilder logFile=new StringBuilder();
+    private boolean isBatch = false;
+
+    public boolean isBatch() {
+        return isBatch;
+    }
+
+    public void setBatch(boolean batch) {
+        isBatch = batch;
+    }
+
     static {
         measures = new HashMap<>();
         measures.put(Measure.POPULATION_EQUALITY, "ratePopequality");
@@ -583,7 +593,7 @@ public class Algorithm implements Runnable{
         return colorCode;
     }
 
-    public void run() {
+    public void singleRun(){
         sendMessage("Algorithm Start...");
         init();
         graphPartition();
@@ -597,7 +607,8 @@ public class Algorithm implements Runnable{
         setWeights(currentState.getConfiguration().getWeights());
         System.out.println("----:"+mmDistricts.size());
         client.sendEvent("Phase two");
-        pause();
+        if(isBatch==false)
+            pause();
         annealing();
         calculateObjectiveFunction();
         calculateNumRepublican();
@@ -623,6 +634,20 @@ public class Algorithm implements Runnable{
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+    }
+
+    public void run() {
+        if(isBatch){
+            for (Map.Entry<Integer, State> stateEntry : states.entrySet()) {
+                currentState = stateEntry.getValue();
+                singleRun();
+                sendMessage("batch run: " + stateEntry.getKey() + " finished!");
+            }
+        }else {
+            singleRun();
+        }
+
     }
 
 //    private void saveToDatabase() {
@@ -677,14 +702,7 @@ public class Algorithm implements Runnable{
         sendMessage(msg.toString());
     }
 
-    public void batchRun() {
-        for (Map.Entry<Integer, State> stateEntry : states.entrySet()) {
-            currentState = stateEntry.getValue();
-            run();
-            sendMessage("batch run: " + stateEntry.getKey() + " finished!");
-        }
-        sendMessage("all batch run finished!");
-    }
+
 
     private void sendMessage(String msg) {
         client.sendEvent("message", msg);

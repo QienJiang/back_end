@@ -54,11 +54,9 @@ public class SocketService {
     public void onEvent(SocketIOClient client, AckRequest request, @RequestBody Configuration data) {
         System.out.println(data);
         currentAlgorithm = new Algorithm("pa", data, precinctService,resultService, client);
-//        if(data.getNumOfRun() == 1) {
-//            algorithm.run();
-//        }else{
-//            algorithm.batchRun();
-//        }
+        if(data.getNumOfRun() > 1)
+            currentAlgorithm.setBatch(true);
+
         Thread task = new Thread(currentAlgorithm);
         task.start();
         //System.out.println("finished");
