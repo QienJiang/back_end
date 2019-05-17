@@ -6,6 +6,9 @@ import java.util.HashMap;
 
 public class Configuration implements Serializable {
     @Transient
+    private String changeMeasures;
+    private Measure changeMeasure;
+    private String compactnessMethod;
     private static final long serialVersionUID = 4L;
     private int targetDistrictNumber;
     private int numOfRun;
@@ -50,6 +53,7 @@ public class Configuration implements Serializable {
         weights.put(Measure.EFFICIENCY_GAP, efficiencyGpa/10);
         weights.put(Measure.PARTISAN_FAIRNESS, fairness/10);
         weights.put(Measure.COMPETITIVENESS, competitiveness/10);
+//        changeMeasure=Measure.valueOf(changeMeasures);
         majorMinor/=10;
         maxMajorMinorPercent /=100;
         minMajorMinorPercent /=100;
@@ -175,11 +179,32 @@ public class Configuration implements Serializable {
 
     @Override
     public String toString() {
+        if(changeMeasures.equals("")){
+            return "Configuration{" +
+                    "TargetDistrictNumber= " + targetDistrictNumber +
+                    ",\n TargetMajorMinorDistrict= "+ targetDistrictNumber +
+                    ",\n NumOfRun= " + numOfRun +
+                    ",\n CompactnessMethod= " + compactnessMethod +
+//                    ",\n MajorMinorWeight= " + majorMinor +
+                    ",\n CommunityOfInterest= " + interestCommunity +
+                    ",\n PopulationEquality= " + equality +
+                    ",\n EfficiencyGpa= " + efficiencyGpa +
+                    ",\n Compactness= " + compactness +
+                    ",\n PartisanFairness= " + fairness +
+                    ",\n Competitiveness= " + competitiveness +
+                    ", MinMajorMinorPercent= "+ minMajorMinorPercent +
+                    ", MaxMajorMinorPercent= "+ maxMajorMinorPercent +
+//                ", weights=" + weights +
+                    '}';
+        }
+
         return "Configuration{" +
                 "TargetDistrictNumber= " + targetDistrictNumber +
                 ",\n TargetMajorMinorDistrict= "+ targetDistrictNumber +
                 ",\n NumOfRun= " + numOfRun +
-//                ", MajorMinorWeight= " + majorMinor +
+                ",\n ChangedMeasure= " + changeMeasures +
+                ",\n CompactnessMethod= " + compactnessMethod +
+//                ",\n MajorMinorWeight= " + majorMinor +
                 ",\n CommunityOfInterest= " + interestCommunity +
                 ",\n PopulationEquality= " + equality +
                 ",\n EfficiencyGpa= " + efficiencyGpa +
@@ -190,5 +215,30 @@ public class Configuration implements Serializable {
                 ", MaxMajorMinorPercent= "+ maxMajorMinorPercent +
 //                ", weights=" + weights +
                 '}';
+    }
+
+    public String getChangeMeasures() {
+        return changeMeasures;
+    }
+
+    public void setChangeMeasures(String changeMeasures) {
+        this.changeMeasures = changeMeasures;
+    }
+
+    public Measure getChangeMeasure() {
+        return changeMeasure;
+    }
+
+    public void setChangeMeasure(Measure changeMeasure) {
+        this.changeMeasure = changeMeasure;
+    }
+
+
+    public String getCompactnessMethod() {
+        return compactnessMethod;
+    }
+
+    public void setCompactnessMethod(String compactnessMethod) {
+        this.compactnessMethod = compactnessMethod;
     }
 }

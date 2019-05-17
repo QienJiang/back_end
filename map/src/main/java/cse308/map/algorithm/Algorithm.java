@@ -649,6 +649,8 @@ public class Algorithm implements Runnable{
             str.append(originalGerrymandering()).append("\n");
             for (Map.Entry<Integer, State> stateEntry : states.entrySet()) {
                 currentState = stateEntry.getValue();
+//                Measure change=currentState.getConfiguration().getChangeMeasure();
+//                currentState.getConfiguration().getWeights().put(change,currentState.getConfiguration().getWeights().get(change)+1);
                 singleRun();
                 Result result = resultService.saveState(new Result(currentState.getConfiguration().getEmail(),currentState,summaryOfBatch()));
                 str.append("Batch run: ").append(result.getId()).append("\n").append(summaryOfBatch());
