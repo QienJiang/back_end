@@ -655,7 +655,7 @@ public class Algorithm implements Runnable{
             str.append(getTotalSummarySingleRun());
         }
 
-        client.sendEvent("Summary",str);
+        client.sendEvent("summary",str);
     }
 
 //    private void saveToDatabase() {
