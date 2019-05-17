@@ -203,14 +203,24 @@ public class Algorithm implements Runnable{
 //            for(Precinct precinct:smallestDistrict.getMovelist()){
             bestMove = getMove(smallestDistrict);
             if(bestMove!=null){
-                bestMove.execute();
-                bestMove.getTo().getMovelist().remove(bestMove.getPrecinct());
-
-                Set<Precinct> otherDistrictPrecincts=bestMove.getPrecinct().getOtherDistrctPreicincts();
-                if(!otherDistrictPrecincts.isEmpty())
-                    for (Precinct otherDistrictPrecinct : otherDistrictPrecincts) {
-                        bestMove.getTo().getMovelist().add(otherDistrictPrecinct);
-                    }
+                updateMoveList(bestMove);
+//                District from = bestMove.getFrom();
+//                Precinct p = bestMove.getPrecinct();
+//                for(Precinct neighbor : p.getOtherDistrctPreicincts()){
+//                    for(Precinct nn : neighbor.getOtherDistrctPreicincts()){
+//                        if(p.getParentCluster() == nn.getParentCluster() && p.getId()!=nn.getId()){
+//                            break;
+//                        }
+//                    }
+//                    from.getMovelist().remove(neighbor);
+//                }
+//                bestMove.execute();
+//                bestMove.getTo().getMovelist().remove(bestMove.getPrecinct());
+//                Set<Precinct> otherDistrictPrecincts=bestMove.getPrecinct().getOtherDistrctPreicincts();
+//                if(!otherDistrictPrecincts.isEmpty())
+//                    for (Precinct otherDistrictPrecinct : otherDistrictPrecincts) {
+//                        bestMove.getTo().getMovelist().add(otherDistrictPrecinct);
+//                    }
                 return bestMove;
             }
 //            }
@@ -218,6 +228,26 @@ public class Algorithm implements Runnable{
 
         }
         return null;
+    }
+    private void updateMoveList(Move move){
+        District from = move.getFrom();
+        Precinct p = move.getPrecinct();
+        for(Precinct neighbor : p.getOtherDistrctPreicincts()){
+            for(Precinct nn : neighbor.getOtherDistrctPreicincts()){
+                if(p.getParentCluster() == nn.getParentCluster() && p.getId()!=nn.getId()){
+                    break;
+                }
+            }
+            from.getMovelist().remove(neighbor);
+        }
+        move.execute();
+        move.getTo().getMovelist().remove(move.getPrecinct());
+        Set<Precinct> otherDistrictPrecincts = move.getPrecinct().getOtherDistrctPreicincts();
+        if(!otherDistrictPrecincts.isEmpty()){
+            for (Precinct otherDistrictPrecinct : otherDistrictPrecincts) {
+                move.getTo().getMovelist().add(otherDistrictPrecinct);
+            }
+        }
     }
 
     private void checkMmDistricts(){
@@ -300,14 +330,14 @@ public class Algorithm implements Runnable{
         }
         double initial_score = move.getTo().getCurrentScore() + move.getFrom().getCurrentScore();
         move.execute();
-        if(move.getFrom().getShape().getGeometryType().equals("MultiPolygon")){
-            move.undo();
-            return 0;
-//            if(!searchByDepth(move)) {
-//                move.undo();
-//                return 0;
-//            }
-        }
+//        if(move.getFrom().getShape().getGeometryType().equals("MultiPolygon")){
+//            move.undo();
+//            return 0;
+            if(!searchByDepth(move)) {
+                move.undo();
+                return 0;
+            }
+//        }
         double to_score = rateDistrict(move.getTo());
         double from_score = rateDistrict(move.getFrom());
         double final_score = to_score + from_score;
@@ -328,14 +358,15 @@ public class Algorithm implements Runnable{
             Move m = getMove(startDistrict);//......
             setMmDistricts();
             if (m != null) {
-                m.execute();
-                m.getTo().getMovelist().remove(m.getPrecinct());
-
-                Set<Precinct> otherDistrictPrecincts=m.getPrecinct().getOtherDistrctPreicincts();
-                if(!otherDistrictPrecincts.isEmpty())
-                    for (Precinct otherDistrictPrecinct : otherDistrictPrecincts) {
-                        m.getTo().getMovelist().add(otherDistrictPrecinct);
-                    }
+                updateMoveList(m);
+//                m.execute();
+//                m.getTo().getMovelist().remove(m.getPrecinct());
+//
+//                Set<Precinct> otherDistrictPrecincts=m.getPrecinct().getOtherDistrctPreicincts();
+//                if(!otherDistrictPrecincts.isEmpty())
+//                    for (Precinct otherDistrictPrecinct : otherDistrictPrecincts) {
+//                        m.getTo().getMovelist().add(otherDistrictPrecinct);
+//                    }
                 return m;
             }
         }
@@ -482,7 +513,7 @@ public class Algorithm implements Runnable{
         }
 //        System.out.println("out while");
         if(visitedNodes.size() == move.getFrom().getCluster().getPrecincts().size()
-                &&visitedNodes.containsAll(move.getFrom().getCluster().getPrecincts())) {
+               ) {
             return true;
         }
         return false;
