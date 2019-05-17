@@ -176,4 +176,7 @@ public class District implements Comparable<District>,Serializable {
         }
         return -1;
     }
+    public String toGeoJsonFormat(){
+        return cluster.toGeoJsonFormat();
+    }
 }

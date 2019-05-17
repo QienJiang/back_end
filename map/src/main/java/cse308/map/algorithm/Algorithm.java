@@ -720,7 +720,7 @@ public class Algorithm implements Runnable{
     }
 
     public void saveMap(){
-        Result result = new Result(currentState.getConfiguration().getEmail(), (Serializable) states);
+        Result result = new Result(currentState.getConfiguration().getEmail(), currentState);
         resultService.saveState(result);
     }
 

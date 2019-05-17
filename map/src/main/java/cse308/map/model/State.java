@@ -235,8 +235,8 @@ public class State implements Serializable {
 
         StringBuilder districtJson = new StringBuilder();
         districtJson.append("{\"type\":\"FeatureCollection\", \"features\": [");
-        for (Cluster c : clusters.values()) {
-            districtJson.append(c.toGeoJsonFormat()).append("},\n");
+        for (District d : districts.values()) {
+            districtJson.append(d.toGeoJsonFormat()).append("},\n");
 
         }
         districtJson.deleteCharAt(districtJson.length() - 2).append("]}");
