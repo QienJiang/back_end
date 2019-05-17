@@ -22,10 +22,14 @@ public class Configuration implements Serializable {
     private double competitiveness;
     private HashMap<Measure, Double> weights=new HashMap<>();
     private String email;
-
+    private String state;
     public String getEmail() {
         return email;
     }
+
+    public String getState() { return state; }
+
+    public void setState(String state) { this.state = state; }
 
     public void setEmail(String email) {
         this.email = email;

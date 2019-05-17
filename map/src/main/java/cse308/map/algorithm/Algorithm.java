@@ -68,7 +68,7 @@ public class Algorithm implements Runnable{
     private void init() {
         sendMessage("fetching precinct'state data...");
 //        Iterable<Precinct> allPrecincts = precinctService.getAllPrecincts("35");
-        Iterable<Precinct> allPrecincts = precinctService.getAllPrecincts("19");
+        Iterable<Precinct> allPrecincts = precinctService.getAllPrecincts(currentState.getConfiguration().getState());
 
         for (Precinct p : allPrecincts) {
             currentState.addPrecinct(p);
