@@ -21,6 +21,7 @@ public class Cluster implements Serializable {
     private String countyID;
     private String color;
     private double CurrentScore;
+    private String isMajorMinorDistrict;
 
     public void assignedColor(String[] color) {
         ArrayList<String> arrayList = new ArrayList<String>(Arrays.asList(color));
@@ -197,7 +198,7 @@ public class Cluster implements Serializable {
     public String getProperty(){
         StringBuilder s = new StringBuilder();
         s.append("\"properties\":{\"GEOID10\": \"").append(clusterID).append("\",").append("\"POP100\":\"").append(demographic.getPopulation()).append("\",").
-                append("\"COLOR\":\"").append(color).append("\",").append("\"name\":\"").append(clusterID).append("\",").append(demographic.demoGeojson()).append("\"}");
+                append("\"COLOR\":\"").append(color).append("\",").append("\"isMajorMinor\":\"").append(isMajorMinorDistrict).append("\",").append("\"name\":\"").append(clusterID).append("\",").append(demographic.demoGeojson()).append("\"}");
         return s.toString();
     }
 
@@ -217,5 +218,13 @@ public class Cluster implements Serializable {
             break;
         }
         return temp;
+    }
+
+    public String getIsMajorMinorDistrict() {
+        return isMajorMinorDistrict;
+    }
+
+    public void setIsMajorMinorDistrict(String isMajorMinorDistrict) {
+        this.isMajorMinorDistrict = isMajorMinorDistrict;
     }
 }

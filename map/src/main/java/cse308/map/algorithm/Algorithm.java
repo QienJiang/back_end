@@ -704,6 +704,12 @@ public class Algorithm implements Runnable{
         StringBuilder districtJson = new StringBuilder();
         districtJson.append("{\"type\":\"FeatureCollection\", \"features\": [");
         for (Cluster c : currentState.getClusters().values()) {
+            if(mmDistricts.containsValue(c)){
+                c.setIsMajorMinorDistrict("true");
+            }
+            else{
+                c.setIsMajorMinorDistrict("false");
+            }
             districtJson.append(c.toGeoJsonFormat()).append("},\n");
             for (Precinct ps : c.getPrecincts()) {
                 districtColor.append(ps.getId()).append(":").append(c.getColor()).append(",");
