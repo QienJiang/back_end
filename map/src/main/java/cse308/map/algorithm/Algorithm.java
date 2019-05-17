@@ -647,7 +647,8 @@ public class Algorithm implements Runnable{
             for (Map.Entry<Integer, State> stateEntry : states.entrySet()) {
                 currentState = stateEntry.getValue();
                 singleRun();
-                str.append("Batch run: ").append(counter++).append("\n").append(summaryOfBatch());
+                Result result = resultService.saveState(new Result(currentState.getConfiguration().getEmail(),currentState,summaryOfBatch()));
+                str.append("Batch run: ").append(result.getId()).append("\n").append(summaryOfBatch());
                 sendMessage("batch run: " + (stateEntry.getKey()+1) + " finished!");
             }
         }else {
@@ -746,7 +747,7 @@ public class Algorithm implements Runnable{
     }
 
     public void saveMap(){
-        Result result = new Result(currentState.getConfiguration().getEmail(), currentState);
+        Result result = new Result(currentState.getConfiguration().getEmail(), currentState,summaryOfBatch());
         resultService.saveState(result);
     }
 

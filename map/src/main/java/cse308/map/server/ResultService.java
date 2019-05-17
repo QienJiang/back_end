@@ -20,8 +20,8 @@ public class ResultService{
         return  resultRepository.findById(stateId);
     }
 
-    public void saveState(Result state){
-        resultRepository.save(state);
+    public Result saveState(Result state){
+        return resultRepository.save(state);
     }
 
     public List<Long> findALLByEmail(String email) {

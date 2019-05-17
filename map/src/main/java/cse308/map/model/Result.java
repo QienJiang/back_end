@@ -20,13 +20,15 @@ public class Result {
     private String email;
     @Lob
     private Serializable stateJSON;
-
+    @Lob
+    private String summary;
     public Result(){
 
     }
-    public Result(String email,Serializable s){
+    public Result(String email,Serializable s,String summary){
         this.email = email;
         this.stateJSON = s;
+        this.summary = summary;
     }
     public Long getId() {
         return id;
@@ -46,6 +48,14 @@ public class Result {
 
     public Serializable getStateJSON() {
         return stateJSON;
+    }
+
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
 
     public void setStateJSON(Serializable stateJSON) {
