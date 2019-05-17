@@ -28,21 +28,21 @@ public class AdminController {
     }
 
     @PostMapping(value = "/delete")//check the user exist in the database or not
-    public ResponseEntity<?> deletedUsers(User user) {
+    public ResponseEntity<?> deletedUsers(@RequestBody User user) {
         userService.isValidUser(user);
         userService.deleted(user.getEmail());
         return new ResponseEntity<>("finish deleted user", HttpStatus.OK);
     }
 
     @PostMapping(value = "/update")//check the user exist in the database or not
-    public ResponseEntity<?> updatedUsers(User user) {
+    public ResponseEntity<?> updatedUsers(@RequestBody User user) {
         userService.isValidUser(user);
-        userService.updateUser(user);
+        userService.updateUser(userService.registerUser(user));
         return new ResponseEntity<>("finish update user", HttpStatus.OK);
     }
 
     @PostMapping(value = "/register")//check the user exist in the database or not
-    public ResponseEntity<?> registerdUsers(User user) {
+    public ResponseEntity<?> registerdUsers(@RequestBody User user) {
         if(userService.isValidUser(user))
             return new ResponseEntity<>("user already exist", HttpStatus.OK);
         userService.registerUser(user);
