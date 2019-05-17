@@ -52,7 +52,7 @@ public class SocketService {
 
     @OnEvent(value = "runAlgorithm")
     public void onEvent(SocketIOClient client, AckRequest request, @RequestBody Configuration data) {
-        System.out.println(data);
+        System.out.println(data.getEmail());
         currentAlgorithm = new Algorithm("pa", data, precinctService,resultService, client);
         if(data.getNumOfRun() > 1)
             currentAlgorithm.setBatch(true);
