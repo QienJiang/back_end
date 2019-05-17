@@ -79,6 +79,10 @@ public class SocketService {
         client.sendEvent("updateDistrictBoundary", state.generateGeoJson());
     }
 
+    @OnEvent(value = "deleteMap")
+    public void onDeleteMap(SocketIOClient client, String id) {
+        resultService.deleteState(Long.valueOf(id));
+    }
 
 
 

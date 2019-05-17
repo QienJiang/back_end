@@ -36,4 +36,8 @@ public class ResultService{
         }
         return result;
     }
+
+    public void deleteState(long id){
+        resultRepository.deleteById(id);
+    }
 }
