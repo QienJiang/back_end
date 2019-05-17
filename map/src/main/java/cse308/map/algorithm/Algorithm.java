@@ -767,14 +767,14 @@ public class Algorithm implements Runnable{
 
     public String originalGerrymandering(){
         String gm = "Gerrymandering scores for the actual votes by district:\n";
-        gm += "District: 1"+" Score: 0.4066, Republican Percentage: 0.2855, Democratic Percentage: 0.2344\n";
-        gm += "District: 2"+" Score: 0.4867, Republican Percentage: 0.2041, Democratic Percentage: 0.1967\n";
-        gm += "District: 3"+" Score: 0.4789, Republican Percentage: 0.2614, Democratic Percentage: 0.2700\n";
-        gm += "District: 4"+" Score: 0.4040, Republican Percentage: 0.0249, Democratic Percentage: 0.2989\n";
+        gm += "District: 1"+" Score: 0.4066,\n  Republican Percentage: 0.2855,\n   Democratic Percentage: 0.2344\n";
+        gm += "District: 2"+" Score: 0.4867,\n  Republican Percentage: 0.2041,\n   Democratic Percentage: 0.1967\n";
+        gm += "District: 3"+" Score: 0.4789,\n  Republican Percentage: 0.2614,\n   Democratic Percentage: 0.2700\n";
+        gm += "District: 4"+" Score: 0.4040,\n  Republican Percentage: 0.0249,\n   Democratic Percentage: 0.2989\n";
         return gm;
     }
     public String gerrymanderingGenerated(){
-        DecimalFormat df = new DecimalFormat("0.00");
+        DecimalFormat df = new DecimalFormat("0.0000");
         String gm = "Gerrymandering scores of the newly generated districts:\n";
         for(District d : currentState.getDistricts().values()){
             int rvote = d.getGOPVote();
@@ -783,8 +783,8 @@ public class Algorithm implements Runnable{
             int totalDVote = currentState.getDvote();
             double r = rvote/totalRVote;
             double gd = dvote/totalDVote;
-            gm += "District: "+d.getDistrictID()+" Score: "+ df.format(d.rateGerrymanderingScore())+
-                    ", Republican Percentage: "+df.format(r)+", Democratic Percentage: "+df.format(gd)+"\n";
+            gm += "District: "+d.getDistrictID()+",\n   Score: "+ df.format(d.rateGerrymanderingScore())+
+                    ",\n    Republican Percentage: "+df.format(r)+",\n  Democratic Percentage: "+df.format(gd)+"\n";
         }
         return gm;
     }

@@ -218,14 +218,14 @@ public class State implements Serializable {
     public String getSummary(){
         String sum = "";
         this.setParty();
-        sum += "Population: "+ this.getPopulation() + ", ObjectiveFunctionValue: "+ this.getObjectiveFunValue()
-                + ", Republican Votes: "+ this.getNumRepublican()+
-                ", Democratic Votes: " +this.getNumDemocratic()+ ", Winner: "+this.getParty()+ "\n";
+        sum += "State Population: "+ this.getPopulation() + ",\n    ObjectiveFunctionValue: "+ this.getObjectiveFunValue()
+                + ",\n  Republican Votes: "+ this.getNumRepublican()+
+                ",\n    Democratic Votes: " +this.getNumDemocratic()+ ",\n  Winner: "+this.getParty()+ "\n";
         sum += "Summary of measure:\n";
         sum += this.getConfiguration().toString();
         for(District d : this.getDistricts().values()){
             d.setParty();
-            sum += "  District : " + d.getDistrictID() + " Population: "+d.getPopulation() + " PoliticalParty: "+d.getP()+"\n";
+            sum += "  District : " + d.getDistrictID() + ",\n   Population: "+d.getPopulation() + ",\n  PoliticalParty: "+d.getP()+"\n";
          }
         return sum;
     }
