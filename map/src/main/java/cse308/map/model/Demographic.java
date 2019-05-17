@@ -31,12 +31,14 @@ public class Demographic implements Serializable {
     }
     public String demoGeojson(){
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("\"democraticvote\":\"").append(democraticVote)
-                .append("\"white\":\"").append(white)
-                .append("\"africanamerican\":\"").append(africanAmerican)
-                .append("\"asian\":\"").append(asian)
-                .append("\"other\":\"").append(other)
-                .append("\"hawaiian\":\"").append(hawaiian)
+        stringBuilder.append("\"GOVDV2010\":\"").append(democraticVote).append("\",")
+                .append("\"GOVRV2010\":\"").append(republicanVote).append("\",")
+                .append("\"total\":\"").append(population).append("\",")
+                .append("\"white\":\"").append(white).append("\",")
+                .append("\"black\":\"").append(africanAmerican).append("\",")
+                .append("\"asian\":\"").append(asian).append("\",")
+                .append("\"other\":\"").append(other).append("\",")
+                .append("\"hawaiian\":\"").append(hawaiian).append("\",")
                 .append("\"hispanic\":\"").append(hispanic);
         return stringBuilder.toString();
     }

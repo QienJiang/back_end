@@ -197,7 +197,7 @@ public class Cluster implements Serializable {
     public String getProperty(){
         StringBuilder s = new StringBuilder();
         s.append("\"properties\":{\"GEOID10\": \"").append(clusterID).append("\",").append("\"POP100\":\"").append(demographic.getPopulation()).append("\",").
-                append("\"COLOR\":\"").append(color).append(demographic.demoGeojson()).append("\"}");
+                append("\"COLOR\":\"").append(color).append("\",").append("\"name\":\"").append(clusterID).append("\",").append(demographic.demoGeojson()).append("\"}");
         return s.toString();
     }
 
