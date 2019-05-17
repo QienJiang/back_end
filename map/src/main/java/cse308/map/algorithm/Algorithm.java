@@ -59,7 +59,7 @@ public class Algorithm implements Runnable{
     private void init() {
         sendMessage("fetching precinct'state data...");
 //        Iterable<Precinct> allPrecincts = precinctService.getAllPrecincts("35");
-        Iterable<Precinct> allPrecincts = precinctService.getAllPrecincts("35");
+        Iterable<Precinct> allPrecincts = precinctService.getAllPrecincts("19");
 
         for (Precinct p : allPrecincts) {
             currentState.addPrecinct(p);
@@ -150,8 +150,8 @@ public class Algorithm implements Runnable{
         int tempc=0;
         ArrayList<Move> moves=new ArrayList<>();
         StringBuilder moveString=new StringBuilder();
-        while ((move = makeMove()) != null) {
-
+        while ((move = makeMove()) != null&&counter<200) {
+            counter++;
 
 //            moveString.append("updateColor"+move.getPrecinct().getId() + ":" + move.getTo().getCluster().getColor() + ",");
 //
@@ -615,7 +615,7 @@ public class Algorithm implements Runnable{
         Logger logger=Logger.getLogger("CSE308");
         FileHandler fh;
         try {
-            fh=new FileHandler("C:\\Users\\zsz\\Desktop\\GerryMandering.log");
+            fh=new FileHandler("GerryMandering.log");
             logger.addHandler(fh);
             SimpleFormatter formatter=new SimpleFormatter();
             fh.setFormatter(formatter);
@@ -693,6 +693,7 @@ public class Algorithm implements Runnable{
     }
 
     private void sendDistrictBoundary(String msg) {
+        System.out.println("send");
         client.sendEvent("updateDistrictBoundary", msg);
     }
     public void stop() {

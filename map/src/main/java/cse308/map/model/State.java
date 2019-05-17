@@ -224,10 +224,10 @@ public class State implements Serializable {
                 ", Democratic Votes: " +this.getNumDemocratic()+ ", Winner: "+this.getParty()+ "\n";
         sum += "Summary of measure:\n";
         sum += this.getConfiguration().toString();
-//        for(District d : this.getDistricts().values()){
-//            d.setParty();
-//            sum += "  District : " + d.getDistrictID() + " Population: "+d.getPopulation() + " PoliticalParty: "+d.getP()+"\n";
-//         }
+        for(District d : this.getDistricts().values()){
+            d.setParty();
+            sum += "  District : " + d.getDistrictID() + " Population: "+d.getPopulation() + " PoliticalParty: "+d.getP()+"\n";
+         }
         return sum;
     }
 

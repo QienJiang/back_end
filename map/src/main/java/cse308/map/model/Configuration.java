@@ -173,15 +173,15 @@ public class Configuration implements Serializable {
     public String toString() {
         return "Configuration{" +
                 "TargetDistrictNumber= " + targetDistrictNumber +
-                ", TargetMajorMinorDistrict= "+ targetDistrictNumber +
-                ", NumOfRun= " + numOfRun +
+                ",\n TargetMajorMinorDistrict= "+ targetDistrictNumber +
+                ",\n NumOfRun= " + numOfRun +
 //                ", MajorMinorWeight= " + majorMinor +
-                ", CommunityOfInterest= " + interestCommunity +
-                ", PopulationEquality= " + equality +
-                ", EfficiencyGpa= " + efficiencyGpa +
-                ", Compactness= " + compactness +
-                ", PartisanFairness= " + fairness +
-                ", Competitiveness= " + competitiveness +
+                ",\n CommunityOfInterest= " + interestCommunity +
+                ",\n PopulationEquality= " + equality +
+                ",\n EfficiencyGpa= " + efficiencyGpa +
+                ",\n Compactness= " + compactness +
+                ",\n PartisanFairness= " + fairness +
+                ",\n Competitiveness= " + competitiveness +
                 ", MinMajorMinorPercent= "+ minMajorMinorPercent +
                 ", MaxMajorMinorPercent= "+ maxMajorMinorPercent +
 //                ", weights=" + weights +
