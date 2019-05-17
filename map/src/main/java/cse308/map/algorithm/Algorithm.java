@@ -146,7 +146,8 @@ public class Algorithm implements Runnable{
     }
 
     private void sendMove(Move move) {
-        client.sendEvent("updateColor", move.getPrecinct().getId() + ":" + move.getTo().getCluster().getColor() + ",");
+        client.sendEvent("updateColor", move.getPrecinct().getId() + ":" + move.getTo().getCluster().getColor() + "$"
+                + "{"+ move.getTo().getCluster().getProperty() + "}");
     }
 
 
