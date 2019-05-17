@@ -622,7 +622,7 @@ public class Algorithm implements Runnable{
         System.out.println(currentState.getSummary());
 //        resultService.saveState(new Result("333@gmail.com",this.currentState));
         sendMessage("Algorithm finished!");
-
+        client.sendEvent("Summary",getTotalSummarySingleRun());
         Logger logger=Logger.getLogger("CSE308");
         FileHandler fh;
         try {
