@@ -49,6 +49,9 @@ public class Algorithm implements Runnable{
     private HashMap<District, Double> currentScores = new HashMap<>();
     private Map<String, District> mmDistricts = new HashMap<>();
 
+    public StringBuilder getLogFile(){
+        return logFile;
+    }
     //pass the precinctService to the algorithm object because we can't autowired precinctService for each object it is not working.
     public Algorithm(String stateName, Configuration configuration, PrecinctService precinctService, ResultService resultService, SocketIOClient client) {
         configuration.initWeights();
@@ -627,18 +630,7 @@ public class Algorithm implements Runnable{
         System.out.println(currentState.getSummary());
 //        resultService.saveState(new Result("333@gmail.com",this.currentState));
         sendMessage("Algorithm finished!");
-        Logger logger=Logger.getLogger("CSE308");
-        FileHandler fh;
-        try {
-            fh=new FileHandler("GerryMandering.log");
-            logger.addHandler(fh);
-            SimpleFormatter formatter=new SimpleFormatter();
-            fh.setFormatter(formatter);
 
-            logger.info(logFile.toString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
     }
 

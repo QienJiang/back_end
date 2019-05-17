@@ -18,7 +18,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.io.IOException;
 import java.util.*;
+import java.util.logging.FileHandler;
+import java.util.logging.SimpleFormatter;
 
 @Service
 public class SocketService {
@@ -84,7 +87,18 @@ public class SocketService {
 
     @OnEvent(value = "saveLog")
     public void onSaveLog(SocketIOClient client, String id) {
-        resultService.deleteState(Long.valueOf(id));
+        java.util.logging.Logger logger= java.util.logging.Logger.getLogger("CSE308");
+        FileHandler fh;
+        try {
+            fh=new FileHandler("GerryMandering.log");
+            logger.addHandler(fh);
+            SimpleFormatter formatter=new SimpleFormatter();
+            fh.setFormatter(formatter);
+
+            logger.info(currentAlgorithm.getLogFile().toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
