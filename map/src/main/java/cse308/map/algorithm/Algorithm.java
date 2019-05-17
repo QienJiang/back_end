@@ -643,11 +643,11 @@ public class Algorithm implements Runnable{
         StringBuilder str = new StringBuilder();
         if(isBatch){
             int counter = 1;
-            str.append(originalGerrymandering());
+            str.append(originalGerrymandering()).append("\n");
             for (Map.Entry<Integer, State> stateEntry : states.entrySet()) {
                 currentState = stateEntry.getValue();
                 singleRun();
-                str.append("Batch run: ").append(counter++).append(summaryOfBatch());
+                str.append("Batch run: ").append(counter++).append("\n").append(summaryOfBatch());
                 sendMessage("batch run: " + stateEntry.getKey() + " finished!");
             }
         }else {
